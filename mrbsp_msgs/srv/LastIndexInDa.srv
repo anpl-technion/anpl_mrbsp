@@ -1,0 +1,5 @@
+#request fields
+string robot_id
+-------
+#response fields
+int64 last_index

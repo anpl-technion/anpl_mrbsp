@@ -1,0 +1,8 @@
+#request fields
+geometry_msgs/Pose start
+geometry_msgs/Pose goal
+string gtsam_values_str
+string gtsam_factors_str
+-------
+#response fields
+mrbsp_msgs/Actions actions

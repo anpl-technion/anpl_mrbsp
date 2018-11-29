@@ -1,0 +1,5 @@
+#request fields
+ChosenActions chosen_action_msg
+-------
+#response fields
+bool success

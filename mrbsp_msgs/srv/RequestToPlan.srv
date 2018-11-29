@@ -1,0 +1,10 @@
+#request fields
+geometry_msgs/Pose start
+geometry_msgs/Pose goal
+string gtsam_values_str
+string gtsam_factors_str
+char robot_id
+octomap_msgs/Octomap incremental_map
+-------
+#response fields
+bool success

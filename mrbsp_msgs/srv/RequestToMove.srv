@@ -1,0 +1,7 @@
+#request fields
+string gtsam_pose
+string gtsam_goal
+-------
+#response fields
+bool   success
+bool   reached_waypoint

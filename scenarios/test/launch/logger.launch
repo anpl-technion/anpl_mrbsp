@@ -1,0 +1,20 @@
+<launch>
+
+    <!-- Parameters to change each time-->
+    <arg name="current_scenario"  default="test" />
+
+    <arg name="scenario_dir"      default="$(eval find(current_scenario))" />
+    <arg name="config_files_dir"  default="$(arg scenario_dir)/config" />
+
+
+    <!-- Putting the time back to real time-->
+    <rosparam> /use_sim_time : false </rosparam>
+
+    <param name="scenario_folder" value="$(arg scenario_dir)"/>
+   
+    <node pkg="logger" type="logger" name="logger" clear_params="true" output="screen">
+	    <rosparam command="load" file="$(arg config_files_dir)/centralize.yaml" />
+    </node>
+
+</launch>
+

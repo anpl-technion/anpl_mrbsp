@@ -1,0 +1,5 @@
+#request fields
+
+-------
+#response fields
+octomap_msgs/Octomap incremental_map

@@ -1,0 +1,6 @@
+#request fields
+
+-------
+#response fields
+string graph_string
+string values_string

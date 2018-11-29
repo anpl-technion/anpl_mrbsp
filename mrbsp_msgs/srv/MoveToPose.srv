@@ -1,0 +1,6 @@
+#request fields
+geometry_msgs/PoseStamped next_pose
+-------
+#response fields
+bool reached_waypoint
+bool set_orientation
