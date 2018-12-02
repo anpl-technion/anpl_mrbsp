@@ -2,17 +2,32 @@
 robot_name: Robot_A #default Robot_A
 robot_id:   A       #default A
 
-#default init_pose: {position:{X: 0.487, Y: -0.937, Z: 0.0}, orientation: {Yaw: 0.0, Pitch: 0.0, Roll: 0.0}}
 init_pose: {
-  position:    {X: 0.487, Y: -0.937, Z: 0.0},
-  orientation: {Yaw: 0.0, Pitch: 0.0, Roll: 0.0}
+    position: {
+        X: 0.487,   #default 0.487
+        Y: -0.937,  #default -0.937
+        Z: 0.0      #default 0.0
+    },
+    orientation: {
+        Yaw: 0.0,   #default 0.0
+        Pitch: 0.0, #default 0.0
+        Roll: 0.0   #default 0.0
+    }
 }
 
-#default topics: {odom: /rosaria/pose, laser: /scan, ground_truth: /ground_truth, pointcloud: /camera/depth/points, image: /zed/left/image_rect_color}
-topics: {odom: /rosaria/pose, laser: /scan, ground_truth: /ground_truth, pointcloud: /camera/depth/points, image: /zed/left/image_rect_color}
+topics: {
+    odom: /rosaria/pose,                #default /rosaria/pose
+    laser: /scan,                       #default /scan
+    ground_truth: /ground_truth,        #default /ground_truth
+    pointcloud: /camera/depth/points,   #default /camera/depth/points
+    image: /zed/left/image_rect_color   #default /zed/left/image_rect_color
+}
 
-#default informative_condition: {distance: 0.5, yaw: 0.2618}
-informative_condition: {distance: 0.5, yaw: 0.2618}
+
+informative_condition: {
+    distance: 0.5,  #default 0.5
+    yaw: 0.2618     #default 0.2618
+}
 
 is_visualize_laser:             true    #default true
 is_3D_vis:                      false   #default false 
