@@ -11,13 +11,13 @@
  * -------------------------------------------------------------------------- */
 
 /**
- * @file: odometry_laser.h
+ * @file: odometry_external.h
  * @brief:
  * @author: Tal Regev
  */
 
-#ifndef ODOMETRY_LASER_H
-#define ODOMETRY_LASER_H
+#ifndef ODOMETRY_EXTERNAL_H
+#define ODOMETRY_EXTERNAL_H
 
 #include <mrbsp_utils/mrbsp_types.h>
 #include "mrbsp_utils/mrbsp_utils.h"
@@ -50,16 +50,16 @@ namespace MRBSP {
     /*
      *
      */
-    class OdometryLaser {
+    class OdometryExternal {
     public:
 
         /**
          *
          * @param nh_private
          */
-        OdometryLaser(const ros::NodeHandle &nh_private);
+        OdometryExternal(const ros::NodeHandle &nh_private);
 
-	    virtual ~OdometryLaser();
+	    virtual ~OdometryExternal();
 
         /**
          * Read information from bag file
@@ -327,4 +327,4 @@ namespace MRBSP {
     };
 }
 
-#endif // ODOMETRY_LASER_H
+#endif // ODOMETRY_EXTERNAL_H

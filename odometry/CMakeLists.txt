@@ -54,11 +54,11 @@ include_directories(
 
 link_directories(${PREFIX}/lib)
 
-add_executable(odometry_laser src/${PROJECT_NAME}/odometry_laser.cpp)
+add_executable(odometry_external src/${PROJECT_NAME}/odometry_external.cpp)
 
 add_executable(odometry_icp_laser src/${PROJECT_NAME}/odometry_icp_laser.cpp)
 
-target_link_libraries(odometry_laser
+target_link_libraries(odometry_external
         ${catkin_LIBRARIES}
         ${BOOST_LIBRARIES}
         ${GTSAM_LIBRARIES}	

@@ -11,13 +11,13 @@
  * -------------------------------------------------------------------------- */
 
 /**
- * @file: odometry_laser.cpp
+ * @file: odometry_external.cpp
  * @brief:
  * @author: Tal Regev
  */
 
 
-#include "odometry/odometry_laser.h"
+#include "odometry/odometry_external.h"
 
 #include <mrbsp_msgs/LastIndexInDa.h>
 #include <std_srvs/Empty.h>
@@ -34,7 +34,7 @@
 #include <planar_icp/Saliency.h>
 
 
-#include "odometry/odometry_laser.h"
+#include "odometry/odometry_external.h"
 #include <ros/ros.h>
 #include <signal.h>
 
@@ -55,11 +55,11 @@ void mySigintHandler(int sig) {
 
 int main(int argc, char** argv)
 {
-    ros::init(argc, argv, "OdometryLaser");
+    ros::init(argc, argv, "OdometryExternal");
     ros::NodeHandle pnh("~");
     signal(SIGINT, mySigintHandler);
 
-    OdometryLaser odometry_laser(pnh);
+    OdometryExternal odometry_external(pnh);
 
     ros::AsyncSpinner spinner(2); // Use 2 threads
     spinner.start();
@@ -69,8 +69,8 @@ int main(int argc, char** argv)
     return 0;
 }
 
-void OdometryLaser::loadParameter() {
-
+void OdometryExternal::loadParameter() {
+    FUNCTION_LOGGER(m_tag);
 
     m_logger_msg << m_node_name << " node parameters:";
     logMessage(info, LOG_INFO_LVL, m_logger_msg, m_tag);
@@ -180,7 +180,7 @@ void OdometryLaser::loadParameter() {
 
 }
 
-OdometryLaser::OdometryLaser(const ros::NodeHandle &nh_private) :
+OdometryExternal::OdometryExternal(const ros::NodeHandle &nh_private) :
         m_is_perceive(false),
         m_privateNodeHandle(nh_private),
         m_first_odom_msg(true),
@@ -207,10 +207,10 @@ OdometryLaser::OdometryLaser(const ros::NodeHandle &nh_private) :
     m_last_keyframe_pose = m_current_pose;
 
 
-    m_odom_sub = m_privateNodeHandle.subscribe(std::string(m_robot_name + m_odom_topic), 1, &OdometryLaser::odomCallback, this);
+    m_odom_sub = m_privateNodeHandle.subscribe(std::string(m_robot_name + m_odom_topic), 1, &OdometryExternal::odomCallback, this);
     
 
-	m_laser_sub = m_privateNodeHandle.subscribe(std::string(m_robot_name + m_laser_topic), 1, &OdometryLaser::laserCallback, this);
+	m_laser_sub = m_privateNodeHandle.subscribe(std::string(m_robot_name + m_laser_topic), 1, &OdometryExternal::laserCallback, this);
 	
 	
     if(m_is_laser_vis) {
@@ -220,7 +220,7 @@ OdometryLaser::OdometryLaser(const ros::NodeHandle &nh_private) :
     
     if(m_is_3D_vis) {
         // set keyframe type (with pointclouds)
-        m_pointcloud_sub = m_privateNodeHandle.subscribe(std::string(m_robot_name + m_pointcloud_topic), 1, &OdometryLaser::pointcloudCallback, this);
+        m_pointcloud_sub = m_privateNodeHandle.subscribe(std::string(m_robot_name + m_pointcloud_topic), 1, &OdometryExternal::pointcloudCallback, this);
         m_keyframe_info_pub = m_privateNodeHandle.advertise<mrbsp_msgs::KeyframeInitRgbd>("/Odometry/keyframe_init/withPointcloud",1);
 
         m_logger_msg << "Robot " << m_robot_id << ": publish keyframes info with 3D scans";
@@ -236,7 +236,7 @@ OdometryLaser::OdometryLaser(const ros::NodeHandle &nh_private) :
     }
 
     std::string optimize_pose_topic("/Robot_" + std::string(1, m_robot_id) + "/optimized_pose");
-	m_optimize_pose_sub = m_privateNodeHandle.subscribe(optimize_pose_topic, 1, &OdometryLaser::optimizePoseCallback, this);
+	m_optimize_pose_sub = m_privateNodeHandle.subscribe(optimize_pose_topic, 1, &OdometryExternal::optimizePoseCallback, this);
 
 
     m_data_source = DataSource::live;
@@ -247,11 +247,11 @@ OdometryLaser::OdometryLaser(const ros::NodeHandle &nh_private) :
 
     m_GT_available = false;
     if (m_gt_source == "gazebo") {
-        m_ground_truth_sub = m_privateNodeHandle.subscribe("/gazebo/model_states", 1, &OdometryLaser::gtGazeboCallback, this);
+        m_ground_truth_sub = m_privateNodeHandle.subscribe("/gazebo/model_states", 1, &OdometryExternal::gtGazeboCallback, this);
         m_GT_available = true;
     }
     if (m_gt_source == "mocap") {
-        m_ground_truth_sub = m_privateNodeHandle.subscribe(std::string(m_robot_name + m_gt_topic_sub), 1, &OdometryLaser::gtMoCapCallback, this);
+        m_ground_truth_sub = m_privateNodeHandle.subscribe(std::string(m_robot_name + m_gt_topic_sub), 1, &OdometryExternal::gtMoCapCallback, this);
         m_GT_available = true;
     }
 
@@ -265,7 +265,7 @@ OdometryLaser::OdometryLaser(const ros::NodeHandle &nh_private) :
     m_da_last_index_client = m_privateNodeHandle.serviceClient<mrbsp_msgs::LastIndexInDa>("da_check_last_index");
 
     std::string service_name(m_robot_name + "/check_if_perceive");
-    m_preceive_init_check_service = m_privateNodeHandle.advertiseService(service_name, &OdometryLaser::odometryInitCheck, this);
+    m_preceive_init_check_service = m_privateNodeHandle.advertiseService(service_name, &OdometryExternal::odometryInitCheck, this);
 
     std::string odom_pub_topic("/Robot_" + std::string(1, m_robot_id) + "/odometry");
     m_current_odom_pub = m_privateNodeHandle.advertise<nav_msgs::Odometry>(odom_pub_topic, 1);
@@ -283,12 +283,16 @@ OdometryLaser::OdometryLaser(const ros::NodeHandle &nh_private) :
 }
 
 
-bool OdometryLaser::odometryInitCheck(mrbsp_msgs::InitCheck::Request& req, mrbsp_msgs::InitCheck::Response& res) {
+bool OdometryExternal::odometryInitCheck(mrbsp_msgs::InitCheck::Request& req, mrbsp_msgs::InitCheck::Response& res) {
+    FUNCTION_LOGGER(m_tag);
+
     res.init_check_answer = static_cast<unsigned char>(m_is_perceive);
     return true;
 }
 
-std::vector<KeyframeInit> OdometryLaser::getDataFromBag(const std::string& path_to_bagfile, const std::string& odom_topic, const std::string& laser_topic) {
+std::vector<KeyframeInit> OdometryExternal::getDataFromBag(const std::string& path_to_bagfile, const std::string& odom_topic, const std::string& laser_topic) {
+    FUNCTION_LOGGER(m_tag);
+
     m_logger_msg << "--------------------";
     logMessage(info, LOG_INFO_LVL, m_logger_msg, m_tag);
 
@@ -415,7 +419,9 @@ std::vector<KeyframeInit> OdometryLaser::getDataFromBag(const std::string& path_
     return m_keyframes;
 }
 
-void OdometryLaser::handleOdomData(nav_msgs::OdometryConstPtr odom_msg) {
+void OdometryExternal::handleOdomData(nav_msgs::OdometryConstPtr odom_msg) {
+    FUNCTION_LOGGER(m_tag);
+
     m_is_perceive = true;
 
     // odometry calculator
@@ -567,7 +573,9 @@ void OdometryLaser::handleOdomData(nav_msgs::OdometryConstPtr odom_msg) {
 
 }
 
-void OdometryLaser::odomCallback(const nav_msgs::OdometryConstPtr& odom) {
+void OdometryExternal::odomCallback(const nav_msgs::OdometryConstPtr& odom) {
+    FUNCTION_LOGGER(m_tag);
+
     // Check if the da node is initialized
 
     if(!m_is_da_init) {
@@ -614,7 +622,9 @@ void OdometryLaser::odomCallback(const nav_msgs::OdometryConstPtr& odom) {
     handleOdomData(odom);
 }
 
-void OdometryLaser::rosOdomeMsgToGtsam(const nav_msgs::OdometryConstPtr& odom_msg) {
+void OdometryExternal::rosOdomeMsgToGtsam(const nav_msgs::OdometryConstPtr& odom_msg) {
+    FUNCTION_LOGGER(m_tag);
+
     geometry_msgs::Pose curr_odom_ros = odom_msg->pose.pose;
     geometry_msgs::Quaternion curr_quat_ros = curr_odom_ros.orientation;
     geometry_msgs::Point curr_point_ros = curr_odom_ros.position;
@@ -624,7 +634,9 @@ void OdometryLaser::rosOdomeMsgToGtsam(const nav_msgs::OdometryConstPtr& odom_ms
     m_current_odom_pose = gtsam::Pose3(curr_rot_gtsam, curr_point_gtsam);
 }
 
-void OdometryLaser::optimizePoseCallback(const mrbsp_msgs::GtsamSerPose3ConstPtr& optimized_pose) {
+void OdometryExternal::optimizePoseCallback(const mrbsp_msgs::GtsamSerPose3ConstPtr& optimized_pose) {
+    FUNCTION_LOGGER(m_tag);
+
     bool optimize_pose = true;
 
     if(optimize_pose) {
@@ -671,7 +683,9 @@ void OdometryLaser::optimizePoseCallback(const mrbsp_msgs::GtsamSerPose3ConstPtr
     }
 }
 
-void OdometryLaser::laserCallback(const sensor_msgs::LaserScanConstPtr& scan) {
+void OdometryExternal::laserCallback(const sensor_msgs::LaserScanConstPtr& scan) {
+    FUNCTION_LOGGER(m_tag);
+
     if(m_first_laser_msg) {
         m_first_laser_msg = false;
         m_logger_msg << "Robot " << m_robot_id << ": Receive first laser msg...";
@@ -685,11 +699,14 @@ void OdometryLaser::laserCallback(const sensor_msgs::LaserScanConstPtr& scan) {
     }
 }
 
-void OdometryLaser::pointcloudCallback(const sensor_msgs::PointCloud2ConstPtr& pointcloud) {
+void OdometryExternal::pointcloudCallback(const sensor_msgs::PointCloud2ConstPtr& pointcloud) {
+    FUNCTION_LOGGER(m_tag);
+
     m_current_pointcloud_msg = *pointcloud;
 }
 
-bool OdometryLaser::isInformative(gtsam::Pose3& relative_pose, sensor_msgs::LaserScan& current_scan) {
+bool OdometryExternal::isInformative(gtsam::Pose3& relative_pose, sensor_msgs::LaserScan& current_scan) {
+    FUNCTION_LOGGER(m_tag);
 
     double distance_between_keyframes = m_relative_motion_from_last_keyframe.range(gtsam::Pose3());
     double yaw_diff = fabs(m_last_keyframe_pose.rotation().yaw() - m_current_pose.rotation().yaw());
@@ -710,7 +727,9 @@ bool OdometryLaser::isInformative(gtsam::Pose3& relative_pose, sensor_msgs::Lase
     return false;
 }
 
-void OdometryLaser::rosLaserMesgToGtsamMatrix(sensor_msgs::LaserScan& laser_msg, gtsam::Matrix& scan) {
+void OdometryExternal::rosLaserMesgToGtsamMatrix(sensor_msgs::LaserScan& laser_msg, gtsam::Matrix& scan) {
+    FUNCTION_LOGGER(m_tag);
+
     float angle_max = M_2_PI;
     float angle_min = -M_2_PI;
     std::vector<float> ranges = laser_msg.ranges;
@@ -728,7 +747,9 @@ void OdometryLaser::rosLaserMesgToGtsamMatrix(sensor_msgs::LaserScan& laser_msg,
     }
 }
 
-void OdometryLaser::broadcastCurrentPose(const gtsam::Pose3& current_pose, const std::string& frame_id, const gtsam::Pose3& current_odom_gtsam) {
+void OdometryExternal::broadcastCurrentPose(const gtsam::Pose3& current_pose, const std::string& frame_id, const gtsam::Pose3& current_odom_gtsam) {
+    FUNCTION_LOGGER(m_tag);
+
     tf::Transform transform;
     transform.setOrigin( tf::Vector3(current_pose.x(), current_pose.y(), current_pose.z()));
     tf::Quaternion q;
@@ -798,7 +819,9 @@ void OdometryLaser::broadcastCurrentPose(const gtsam::Pose3& current_pose, const
     ++seq;
 }
 
-bool OdometryLaser::isOptimizePoseTimout() {
+bool OdometryExternal::isOptimizePoseTimout() {
+    FUNCTION_LOGGER(m_tag);
+
     int index_dist = m_last_keyframe_index- m_last_optimize_index;
     if(index_dist > m_optimize_pose_index_timeout_threshold) {
         m_logger_msg << "Robot " << m_robot_id << ": Optimized pose index is " << index_dist << " indexes behind last keyframe index";
@@ -806,7 +829,9 @@ bool OdometryLaser::isOptimizePoseTimout() {
     }
 }
 
-void OdometryLaser::gtsamPose3ToRosPoseMsg(gtsam::Pose3& gtsam_pose, geometry_msgs::Pose& ros_pose_msg) {
+void OdometryExternal::gtsamPose3ToRosPoseMsg(gtsam::Pose3& gtsam_pose, geometry_msgs::Pose& ros_pose_msg) {
+    FUNCTION_LOGGER(m_tag);
+
     ros_pose_msg.position.x = gtsam_pose.x();
     ros_pose_msg.position.y = gtsam_pose.y();
     ros_pose_msg.position.z = gtsam_pose.z();
@@ -817,7 +842,9 @@ void OdometryLaser::gtsamPose3ToRosPoseMsg(gtsam::Pose3& gtsam_pose, geometry_ms
 }
 
 // Ground truth from Gazebo
-void OdometryLaser::gtGazeboCallback(const gazebo_msgs::ModelStatesConstPtr& gt_msg) {
+void OdometryExternal::gtGazeboCallback(const gazebo_msgs::ModelStatesConstPtr& gt_msg) {
+    FUNCTION_LOGGER(m_tag);
+
     static nav_msgs::Path gt_path;
     static int seq = 0;
 
@@ -851,7 +878,9 @@ void OdometryLaser::gtGazeboCallback(const gazebo_msgs::ModelStatesConstPtr& gt_
 }
 
 // Ground truth from Optitrack
-void OdometryLaser::gtMoCapCallback(const geometry_msgs::PoseStampedConstPtr& gt_msg) {
+void OdometryExternal::gtMoCapCallback(const geometry_msgs::PoseStampedConstPtr& gt_msg) {
+    FUNCTION_LOGGER(m_tag);
+
     static nav_msgs::Path gt_path;
     static int seq = 0;
 
@@ -867,7 +896,9 @@ void OdometryLaser::gtMoCapCallback(const geometry_msgs::PoseStampedConstPtr& gt
     m_robot_ground_truth_pub.publish(gt_path);
 }
 
-OdometryLaser::~OdometryLaser() {
+OdometryExternal::~OdometryExternal() {
+    FUNCTION_LOGGER(m_tag);
+
     m_logger_msg << "Robot " << m_robot_id << ": Destroy" << m_node_name << " node";
     logMessage(info, LOG_INFO_LVL, m_logger_msg, m_tag);
 }

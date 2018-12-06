@@ -469,7 +469,6 @@ void OdometryIcpLaser::odomCallback(const nav_msgs::OdometryConstPtr& odom) {
     FUNCTION_LOGGER(m_tag);
 
     // Check if the da node is initialized
-
     if(!m_is_da_init) {
         ros::ServiceClient da_init_check_client = m_privateNodeHandle.serviceClient<mrbsp_msgs::InitCheck>("da_init_check");
         mrbsp_msgs::InitCheck da_init_check_srv;
