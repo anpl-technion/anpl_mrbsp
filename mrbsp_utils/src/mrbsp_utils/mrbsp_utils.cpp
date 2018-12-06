@@ -51,7 +51,7 @@ public:
     typedef std::shared_ptr<spdlog::logger> Ptr;
 };
 
-void logMessage_h(Logger::Ptr& logger, LogType log_type, std::string message);
+void logMessage_spdf_h(Logger::Ptr &logger, LogType log_type, std::string message);
 void logMessage_ros_h(LogType log_type, std::string message);
 bool isTagFitting(LogTag tag);
 
@@ -73,6 +73,7 @@ bool                                        Globals::is_over_network_logger = IS
 std::unordered_set<LogTag, EnumClassHash>   Globals::log_tags               = {LogTag::all};
 std::string                                 Globals::researcher_name;
 std::string                                 Globals::scenario_name;
+std::string                                 Globals::node_name;
 
 LogTag m_tag = LogTag::utils;
 
@@ -98,7 +99,7 @@ void MRBSP::Utils::initLogger(const ros::NodeHandle &pnh) {
 
     std::string loggerPath;
     std::string log_tags;
-    int flush_seconds;
+    int flush_freq;
 
     pnh.getParam("/logger/loggerPath", loggerPath);
     pnh.getParam("/logger/researcher_name", Globals::researcher_name);
@@ -107,7 +108,7 @@ void MRBSP::Utils::initLogger(const ros::NodeHandle &pnh) {
     pnh.param("/logger/is_console_logger", Globals::is_console_logger, true);
     pnh.param("/logger/is_ros_console", Globals::is_ros_console, false);
     pnh.param("/logger/log_tags", log_tags, std::string("all"));
-    pnh.param("/logger/logger_write_every", flush_seconds, 5);
+    pnh.param("/logger/logger_flash_frequency", flush_freq, 5);
 
     if(!log_tags.empty()) {
         Globals::log_tags.clear();
@@ -127,12 +128,13 @@ void MRBSP::Utils::initLogger(const ros::NodeHandle &pnh) {
 
     Globals::folder_log = loggerPath;
     std::string node_name = ros::this_node::getName().substr(1);
+    Globals::node_name = node_name;
     console = spdlog::stdout_color_mt(node_name);
 
     loggerPath.append(node_name);
     loggerPath.append(".txt");
     file_logger = spdlog::basic_logger_mt(node_name + "_file", loggerPath);
-    spdlog::flush_every(std::chrono::seconds(flush_seconds));
+    spdlog::flush_every(std::chrono::seconds(flush_freq));
     Globals::is_file_logger_init = true;
 
 }
@@ -145,12 +147,12 @@ void MRBSP::Utils::logMessage(LogType log_type, int log_level, std::string messa
                     logMessage_ros_h(log_type, message);
                 }
                 else {
-                    logMessage_h(console, log_type, message);
+                    logMessage_spdf_h(console, log_type, message);
                 }
             }
 
             if (Globals::is_file_logger && Globals::is_file_logger_init) {
-                logMessage_h(file_logger, log_type, message);
+                logMessage_spdf_h(file_logger, log_type, message);
             }
         }
     }
@@ -205,7 +207,7 @@ std::string MRBSP::Utils::getCurrentTime() {
     return timestemp;
 }
 
-void logMessage_h(Logger::Ptr& logger, LogType log_type, std::string message) {
+void logMessage_spdf_h(Logger::Ptr &logger, LogType log_type, std::string message) {
     switch (log_type) {
         case info:
             logger->info(message);
@@ -223,20 +225,24 @@ void logMessage_h(Logger::Ptr& logger, LogType log_type, std::string message) {
 }
 
 void logMessage_ros_h(LogType log_type, std::string message) {
+    Globals::string_stream.str(std::string());
+    Globals::string_stream << "[" << Globals::node_name << "] " << message;
+    std::string log_str = Globals::string_stream.str();
     switch (log_type) {
         case info:
-            ROS_INFO(message.c_str());
+            ROS_INFO(log_str.c_str());
             break;
         case warn:
-            ROS_WARN(message.c_str());
+            ROS_WARN(log_str.c_str());
             break;
         case error:
-            ROS_ERROR(message.c_str());
+            ROS_ERROR(log_str.c_str());
             break;
         case critical:
-            ROS_FATAL(message.c_str());
+            ROS_FATAL(log_str.c_str());
             break;
     }
+    Globals::string_stream.str(std::string());
 }
 
 bool isTagFitting(LogTag tag) {

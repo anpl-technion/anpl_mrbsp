@@ -107,7 +107,7 @@ void Logger::loadParameter() {
     logMessage(info, LOG_INFO_LVL, m_logger_msg, m_tag);
 
     int         log_level;
-    int         flush_sec;
+    int         flush_freq;
     bool        is_file_logger;
     bool        is_console_logger;
     bool        is_ros_console;
@@ -120,7 +120,7 @@ void Logger::loadParameter() {
     m_privateNodeHandle.getParam("is_console_logger", is_console_logger);
     m_privateNodeHandle.getParam("is_ros_console", is_ros_console);
     m_privateNodeHandle.getParam("log_tags", log_tags);
-    m_privateNodeHandle.getParam("logger_write_every", flush_sec);
+    m_privateNodeHandle.getParam("logger_flash_frequency", flush_freq);
 
 
     m_logger_msg <<  "/scenario_folder: " << m_scenario_prefix;
@@ -144,7 +144,7 @@ void Logger::loadParameter() {
     m_logger_msg << "log_tags: " << log_tags;
     logMessage(info, LOG_INFO_LVL, m_logger_msg, m_tag);
 
-    m_logger_msg << "logger_write_every: " << flush_sec;
+    m_logger_msg << "logger_flash_frequency: " << flush_freq;
     logMessage(info, LOG_INFO_LVL, m_logger_msg, m_tag);
 
     m_logger_msg << "=====================";

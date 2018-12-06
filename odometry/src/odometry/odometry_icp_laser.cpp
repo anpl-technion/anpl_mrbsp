@@ -70,7 +70,7 @@ int main(int argc, char** argv)
 }
 
 void OdometryIcpLaser::loadParameter() {
-
+    FUNCTION_LOGGER(m_tag);
 
     m_logger_msg << m_node_name << " node parameters:";
     logMessage(info, LOG_INFO_LVL, m_logger_msg, m_tag);
@@ -303,11 +303,15 @@ OdometryIcpLaser::OdometryIcpLaser(const ros::NodeHandle &nh_private) :
 
 
 bool OdometryIcpLaser::odometryInitCheck(mrbsp_msgs::InitCheck::Request& req, mrbsp_msgs::InitCheck::Response& res) {
+    FUNCTION_LOGGER(m_tag);
+
     res.init_check_answer = static_cast<unsigned char>(m_is_perceive);
     return true;
 }
 
 void OdometryIcpLaser::handleOdomData(nav_msgs::OdometryConstPtr odom_msg) {
+    FUNCTION_LOGGER(m_tag);
+
     m_is_perceive = true;
 
     // odometry calculator
@@ -462,6 +466,8 @@ void OdometryIcpLaser::handleOdomData(nav_msgs::OdometryConstPtr odom_msg) {
 }
 
 void OdometryIcpLaser::odomCallback(const nav_msgs::OdometryConstPtr& odom) {
+    FUNCTION_LOGGER(m_tag);
+
     // Check if the da node is initialized
 
     if(!m_is_da_init) {
@@ -509,6 +515,8 @@ void OdometryIcpLaser::odomCallback(const nav_msgs::OdometryConstPtr& odom) {
 }
 
 void OdometryIcpLaser::rosOdomeMsgToGtsam(const nav_msgs::OdometryConstPtr& odom_msg) {
+    FUNCTION_LOGGER(m_tag);
+
     geometry_msgs::Pose curr_odom_ros = odom_msg->pose.pose;
     geometry_msgs::Quaternion curr_quat_ros = curr_odom_ros.orientation;
     geometry_msgs::Point curr_point_ros = curr_odom_ros.position;
@@ -519,6 +527,8 @@ void OdometryIcpLaser::rosOdomeMsgToGtsam(const nav_msgs::OdometryConstPtr& odom
 }
 
 void OdometryIcpLaser::optimizePoseCallback(const mrbsp_msgs::GtsamSerPose3ConstPtr& optimized_pose) {
+    FUNCTION_LOGGER(m_tag);
+
     bool optimize_pose = true;
 
     if(optimize_pose) {
@@ -566,6 +576,8 @@ void OdometryIcpLaser::optimizePoseCallback(const mrbsp_msgs::GtsamSerPose3Const
 }
 
 void OdometryIcpLaser::laserCallback(const sensor_msgs::LaserScanConstPtr& scan) {
+    FUNCTION_LOGGER(m_tag);
+
     // Debag: releated to quad bagfiles...
     static int first_msg_seq;
 
@@ -623,6 +635,8 @@ void OdometryIcpLaser::laserCallback(const sensor_msgs::LaserScanConstPtr& scan)
 }
 
 void OdometryIcpLaser::handleLaserData(const sensor_msgs::LaserScanConstPtr& laser_msg) {
+    FUNCTION_LOGGER(m_tag);
+
     m_is_perceive = true;
 
     // odometry calculator
@@ -800,10 +814,13 @@ void OdometryIcpLaser::handleLaserData(const sensor_msgs::LaserScanConstPtr& las
 }
 
 void OdometryIcpLaser::pointcloudCallback(const sensor_msgs::PointCloud2ConstPtr& pointcloud) {
+    FUNCTION_LOGGER(m_tag);
+
     m_current_pointcloud_msg = *pointcloud;
 }
 
 bool OdometryIcpLaser::isInformative(gtsam::Pose3& relative_pose, sensor_msgs::LaserScan& current_scan) {
+    FUNCTION_LOGGER(m_tag);
 
     double distance_between_keyframes = m_relative_motion_from_last_keyframe.range(gtsam::Pose3());
     double yaw_diff = fabs(m_last_keyframe_pose.rotation().yaw() - m_current_pose.rotation().yaw());
@@ -825,6 +842,8 @@ bool OdometryIcpLaser::isInformative(gtsam::Pose3& relative_pose, sensor_msgs::L
 }
 
 void OdometryIcpLaser::rosLaserMesgToGtsamMatrix(sensor_msgs::LaserScan& laser_msg, gtsam::Matrix& scan) {
+    FUNCTION_LOGGER(m_tag);
+
     float angle_max = M_2_PI;
     float angle_min = -M_2_PI;
     std::vector<float> ranges = laser_msg.ranges;
@@ -843,6 +862,8 @@ void OdometryIcpLaser::rosLaserMesgToGtsamMatrix(sensor_msgs::LaserScan& laser_m
 }
 
 void OdometryIcpLaser::broadcastCurrentPose(const gtsam::Pose3& current_pose, const std::string& frame_id, const gtsam::Pose3& current_odom_gtsam) {
+    FUNCTION_LOGGER(m_tag);
+
     tf::Transform transform;
     transform.setOrigin( tf::Vector3(current_pose.x(), current_pose.y(), current_pose.z()));
     tf::Quaternion q;
@@ -912,6 +933,8 @@ void OdometryIcpLaser::broadcastCurrentPose(const gtsam::Pose3& current_pose, co
 }
 
 bool OdometryIcpLaser::isOptimizePoseTimout() {
+    FUNCTION_LOGGER(m_tag);
+
     int index_dist = m_last_keyframe_index- m_last_optimize_index;
     if(index_dist > m_optimize_pose_index_timeout_threshold) {
         m_logger_msg << "Robot " << m_robot_id << ": Optimized pose index is " << index_dist << " indexes behind last keyframe index";
@@ -920,6 +943,8 @@ bool OdometryIcpLaser::isOptimizePoseTimout() {
 }
 
 void OdometryIcpLaser::gtsamPose3ToRosPoseMsg(gtsam::Pose3& gtsam_pose, geometry_msgs::Pose& ros_pose_msg) {
+    FUNCTION_LOGGER(m_tag);
+
     ros_pose_msg.position.x = gtsam_pose.x();
     ros_pose_msg.position.y = gtsam_pose.y();
     ros_pose_msg.position.z = gtsam_pose.z();
@@ -931,6 +956,8 @@ void OdometryIcpLaser::gtsamPose3ToRosPoseMsg(gtsam::Pose3& gtsam_pose, geometry
 
 // Ground truth from Gazebo
 void OdometryIcpLaser::gtGazeboCallback(const gazebo_msgs::ModelStatesConstPtr& gt_msg) {
+    FUNCTION_LOGGER(m_tag);
+
     static nav_msgs::Path gt_path;
     static int seq = 0;
 
@@ -964,6 +991,8 @@ void OdometryIcpLaser::gtGazeboCallback(const gazebo_msgs::ModelStatesConstPtr& 
 
 // Ground truth from Optitrack
 void OdometryIcpLaser::gtMoCapCallback(const geometry_msgs::PoseStampedConstPtr& gt_msg) {
+    FUNCTION_LOGGER(m_tag);
+
     static nav_msgs::Path gt_path;
     static int seq = 0;
 
@@ -987,6 +1016,8 @@ void OdometryIcpLaser::gtMoCapCallback(const geometry_msgs::PoseStampedConstPtr&
 
 
 void OdometryIcpLaser::rosLaserToCsmGtsam(sensor_msgs::LaserScan& laser_msg, std::vector<gtsam::Point2>& current_scan) {
+    FUNCTION_LOGGER(m_tag);
+
     current_scan.clear();
     float angle_max = M_PI_2;  // M_PI_2 = (pi/2) =  90 [deg]
     float angle_min = -M_PI_2; // -90 [deg]
@@ -1011,6 +1042,7 @@ void OdometryIcpLaser::rosLaserToCsmGtsam(sensor_msgs::LaserScan& laser_msg, std
 bool OdometryIcpLaser::performCsmIcp(std::vector<gtsam::Point2>& current_measurement,
                                        std::vector<gtsam::Point2>& prev_measurement, const gtsam::Pose3& initial_guess,
                                        gtsam::Pose3& icp_transformation, const double nn_matching_threshold) {
+    FUNCTION_LOGGER(m_tag);
 
     if(current_measurement.empty() || prev_measurement.empty()) {
         return false;
@@ -1051,10 +1083,14 @@ bool OdometryIcpLaser::performCsmIcp(std::vector<gtsam::Point2>& current_measure
 }
 
 void OdometryIcpLaser::imageCallback(const sensor_msgs::ImageConstPtr& image) {
+    FUNCTION_LOGGER(m_tag);
+
     m_current_img = *image;
 }
 
 OdometryIcpLaser::~OdometryIcpLaser() {
+    FUNCTION_LOGGER(m_tag);
+
     m_keyframe_bag.close();
 
     m_logger_msg << "Robot " << m_robot_id << ": Destroy" << m_node_name << " node";

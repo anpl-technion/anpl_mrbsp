@@ -94,6 +94,8 @@ namespace MRBSP {
 
             /// Researcher Name
             static std::string researcher_name;
+
+            static std::string node_name;
         };
 
         /**
