@@ -45,8 +45,11 @@ using namespace MRBSP;
 using namespace MRBSP::Utils;
 
 void mySigintHandler(int sig) {
-    std::stringstream logger_msg;
     Utils::LogTag tag = LogTag::odometry;
+    FUNCTION_LOGGER(tag);
+
+    std::stringstream logger_msg;
+
 
     logger_msg << "Shutting down " << ros::this_node::getName().substr(1) << " node";
     logMessage(info, LOG_INFO_LVL, logger_msg, tag);
@@ -55,6 +58,8 @@ void mySigintHandler(int sig) {
 
 int main(int argc, char** argv)
 {
+    FUNCTION_LOGGER(LogTag::odometry);
+
     ros::init(argc, argv, "OdometryIcpLaser");
     ros::NodeHandle pnh("~");
     signal(SIGINT, mySigintHandler);
@@ -211,22 +216,25 @@ OdometryIcpLaser::OdometryIcpLaser(const ros::NodeHandle &nh_private) :
     m_last_optimize_pose = m_current_pose;
     m_last_keyframe_pose = m_current_pose;
 
-    m_odom_sub = m_privateNodeHandle.subscribe(std::string(m_robot_name + m_odom_topic), 1, &OdometryIcpLaser::odomCallback, this);
+    std::string name_space_sub = "/" + m_robot_name;
+    std::string name_space_pub = "/Robot_" +  std::string(1,m_robot_id);
+
+    m_odom_sub = m_privateNodeHandle.subscribe(name_space_sub + m_odom_topic, 1, &OdometryIcpLaser::odomCallback, this);
 
 
 
-	m_laser_sub = m_privateNodeHandle.subscribe(std::string(m_robot_name + m_laser_topic), 1, &OdometryIcpLaser::laserCallback, this);
+	m_laser_sub = m_privateNodeHandle.subscribe(name_space_sub+ m_laser_topic, 1, &OdometryIcpLaser::laserCallback, this);
 
 
     if(m_is_laser_vis) {
-        m_laser_pub = m_privateNodeHandle.advertise<sensor_msgs::LaserScan>(std::string(m_robot_name + m_laser_topic + "/vis"), 1);
+        m_laser_pub = m_privateNodeHandle.advertise<sensor_msgs::LaserScan>(std::string(name_space_sub + m_laser_topic + "/vis"), 1);
     }
 
 
 
     if(m_is_3D_vis) {
         // set keyframe type (with pointclouds)
-        m_pointcloud_sub = m_privateNodeHandle.subscribe(std::string(m_robot_name + m_pointcloud_topic), 1, &OdometryIcpLaser::pointcloudCallback, this);
+        m_pointcloud_sub = m_privateNodeHandle.subscribe(name_space_sub + m_pointcloud_topic, 1, &OdometryIcpLaser::pointcloudCallback, this);
         m_keyframe_info_pub = m_privateNodeHandle.advertise<mrbsp_msgs::KeyframeInitRgbd>("/Odometry/keyframe_init/withPointcloud",1);
 
         m_logger_msg << "Robot " << m_robot_id << ": publish keyframes info with 3D scans";
@@ -241,8 +249,8 @@ OdometryIcpLaser::OdometryIcpLaser(const ros::NodeHandle &nh_private) :
         logMessage(info, LOG_INFO_LVL, m_logger_msg, m_tag);
     }
 
-    std::string optimize_pose_topic("/Robot_" + std::string(1, m_robot_id) + "/optimized_pose");
-	m_optimize_pose_sub = m_privateNodeHandle.subscribe(optimize_pose_topic, 1, &OdometryIcpLaser::optimizePoseCallback, this);
+    ;
+	m_optimize_pose_sub = m_privateNodeHandle.subscribe(std::string(name_space_pub + "/optimized_pose"), 1, &OdometryIcpLaser::optimizePoseCallback, this);
 
 
     m_data_source = DataSource::live;
@@ -259,11 +267,10 @@ OdometryIcpLaser::OdometryIcpLaser(const ros::NodeHandle &nh_private) :
         m_GT_available = true;
     }
 
-    std::string gt_topic_pub("/Robot_" + std::string(1, m_robot_id) + "/ground_truth_path");
-    m_robot_ground_truth_pub = m_privateNodeHandle.advertise<nav_msgs::Path>(gt_topic_pub, 1);
+    m_robot_ground_truth_pub = m_privateNodeHandle.advertise<nav_msgs::Path>(std::string(name_space_pub + "/ground_truth_path"), 1);
 
-    std::string estimated_path_topic("/Robot_" + std::string(1, m_robot_id) + "/estimated_path");
-    m_estimated_path_pub = m_privateNodeHandle.advertise<nav_msgs::Path>(estimated_path_topic, 1);
+
+    m_estimated_path_pub = m_privateNodeHandle.advertise<nav_msgs::Path>(std::string(name_space_pub + "/estimated_path"), 1);
 
 
     m_da_last_index_client = m_privateNodeHandle.serviceClient<mrbsp_msgs::LastIndexInDa>("da_check_last_index");
@@ -281,13 +288,11 @@ OdometryIcpLaser::OdometryIcpLaser(const ros::NodeHandle &nh_private) :
 
         if(!m_is_3D_vis) {
             std::string pointcloud_topic;
-            m_pointcloud_sub = m_privateNodeHandle.subscribe(std::string(m_robot_name + m_pointcloud_topic), 1, &OdometryIcpLaser::pointcloudCallback, this);
+            m_pointcloud_sub = m_privateNodeHandle.subscribe(name_space_sub + m_pointcloud_topic, 1, &OdometryIcpLaser::pointcloudCallback, this);
         }
     }
 
-
-    std::string odom_pub_topic("/Robot_" + std::string(1, m_robot_id) + "/odometry");
-    m_current_odom_pub = m_privateNodeHandle.advertise<nav_msgs::Odometry>(odom_pub_topic, 1);
+    m_current_odom_pub = m_privateNodeHandle.advertise<nav_msgs::Odometry>(std::string(name_space_pub + "/odometry"), 1);
 
 	//m_relative_motion.push_back(gtsam::Pose3());
     m_logger_msg << "Robot " << m_robot_id << " initialized";
@@ -1092,6 +1097,6 @@ OdometryIcpLaser::~OdometryIcpLaser() {
 
     m_keyframe_bag.close();
 
-    m_logger_msg << "Robot " << m_robot_id << ": Destroy" << m_node_name << " node";
+    m_logger_msg << "Robot " << m_robot_id << ": destructor " << m_node_name << " node";
     logMessage(info, LOG_INFO_LVL, m_logger_msg, m_tag);
 }

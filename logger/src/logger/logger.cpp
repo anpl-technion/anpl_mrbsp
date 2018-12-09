@@ -29,6 +29,8 @@ using namespace MRBSP::Utils;
 
 int main(int argc, char** argv)
 {
+    FUNCTION_LOGGER(LogTag::logger);
+
     ros::init(argc, argv, "logger");
     ros::NodeHandle pnh("~");
 
@@ -95,10 +97,12 @@ Logger::Logger(ros::NodeHandle& privateNodeHandle) :
 }
 
 Logger::~Logger() {
+    FUNCTION_LOGGER(m_tag);
 
 }
 
 void Logger::loadParameter() {
+    FUNCTION_LOGGER(m_tag);
 
     m_logger_msg << ros::this_node::getName().substr(1) << " node parameters:";
     logMessage(info, LOG_INFO_LVL, m_logger_msg, m_tag);

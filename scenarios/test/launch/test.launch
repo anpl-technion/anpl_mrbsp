@@ -17,7 +17,7 @@
     </node>
 
     <node pkg="odometry" type="odometry_icp_laser" name="odometry_icp_laser" clear_params="true" output="screen">
-    <rosparam command="load" file="$(arg config_files_dir)/robot_A.yaml" />
+    <rosparam command="load" file="$(arg config_files_dir)/gazebo_pioneer1.yaml" />
     </node>
 
 </launch>
