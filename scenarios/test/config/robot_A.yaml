@@ -38,3 +38,4 @@ error_dynamic_percentage:       0.1     #default 0.1 (only avialbe if is_odom_no
 index_timeout_threshold:        50      #default 50
 is_print_icp_results:           true    #default true
 record_keyframe_bagfile:        false   #default false
+gt_buffer_size:                 100     #default 100

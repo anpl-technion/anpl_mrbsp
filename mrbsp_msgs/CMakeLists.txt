@@ -55,8 +55,8 @@ find_package(catkin REQUIRED COMPONENTS
 ## Generate messages in the 'msg' folder
 add_message_files(
   FILES
-  KeyframeInit.msg
-  KeyframeInitRgbd.msg
+  Keyframe.msg
+  KeyframeRgbd.msg
   MapData.msg
   MapData3D.msg
   GtsamFactorGraph.msg

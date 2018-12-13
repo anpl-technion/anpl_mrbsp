@@ -230,7 +230,7 @@ OdometryExternal::OdometryExternal(const ros::NodeHandle &nh_private) :
     if(m_is_3D_vis) {
         // set keyframe type (with pointclouds)
         m_pointcloud_sub = m_privateNodeHandle.subscribe(name_space_sub + m_pointcloud_topic, 1, &OdometryExternal::pointcloudCallback, this);
-        m_keyframe_info_pub = m_privateNodeHandle.advertise<mrbsp_msgs::KeyframeInitRgbd>("/Odometry/keyframe_init/withPointcloud",1);
+        m_keyframe_info_pub = m_privateNodeHandle.advertise<mrbsp_msgs::KeyframeRgbd>("/Robots/Odometry/keyframe/withPointcloud",1);
 
         m_logger_msg << "Robot " << m_robot_id << ": publish keyframes info with 3D scans";
         logMessage(info, LOG_INFO_LVL, m_logger_msg, m_tag);
@@ -238,7 +238,7 @@ OdometryExternal::OdometryExternal(const ros::NodeHandle &nh_private) :
     }
     else {
         // set keyframe type here (without pointclouds)
-        m_keyframe_info_pub = m_privateNodeHandle.advertise<mrbsp_msgs::KeyframeInit>("/Odometry/keyframe_init",1);
+        m_keyframe_info_pub = m_privateNodeHandle.advertise<mrbsp_msgs::Keyframe>("/Robots/Odometry/keyframe",1);
 
         m_logger_msg << "Robot " << m_robot_id << ": publish keyframes info with 2D scans";
         logMessage(info, LOG_INFO_LVL, m_logger_msg, m_tag);
@@ -271,7 +271,7 @@ OdometryExternal::OdometryExternal(const ros::NodeHandle &nh_private) :
     m_estimated_path_pub = m_privateNodeHandle.advertise<nav_msgs::Path>( std::string(name_space_pub + "/estimated_path"), 1);
     
     
-    m_da_last_index_client = m_privateNodeHandle.serviceClient<mrbsp_msgs::LastIndexInDa>("/da_check_last_index");
+    m_da_last_index_client = m_privateNodeHandle.serviceClient<mrbsp_msgs::LastIndexInDa>("/Centralize/da_check_last_index");
 
 
     m_preceive_init_check_service = m_privateNodeHandle.advertiseService(std::string(name_space_sub + "/check_if_perceive"), &OdometryExternal::odometryInitCheck, this);
@@ -299,7 +299,7 @@ bool OdometryExternal::odometryInitCheck(mrbsp_msgs::InitCheck::Request& req, mr
     return true;
 }
 
-std::vector<KeyframeInit> OdometryExternal::getDataFromBag(const std::string& path_to_bagfile, const std::string& odom_topic, const std::string& laser_topic) {
+std::vector<Keyframe> OdometryExternal::getDataFromBag(const std::string& path_to_bagfile, const std::string& odom_topic, const std::string& laser_topic) {
     FUNCTION_LOGGER(m_tag);
 
     m_logger_msg << "--------------------";
@@ -362,7 +362,7 @@ std::vector<KeyframeInit> OdometryExternal::getDataFromBag(const std::string& pa
 
                         if (!init_laser) {
                             std::string keyframe_idx(m_robot_id + std::to_string(m_last_keyframe_index));
-                            KeyframeInit current_keyframe = std::make_tuple(keyframe_idx, 0, m_current_laser_msg,
+                            Keyframe current_keyframe = std::make_tuple(keyframe_idx, 0, m_current_laser_msg,
                                                                             m_current_pose, m_ground_truth_pose_stamped.pose);
                             m_keyframes.push_back(current_keyframe);
 
@@ -402,7 +402,7 @@ std::vector<KeyframeInit> OdometryExternal::getDataFromBag(const std::string& pa
 
                         if (!init_odom) {
                             std::string keyframe_idx(m_robot_id + std::to_string(m_last_keyframe_index));
-                            KeyframeInit current_keyframe = std::make_tuple(keyframe_idx, 0, m_current_laser_msg,
+                            Keyframe current_keyframe = std::make_tuple(keyframe_idx, 0, m_current_laser_msg,
                                                                             m_current_pose, m_ground_truth_pose_stamped.pose);
                             m_keyframes.push_back(current_keyframe);
                             init_odom = true;
@@ -507,7 +507,7 @@ void OdometryExternal::handleOdomData(nav_msgs::OdometryConstPtr odom_msg) {
             {
                 std::string keyframe_idx(m_robot_id + std::to_string(m_last_keyframe_index));
                 double current_time = odom_msg->header.stamp.toSec() - m_initial_time;
-                KeyframeInit current_keyframe = std::make_tuple(keyframe_idx, current_time, m_current_laser_msg, m_relative_motion_from_last_keyframe, m_ground_truth_pose_stamped.pose);
+                Keyframe current_keyframe = std::make_tuple(keyframe_idx, current_time, m_current_laser_msg, m_relative_motion_from_last_keyframe, m_ground_truth_pose_stamped.pose);
                 m_keyframes.push_back(current_keyframe);
                 break;
             }
@@ -519,7 +519,7 @@ void OdometryExternal::handleOdomData(nav_msgs::OdometryConstPtr odom_msg) {
 
 		        //publish keyframes
                 if(!m_is_3D_vis) {
-                    mrbsp_msgs::KeyframeInit keyframe;
+                    mrbsp_msgs::Keyframe keyframe;
                     keyframe.header.frame_id = std::string("Robot_" + std::string(1, m_robot_id));
                     keyframe.header.seq = m_last_keyframe_index;
                     keyframe.header.stamp = odom_msg->header.stamp;
@@ -538,7 +538,7 @@ void OdometryExternal::handleOdomData(nav_msgs::OdometryConstPtr odom_msg) {
                 }
                 else {
                     // keyframes with 3D data
-                    mrbsp_msgs::KeyframeInitRgbd keyframe_3d;
+                    mrbsp_msgs::KeyframeRgbd keyframe_3d;
                     keyframe_3d.header.frame_id = std::string("Robot_" + std::string(1, m_robot_id));
                     keyframe_3d.header.seq = m_last_keyframe_index;
                     keyframe_3d.header.stamp =  odom_msg->header.stamp;
@@ -588,7 +588,7 @@ void OdometryExternal::odomCallback(const nav_msgs::OdometryConstPtr& odom) {
     // Check if the da node is initialized
 
     if(!m_is_da_init) {
-        ros::ServiceClient da_init_check_client = m_privateNodeHandle.serviceClient<mrbsp_msgs::InitCheck>("da_init_check");
+        ros::ServiceClient da_init_check_client = m_privateNodeHandle.serviceClient<mrbsp_msgs::InitCheck>("/Centralize/da_init_check");
         mrbsp_msgs::InitCheck da_init_check_srv;
         if (da_init_check_client.call(da_init_check_srv))
         {
@@ -686,7 +686,7 @@ void OdometryExternal::optimizePoseCallback(const mrbsp_msgs::GtsamSerPose3Const
             m_logger_msg << "Robot " << optimized_pose_id << ": Something was wrong ...." << "\n" <<
                          "Old optimize pose index: " << m_last_optimize_index << "\n" <<
                          "New optimize pose ID: "    << optimized_pose_id     << "\n" <<
-                         "New optimize pose index: " << optimize_pose_idx ;
+                         "New optimize pose index: " << optimize_pose_idx;
             logMessage(info, LOG_INFO_LVL, m_logger_msg, m_tag);
         }
     }
@@ -780,12 +780,33 @@ void OdometryExternal::broadcastCurrentPose(const gtsam::Pose3& current_pose, co
     ros_pose_stamp.header.frame_id = std::string(frame_id + "/estimated_path");
 
     static nav_msgs::Path path_msg;
-    path_msg.poses.push_back(ros_pose_stamp);
-    path_msg.header.seq = seq;
-    path_msg.header.stamp = ros::Time::now();
-    path_msg.header.frame_id = std::string("world");
 
-    m_estimated_path_pub.publish(path_msg);
+    if (path_msg.poses.empty()) {
+        path_msg.poses.push_back(ros_pose_stamp);
+        //path_msg.header.seq = seq;
+        path_msg.header.stamp = ros_pose_stamp.header.stamp;
+        path_msg.header.frame_id = std::string("world");
+        m_estimated_path_pub.publish(path_msg);
+
+    }  else if  (m_estimated_path_pub.getNumSubscribers() > 0 ) { // publish est. path only if someone interested to this topic and robot moved enough according to informative condition
+
+        geometry_msgs::PoseStamped prev_est_pose = path_msg.poses.back();
+        gtsam::Point3 ds(ros_pose_stamp.pose.position.x-prev_est_pose.pose.position.x,
+                         ros_pose_stamp.pose.position.y-prev_est_pose.pose.position.y,
+                         ros_pose_stamp.pose.position.z-prev_est_pose.pose.position.z);
+        gtsam::Quaternion q1(ros_pose_stamp.pose.orientation.x, ros_pose_stamp.pose.orientation.y, ros_pose_stamp.pose.orientation.z, ros_pose_stamp.pose.orientation.w);
+        gtsam::Quaternion q2(prev_est_pose.pose.orientation.x, prev_est_pose.pose.orientation.y, prev_est_pose.pose.orientation.z, prev_est_pose.pose.orientation.w);
+
+        if (ds.norm() > m_informative_condition_distance ||
+            q1.angularDistance(q2) > m_informative_condition_yaw) {
+            path_msg.poses.push_back(ros_pose_stamp);
+            //path_msg.header.seq = seq;
+            path_msg.header.stamp = ros_pose_stamp.header.stamp;
+            path_msg.header.frame_id = std::string("world");
+            m_estimated_path_pub.publish(path_msg);
+        }
+    }
+
 
     static gtsam::Pose3 integrated_odom;
     static ros::Time prev_odom_time(ros::Time::now());
@@ -798,13 +819,13 @@ void OdometryExternal::broadcastCurrentPose(const gtsam::Pose3& current_pose, co
     double dt = (ros::Time::now() - prev_odom_time).toSec();
     integrated_odom = integrated_odom.compose(current_odom_gtsam);
     if(dt > (1 / m_vel_update_rate)) {
-        current_odom_ros.twist.twist.linear.x = integrated_odom.x() / dt;
-        current_odom_ros.twist.twist.linear.y = integrated_odom.y() / dt;
-        current_odom_ros.twist.twist.linear.z = integrated_odom.z() / dt;
+        current_odom_ros.twist.twist.linear.x = current_odom_gtsam.x() / dt;
+        current_odom_ros.twist.twist.linear.y = current_odom_gtsam.y() / dt;
+        current_odom_ros.twist.twist.linear.z = current_odom_gtsam.z() / dt;
 
-        current_odom_ros.twist.twist.angular.x = integrated_odom.rotation().roll() / dt;
-        current_odom_ros.twist.twist.angular.y = integrated_odom.rotation().pitch() / dt;
-        current_odom_ros.twist.twist.angular.z = integrated_odom.rotation().yaw() / dt;
+        current_odom_ros.twist.twist.angular.x = current_odom_gtsam.rotation().roll() / dt;
+        current_odom_ros.twist.twist.angular.y = current_odom_gtsam.rotation().pitch() / dt;
+        current_odom_ros.twist.twist.angular.z = current_odom_gtsam.rotation().yaw() / dt;
 
         //m_logger_msg << current_odom_ros.twist.twist.linear.x << ", "
         //             << current_odom_ros.twist.twist.linear.y << ", "
@@ -854,55 +875,96 @@ void OdometryExternal::gtsamPose3ToRosPoseMsg(gtsam::Pose3& gtsam_pose, geometry
 void OdometryExternal::gtGazeboCallback(const gazebo_msgs::ModelStatesConstPtr& gt_msg) {
     FUNCTION_LOGGER(m_tag);
 
-    static nav_msgs::Path gt_path;
+    nav_msgs::Path gt_path;
+    static std::list<geometry_msgs::PoseStamped> gt_poses_list;
     static int seq = 0;
+    static tf::Transform tf_p_prev = tf::Transform::getIdentity();
 
     // check if the Gazebo model contains this robot
     m_GT_available = false;
     std::vector<std::string> gt_names(gt_msg->name);
     int robot_gt_pose_ids = 0;
-    for(auto iter_gt = gt_names.begin(); iter_gt != gt_names.end(); ++iter_gt) {
-        if(iter_gt->compare(m_robot_name) == 0) {
+    for (auto iter_gt = gt_names.begin(); iter_gt != gt_names.end(); ++iter_gt) {
+        if (iter_gt->compare(m_robot_name) == 0) {
             m_GT_available = true;
             break;
-        }
-        else {
+        } else {
             ++robot_gt_pose_ids;
         }
     }
 
-    if (m_GT_available) {
-        m_ground_truth_pose_stamped.pose = gt_msg->pose.at(robot_gt_pose_ids);
-        m_ground_truth_pose_stamped.header.seq = seq;
-        m_ground_truth_pose_stamped.header.frame_id = std::string(
-                "Robot_" + std::string(1, m_robot_id) + "/ground_truth");
-        m_ground_truth_pose_stamped.header.stamp = ros::Time::now();
-        gt_path.header.seq = seq;
-        gt_path.header.frame_id = std::string("world");
-        gt_path.header.stamp = m_ground_truth_pose_stamped.header.stamp;
-        gt_path.poses.push_back(m_ground_truth_pose_stamped);
+    if (m_GT_available && m_robot_ground_truth_pub.getNumSubscribers() > 0) {
+        ros::Time stamp = ros::Time::now();
+        geometry_msgs::PoseStamped pose_stamped;
 
-        m_robot_ground_truth_pub.publish(gt_path);
+        tf::Transform tf_p_curr, tf_p_delta;
+        pose_stamped.pose = gt_msg->pose.at(robot_gt_pose_ids);
+        tf::poseMsgToTF(pose_stamped.pose, tf_p_curr);
+
+        tf_p_delta = tf_p_prev.inverse() * tf_p_curr;
+
+        if (tf_p_delta.getOrigin().length() > m_informative_condition_distance / 5 ||
+            tf_p_delta.getRotation().getAngle() > m_informative_condition_yaw / 3) {
+
+            pose_stamped.header.seq = seq;
+            pose_stamped.header.frame_id = std::string("Robot_" + std::string(1, m_robot_id) + "/ground_truth");
+            pose_stamped.header.stamp = stamp;
+            gt_path.header.seq = seq;
+            gt_path.header.frame_id = std::string("world");
+            gt_path.header.stamp = pose_stamped.header.stamp;
+
+            if (gt_poses_list.size() == m_gt_buffer_size) {
+                gt_poses_list.pop_front();
+            }
+            gt_poses_list.push_back(pose_stamped);
+            gt_path.poses.assign(gt_poses_list.begin(), gt_poses_list.end());
+
+            tf_p_prev = tf_p_curr;
+            m_robot_ground_truth_pub.publish(gt_path);
+        }
     }
 }
+
+
 
 // Ground truth from Optitrack
 void OdometryExternal::gtMoCapCallback(const geometry_msgs::PoseStampedConstPtr& gt_msg) {
     FUNCTION_LOGGER(m_tag);
 
-    static nav_msgs::Path gt_path;
+    nav_msgs::Path gt_path;
+    static std::list<geometry_msgs::PoseStamped> gt_poses_list;
     static int seq = 0;
+    static tf::Transform tf_p_prev = tf::Transform::getIdentity();
 
-    m_ground_truth_pose_stamped.pose = gt_msg->pose;
-    m_ground_truth_pose_stamped.header.seq = seq;
-    m_ground_truth_pose_stamped.header.frame_id = std::string("Robot_" + std::string(1,m_robot_id) + "/ground_truth");
-    m_ground_truth_pose_stamped.header.stamp = gt_msg->header.stamp;
-    gt_path.header.seq = seq;
-    gt_path.header.frame_id = std::string("world");
-    gt_path.header.stamp = m_ground_truth_pose_stamped.header.stamp;
-    gt_path.poses.push_back(m_ground_truth_pose_stamped);
 
-    m_robot_ground_truth_pub.publish(gt_path);
+    geometry_msgs::PoseStamped pose_stamped;
+
+    if (m_robot_ground_truth_pub.getNumSubscribers()>0) {
+        tf::Transform tf_p_curr, tf_p_delta;
+        pose_stamped.pose = gt_msg->pose;
+        tf::poseMsgToTF(pose_stamped.pose, tf_p_curr);
+
+        tf_p_delta = tf_p_prev.inverse()*tf_p_curr;
+
+        if (tf_p_delta.getOrigin().length() > m_informative_condition_distance/5 || tf_p_delta.getRotation().getAngle() > m_informative_condition_yaw/3) {
+
+            pose_stamped.header.seq = seq;
+            pose_stamped.header.frame_id = std::string("Robot_" + std::string(1,m_robot_id) + "/ground_truth");
+            pose_stamped.header.stamp = gt_msg->header.stamp;
+            gt_path.header.seq = seq;
+            gt_path.header.frame_id = std::string("world");
+            gt_path.header.stamp = pose_stamped.header.stamp;
+
+            if (gt_poses_list.size() == m_gt_buffer_size) {
+                gt_poses_list.pop_front();
+            }
+            gt_poses_list.push_back(pose_stamped);
+            gt_path.poses.assign(gt_poses_list.begin(), gt_poses_list.end());
+
+            tf_p_prev = tf_p_curr;
+            m_robot_ground_truth_pub.publish(gt_path);
+        }
+    }
 }
 
 OdometryExternal::~OdometryExternal() {

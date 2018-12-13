@@ -22,8 +22,8 @@
 #include "mrbsp_utils/mrbsp_types.h"
 #include "mrbsp_utils/mrbsp_utils.h"
 
-#include <mrbsp_msgs/KeyframeInit.h>
-#include <mrbsp_msgs/KeyframeInitRgbd.h>
+#include <mrbsp_msgs/Keyframe.h>
+#include <mrbsp_msgs/KeyframeRgbd.h>
 #include <mrbsp_msgs/GtsamSerPose3.h>
 #include <mrbsp_msgs/InitCheck.h>
 
@@ -42,7 +42,7 @@
 
 
 
-//typedef std::tuple<std::string, double, sensor_msgs::LaserScan, gtsam::Pose3> KeyframeInit;
+
 
 namespace MRBSP {
 
@@ -99,7 +99,7 @@ namespace MRBSP {
         double m_initial_time;
 
         /// container for keyframe information
-        std::vector<Utils::KeyframeInit> m_keyframes;
+        std::vector<Utils::Keyframe> m_keyframes;
 
         /// ros node
         ros::NodeHandle m_privateNodeHandle;
@@ -349,6 +349,7 @@ namespace MRBSP {
         bool        m_is_odom_noised;
         double      m_error_dynamic_percentage;
         bool        m_is_print_icp_results;
+        int         m_gt_buffer_size;
 
     };
 }

@@ -35,8 +35,8 @@ namespace MRBSP {
 
     namespace Utils {
 
-        typedef std::tuple<std::string, double, sensor_msgs::LaserScan, gtsam::Pose3, geometry_msgs::Pose> KeyframeInit;
-        typedef std::tuple<std::string, double, sensor_msgs::LaserScan, gtsam::Pose3, sensor_msgs::PointCloud2, geometry_msgs::Pose> KeyframeInitRgbd;
+        typedef std::tuple<std::string, double, sensor_msgs::LaserScan, gtsam::Pose3, geometry_msgs::Pose> Keyframe;
+        typedef std::tuple<std::string, double, sensor_msgs::LaserScan, gtsam::Pose3, sensor_msgs::PointCloud2, geometry_msgs::Pose> KeyframeRgbd;
         typedef std::pair<std::vector<gtsam::Point2>, gtsam::Pose3> KeyframeData;
         typedef std::map<unsigned int, KeyframeData> SingleRobotKeyframe;
         typedef std::map<char, SingleRobotKeyframe> AllKeyframes;
