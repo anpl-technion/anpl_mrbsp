@@ -42,6 +42,7 @@
   <buildtool_depend>catkin</buildtool_depend>
   <build_depend>logger</build_depend>
   <build_depend>odometry</build_depend>
+  <build_depend>da</build_depend>
 
 
   <!-- The export tag contains other, unspecified, tags -->

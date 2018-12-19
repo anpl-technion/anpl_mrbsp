@@ -83,6 +83,7 @@ static std::map<std::string, LogTag> strToLogTagMap = {
         {"utils",               LogTag::utils},
         {"logger",              LogTag::logger},
         {"odometry",            LogTag::odometry},
+        {"da",                  LogTag::da},
 };
 
 

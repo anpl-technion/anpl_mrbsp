@@ -12,16 +12,8 @@
 
     <param name="scenario_folder" value="$(arg scenario_dir)"/>
 
-    <node pkg="logger" type="logger" name="logger" clear_params="true" output="screen">
-	    <rosparam command="load" file="$(arg config_files_dir)/centralize.yaml" />
-    </node>
-
     <node pkg="da" type="da_icp_laser" name="da_icp_laser" clear_params="true" output="screen">
         <rosparam command="load" file="$(arg config_files_dir)/centralize.yaml" />
-    </node>
-
-    <node pkg="odometry" type="odometry_icp_laser" name="odometry_icp_laser" clear_params="true" output="screen">
-    <rosparam command="load" file="$(arg config_files_dir)/gazebo_pioneer1.yaml" />
     </node>
 
 </launch>

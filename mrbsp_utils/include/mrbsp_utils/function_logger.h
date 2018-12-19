@@ -44,6 +44,7 @@ namespace MRBSP {
             utils,
             logger,
             odometry,
+            da,
         };
 
         // taken from: http://stackoverflow.com/questions/1082192/how-to-generate-random-variable-names-in-c-using-macros:
