@@ -1,10 +1,11 @@
 <launch>
 
-    <!-- Parameters to change each time-->
+    <!-- Parameters to change -->
     <arg name="current_scenario"  default="test" />
 
-    <arg name="scenario_dir"      default="$(eval find(current_scenario))" />
-    <arg name="config_files_dir"  default="$(arg scenario_dir)/config" />
+    <!-- Parameters that not change -->
+    <arg name="scenario_dir"      value="$(eval find(current_scenario))" />
+    <arg name="config_files_dir"  value="$(arg scenario_dir)/config" />
 
 
     <!-- Putting the time back to real time-->

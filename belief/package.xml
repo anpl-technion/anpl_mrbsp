@@ -1,7 +1,7 @@
 <package>
-    <name>da</name>
+    <name>belief</name>
     <version>0.1.0</version>
-    <description>da</description>
+    <description>belief</description>
     <maintainer email="tal.regev@gmail.com">Tal Regev</maintainer>
     <author email="tal.regev@gmail.com">Tal Regev</author>
     <license>MIT</license>

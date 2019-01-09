@@ -1,7 +1,7 @@
 <launch>
 
     <!-- Parameters to change -->
-    <arg name="current_scenario"  default="test" />
+    <arg name="current_scenario"  default="anpl_mr_passive_rosbag" />
     <arg name="robot_name"        default="robot_a"/>
     <arg name="odometry_type"     default="odometry_external"/> <!-- odometry_icp_laser|odometry_external-->
 
@@ -16,7 +16,7 @@
     <param name="scenario_folder" value="$(arg scenario_dir)"/>
 
     <node pkg="odometry" type="$(arg odometry_type)" name="$(eval odometry_type + '_' + robot_name)" clear_params="true" output="screen">
-        <rosparam command="load" file="$(arg config_files_dir)/robot_A.yaml" />
+        <rosparam command="load" file="$(arg config_files_dir)/gazebo_pioneer1.yaml" />
     </node>
 
 </launch>

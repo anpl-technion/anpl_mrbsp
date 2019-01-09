@@ -1,0 +1,25 @@
+<launch>
+
+    <!-- Parameters to change -->
+    <arg name="current_scenario"  default="anpl_mr_passive_rosbag" />
+    <arg name="robot1_bag"        default="/home/talregev/ANPL/data/bags/MR_laser/pioneer_laser_01.bag" />
+    <arg name="robot2_bag"        default="/home/talregev/ANPL/data/bags/MR_laser/pioneer_laser_02.bag" />
+
+    <!-- Parameters that not change -->
+    <arg name="scenario_dir"      value="$(eval find(current_scenario))" />
+    <arg name="config_files_dir"  value="$(arg scenario_dir)/config" />
+
+
+    <!-- Putting the time back to real time-->
+    <rosparam> /use_sim_time : false </rosparam>
+
+    <param name="scenario_folder" value="$(arg scenario_dir)"/>
+
+    <node pkg="rosbag" type="play" name="rosbag_play_robot1" clear_params="true" output="screen" args="$(arg robot1_bag)"/>
+    <node pkg="rosbag" type="play" name="rosbag_play_robot2" clear_params="true" output="screen" args="$(arg robot2_bag)">
+        <remap from="/pioneer1/laser" to="/pioneer2/laser"/>
+        <remap from="/pioneer1/odom" to="/pioneer2/odom"/>
+    </node>
+
+</launch>
+

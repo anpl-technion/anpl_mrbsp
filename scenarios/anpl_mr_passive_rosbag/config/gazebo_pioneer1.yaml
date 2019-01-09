@@ -1,24 +1,24 @@
 #==== odometry node ====
-robot_name: Robot_A #default Robot_A
-robot_id:   A       #default A
+robot_name: pioneer1 #default Robot_A
+robot_id:   A        #default A
 
 init_pose: {
     position: {
-        X: 0.487,   #default 0.0
-        Y: -0.937,  #default 0.0
+        X: -9.217,   #default 0.0
+        Y: -19.357,  #default 0.0
         Z: 0.0      #default 0.0
     },
     orientation: {
-        Yaw: 0.0,   #default 0.0
+        Yaw: 1.5708,   #default 0.0
         Pitch: 0.0, #default 0.0
         Roll: 0.0   #default 0.0
     }
 }
 
 topics: {
-    odom: /rosaria/pose,                #default /rosaria/pose
-    laser: /scan,                       #default /scan
-    ground_truth: /ground_truth,        #default /ground_truth
+    odom: /odom,                #default /rosaria/pose
+    laser: /laser,                       #default /scan
+    ground_truth: /gazebo/model_states, #default /ground_truth
     pointcloud: /camera/depth/points,   #default /camera/depth/points
     image: /zed/left/image_rect_color   #default /zed/left/image_rect_color
 }
@@ -31,7 +31,7 @@ informative_condition: {
 
 is_visualize_laser:             true    #default true
 is_3D_vis:                      false   #default false 
-ground_truth_source:            gazebo  #default gazebo (gazebo,  mocap)
+ground_truth_source:            gazebo  #default gazebo (gazebo,  mocap, none)
 velocity_update_rate:           10.0    #default 10.0
 is_odom_noised:                 false   #default false
 error_dynamic_percentage:       0.1     #default 0.1 (only avialbe if is_odom_noised = true)

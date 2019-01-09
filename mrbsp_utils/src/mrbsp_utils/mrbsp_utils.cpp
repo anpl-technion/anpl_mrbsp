@@ -84,6 +84,7 @@ static std::map<std::string, LogTag> strToLogTagMap = {
         {"logger",              LogTag::logger},
         {"odometry",            LogTag::odometry},
         {"da",                  LogTag::da},
+        {"belief",              LogTag::belief},
 };
 
 
@@ -137,7 +138,6 @@ void MRBSP::Utils::initLogger(const ros::NodeHandle &pnh) {
     file_logger = spdlog::basic_logger_mt(node_name + "_file", loggerPath);
     spdlog::flush_every(std::chrono::seconds(flush_freq));
     Globals::is_file_logger_init = true;
-
 }
 
 void MRBSP::Utils::logMessage(LogType log_type, int log_level, std::string message, LogTag log_tag) {
@@ -164,15 +164,21 @@ void MRBSP::Utils::logMessage(LogType log_type, int log_level, std::stringstream
     string_stream.str(std::string());
 }
 
+bool MRBSP::Utils::isFolderExist(const std::string &folder_name)
+{
+    boost::filesystem::path dir(folder_name);
+    return boost::filesystem::is_directory(dir);
+}
+
 void MRBSP::Utils::createFolder(const std::string &folder_name) {
     FUNCTION_LOGGER(m_tag);
 
     boost::filesystem::path dir(folder_name);
 
-    if(boost::filesystem::is_directory(dir))
+    if(isFolderExist(folder_name))
     {
         Globals::string_stream << folder_name << " folder exist";
-        logMessage(info, 0, Globals::string_stream, m_tag);
+        logMessage(warn, 0, Globals::string_stream, m_tag);
     }
     else
     {
@@ -180,7 +186,7 @@ void MRBSP::Utils::createFolder(const std::string &folder_name) {
         if(!boost::filesystem::create_directory(dir))
         {
             Globals::string_stream << folder_name << " folder fail to create";
-            logMessage(info, 0, Globals::string_stream, m_tag);
+            logMessage(error, 0, Globals::string_stream, m_tag);
         }
         else
         {
@@ -189,7 +195,6 @@ void MRBSP::Utils::createFolder(const std::string &folder_name) {
         }
     }
 }
-
 
 std::string MRBSP::Utils::getCurrentTime() {
     FUNCTION_LOGGER(m_tag);

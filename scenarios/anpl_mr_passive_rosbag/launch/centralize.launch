@@ -1,7 +1,7 @@
 <launch>
 
     <!-- Parameters to change -->
-    <arg name="current_scenario"  default="test" />
+    <arg name="current_scenario"  default="anpl_mr_passive_rosbag" />
 
     <!-- Parameters that not change -->
     <arg name="scenario_dir"      value="$(eval find(current_scenario))" />
@@ -12,9 +12,17 @@
     <rosparam> /use_sim_time : false </rosparam>
 
     <param name="scenario_folder" value="$(arg scenario_dir)"/>
-   
+
     <node pkg="logger" type="logger" name="logger" clear_params="true" output="screen">
 	    <rosparam command="load" file="$(arg config_files_dir)/centralize.yaml" />
+    </node>
+
+    <node pkg="da" type="da_icp_laser" name="da_icp_laser" clear_params="true" output="screen">
+        <rosparam command="load" file="$(arg config_files_dir)/centralize.yaml" />
+    </node>
+
+    <node pkg="belief" type="belief_isam2" name="belief_isam2" clear_params="true" output="screen">
+        <rosparam command="load" file="$(arg config_files_dir)/centralize.yaml" />
     </node>
 
 </launch>

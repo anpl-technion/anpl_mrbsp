@@ -133,6 +133,14 @@ namespace MRBSP {
         */
         void createFolder(const std::string &folder_name);
 
+
+        /**
+         * Check if folder exist
+         * @param folder_name - name of folder to check if exist
+         * @return true if folder exist, false otherwise
+         */
+        bool isFolderExist(const std::string &folder_name);
+
         /**
         * Return the current time
         * @return the current time

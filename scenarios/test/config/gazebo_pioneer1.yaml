@@ -4,8 +4,8 @@ robot_id:   A        #default A
 
 init_pose: {
     position: {
-        X: -9.217,   #default 0.487
-        Y: -19.357,  #default -0.937
+        X: -9.217,   #default 0.0
+        Y: -19.357,  #default 0.0
         Z: 0.0      #default 0.0
     },
     orientation: {

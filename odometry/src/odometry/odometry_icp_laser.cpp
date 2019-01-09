@@ -633,10 +633,12 @@ void OdometryIcpLaser::laserCallback(const sensor_msgs::LaserScanConstPtr& scan)
         m_laser_pub.publish(m_current_laser_msg);
     }
 
-    // Debag: releated to quad bagfiles...
-    if(scan->header.seq > first_msg_seq + 100) {
-        handleLaserData(scan);
-    }
+    handleLaserData(scan);
+
+//    // Debag: releated to quad bagfiles...
+//    if(scan->header.seq > first_msg_seq + 100) {
+//        handleLaserData(scan);
+//    }
 }
 
 void OdometryIcpLaser::handleLaserData(const sensor_msgs::LaserScanConstPtr& laser_msg) {
