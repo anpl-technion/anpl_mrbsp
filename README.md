@@ -1,3 +1,3 @@
-# open_mrbsp_ros
+# anpl mrbsp
 
-mrbsp_ros for open source
+Autonomus Navigation and Perception Multi Robot Belief Space Planning for open source.
