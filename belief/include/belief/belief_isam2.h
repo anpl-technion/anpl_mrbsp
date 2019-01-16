@@ -146,6 +146,7 @@ namespace MRBSP {
         LogTag m_tag;
         std::string m_node_name;
         bool m_is_save_isam_files;
+        std::string m_central_prefix;
 
     };
 }

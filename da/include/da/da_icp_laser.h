@@ -347,6 +347,8 @@ namespace MRBSP {
         /// tag
         LogTag m_tag;
         std::string m_node_name;
+        std::string m_central_prefix;
+        std::string m_robots_prefix;
 
         double m_range_max;
 

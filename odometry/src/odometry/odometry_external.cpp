@@ -214,7 +214,8 @@ OdometryExternal::OdometryExternal(const ros::NodeHandle &nh_private) :
 
     std::string name_space_sub = "/" + m_robot_name;
     std::string name_space_pub = "/Robot_" +  std::string(1,m_robot_id);
-
+    m_central_prefix = "/Central/";
+    m_robots_prefix  = "/Robots/";
 
     m_odom_sub = m_privateNodeHandle.subscribe(name_space_sub + m_odom_topic, 1, &OdometryExternal::odomCallback, this);
     
@@ -230,7 +231,7 @@ OdometryExternal::OdometryExternal(const ros::NodeHandle &nh_private) :
     if(m_is_3D_vis) {
         // set keyframe type (with pointclouds)
         m_pointcloud_sub = m_privateNodeHandle.subscribe(name_space_sub + m_pointcloud_topic, 1, &OdometryExternal::pointcloudCallback, this);
-        m_keyframe_info_pub = m_privateNodeHandle.advertise<mrbsp_msgs::KeyframeRgbd>("/Robots/Odometry/keyframe/withPointcloud",1);
+        m_keyframe_info_pub = m_privateNodeHandle.advertise<mrbsp_msgs::KeyframeRgbd>(m_robots_prefix + "Odometry/keyframe/withPointcloud",1);
 
         m_logger_msg << "Robot " << m_robot_id << ": publish keyframes info with 3D scans";
         logMessage(info, LOG_INFO_LVL, m_logger_msg, m_tag);
@@ -238,7 +239,7 @@ OdometryExternal::OdometryExternal(const ros::NodeHandle &nh_private) :
     }
     else {
         // set keyframe type here (without pointclouds)
-        m_keyframe_info_pub = m_privateNodeHandle.advertise<mrbsp_msgs::Keyframe>("/Robots/Odometry/keyframe",1);
+        m_keyframe_info_pub = m_privateNodeHandle.advertise<mrbsp_msgs::Keyframe>(m_robots_prefix + "Odometry/keyframe",1);
 
         m_logger_msg << "Robot " << m_robot_id << ": publish keyframes info with 2D scans";
         logMessage(info, LOG_INFO_LVL, m_logger_msg, m_tag);
@@ -271,7 +272,7 @@ OdometryExternal::OdometryExternal(const ros::NodeHandle &nh_private) :
     m_estimated_path_pub = m_privateNodeHandle.advertise<nav_msgs::Path>( std::string(name_space_pub + "/estimated_path"), 1);
     
     
-    m_da_last_index_client = m_privateNodeHandle.serviceClient<mrbsp_msgs::LastIndexInDa>("/Centralize/da_check_last_index");
+    m_da_last_index_client = m_privateNodeHandle.serviceClient<mrbsp_msgs::LastIndexInDa>(m_central_prefix + "da_check_last_index");
 
 
     m_preceive_init_check_service = m_privateNodeHandle.advertiseService(std::string(name_space_sub + "/check_if_perceive"), &OdometryExternal::odometryInitCheck, this);
@@ -588,7 +589,7 @@ void OdometryExternal::odomCallback(const nav_msgs::OdometryConstPtr& odom) {
     // Check if the da node is initialized
 
     if(!m_is_da_init) {
-        ros::ServiceClient da_init_check_client = m_privateNodeHandle.serviceClient<mrbsp_msgs::InitCheck>("/Centralize/da_init_check");
+        ros::ServiceClient da_init_check_client = m_privateNodeHandle.serviceClient<mrbsp_msgs::InitCheck>(m_central_prefix + "da_init_check");
         mrbsp_msgs::InitCheck da_init_check_srv;
         if (da_init_check_client.call(da_init_check_srv))
         {

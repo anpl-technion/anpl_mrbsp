@@ -95,27 +95,30 @@ DaIcpLaser::DaIcpLaser(const ros::NodeHandle &nh_private) :
     initLogger(m_privateNodeHandle);
     loadParameter();
 
+    m_central_prefix = "/Central/";
+    m_robots_prefix  = "/Robots/";
+    
     // keyframes with pointclouds
-    m_keyframe_init_rgbd_sub = m_privateNodeHandle.subscribe("/Robots/Odometry/keyframe/withPointcloud", 1, &DaIcpLaser::KeyframeRgbdCallback, this);
-    m_map_data_3D_pub = m_privateNodeHandle.advertise<mrbsp_msgs::MapData3D>("/Centralize/DA/map_data/3D", 1);
+    m_keyframe_init_rgbd_sub = m_privateNodeHandle.subscribe(m_robots_prefix + "Odometry/keyframe/withPointcloud", 1, &DaIcpLaser::KeyframeRgbdCallback, this);
+    m_map_data_3D_pub = m_privateNodeHandle.advertise<mrbsp_msgs::MapData3D>(m_central_prefix + "DA/map_data/3D", 1);
 
     // keyframes without pointclouds
-    m_keyframe_init_sub = m_privateNodeHandle.subscribe("/Robots/Odometry/keyframe", 1, &DaIcpLaser::KeyframeCallback, this);
-    m_map_data_2D_pub = m_privateNodeHandle.advertise<mrbsp_msgs::MapData>("/Centralize/DA/map_data/2D", 1);
+    m_keyframe_init_sub = m_privateNodeHandle.subscribe(m_robots_prefix + "Odometry/keyframe", 1, &DaIcpLaser::KeyframeCallback, this);
+    m_map_data_2D_pub = m_privateNodeHandle.advertise<mrbsp_msgs::MapData>(m_central_prefix + "DA/map_data/2D", 1);
 
-    m_updated_values_sub = m_privateNodeHandle.subscribe("/Centralize/Belief/memory_update", 1, &DaIcpLaser::updateMemoryCallback, this);
+    m_updated_values_sub = m_privateNodeHandle.subscribe(m_central_prefix + "Belief/memory_update", 1, &DaIcpLaser::updateMemoryCallback, this);
 
-    m_loop_closure_pub = m_privateNodeHandle.advertise<mrbsp_msgs::Keyframe>("/Centralize/DA/LoopClosure", 5);
-    m_loop_closure_sub = m_privateNodeHandle.subscribe("/Centralize/DA/LoopClosure", 1, &DaIcpLaser::loopClosureCallback, this);
-    m_multirobot_pub = m_privateNodeHandle.advertise<mrbsp_msgs::Keyframe>("/Centralize/DA/MultiRobot", 5);
-    m_multirobot_sub = m_privateNodeHandle.subscribe("/Centralize/DA/MultiRobot", 1, &DaIcpLaser::multiRobotCallback, this);
+    m_loop_closure_pub = m_privateNodeHandle.advertise<mrbsp_msgs::Keyframe>(m_central_prefix + "DA/LoopClosure", 5);
+    m_loop_closure_sub = m_privateNodeHandle.subscribe(m_central_prefix + "DA/LoopClosure", 1, &DaIcpLaser::loopClosureCallback, this);
+    m_multirobot_pub = m_privateNodeHandle.advertise<mrbsp_msgs::Keyframe>(m_central_prefix + "DA/MultiRobot", 5);
+    m_multirobot_sub = m_privateNodeHandle.subscribe(m_central_prefix + "DA/MultiRobot", 1, &DaIcpLaser::multiRobotCallback, this);
 
-    m_factors_and_values_pub = m_privateNodeHandle.advertise<mrbsp_msgs::GtsamFactorGraph>("/Centralize/belief_input", 1);
+    m_factors_and_values_pub = m_privateNodeHandle.advertise<mrbsp_msgs::GtsamFactorGraph>(m_central_prefix + "belief_input", 1);
 
-    m_da_check_last_index = m_privateNodeHandle.advertiseService("/Centralize/da_check_last_index", &DaIcpLaser::daCheckLastIndex, this);
+    m_da_check_last_index = m_privateNodeHandle.advertiseService(m_central_prefix + "da_check_last_index", &DaIcpLaser::daCheckLastIndex, this);
 
     m_is_init = true;
-    m_da_init_check_service = m_privateNodeHandle.advertiseService("/Centralize/da_init_check", &DaIcpLaser::daInitCheck, this);
+    m_da_init_check_service = m_privateNodeHandle.advertiseService(m_central_prefix + "da_init_check", &DaIcpLaser::daInitCheck, this);
 
     m_logger_msg << "da node initialized...";
     logMessage(info, LOG_INFO_LVL, m_logger_msg, m_tag);

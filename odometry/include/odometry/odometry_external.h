@@ -319,6 +319,9 @@ namespace MRBSP {
         std::string m_gt_topic_sub;
         std::string m_gt_source;
 
+        std::string m_central_prefix;
+        std::string m_robots_prefix;
+
         std::string m_node_name;
         bool        m_is_odom_noised;
         double      m_error_dynamic_percentage;

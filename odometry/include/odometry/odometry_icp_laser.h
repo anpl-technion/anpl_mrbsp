@@ -346,6 +346,8 @@ namespace MRBSP {
         std::string m_gt_source;
         std::string m_pointcloud_topic;
         std::string m_node_name;
+        std::string m_central_prefix;
+        std::string m_robots_prefix;
         bool        m_is_odom_noised;
         double      m_error_dynamic_percentage;
         bool        m_is_print_icp_results;

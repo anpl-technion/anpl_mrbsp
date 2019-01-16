@@ -79,11 +79,12 @@ BeliefIsam2::BeliefIsam2(const ros::NodeHandle &nh_private) :
     initLogger(m_privateNodeHandle);
     loadParameter();
 
-    m_factors_and_values_sub    = m_privateNodeHandle.subscribe("/Centralize/belief_input", 100, &BeliefIsam2::factorAndValuesCallback, this);
-    m_memory_update_pub         = m_privateNodeHandle.advertise<mrbsp_msgs::GtsamSerValues>("/Centralize/Belief/memory_update", 100);
+    m_central_prefix = "/Central/";
+    
+    m_factors_and_values_sub    = m_privateNodeHandle.subscribe(m_central_prefix + "belief_input", 100, &BeliefIsam2::factorAndValuesCallback, this);
+    m_memory_update_pub         = m_privateNodeHandle.advertise<mrbsp_msgs::GtsamSerValues>(m_central_prefix + "Belief/memory_update", 100);
 
-
-    m_get_belief_service = m_privateNodeHandle.advertiseService("/Centralize/request_belief", &BeliefIsam2::getBeliefCallback, this);
+    m_get_belief_service = m_privateNodeHandle.advertiseService(m_central_prefix + "request_belief", &BeliefIsam2::getBeliefCallback, this);
 
     m_logger_msg << "Belief: Belief node initialized";
     logMessage(info, LOG_INFO_LVL, m_logger_msg, m_tag);
