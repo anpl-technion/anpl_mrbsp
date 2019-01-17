@@ -5,8 +5,9 @@
  * Faculty of Aerospace Engineering,
  * Haifa, Israel, 32000
  * All Rights Reserved
+ * Authors: Vadim Indelman, et al. (see THANKS for the full author list)
  *
- * See LICENSE for the license information
+ * See LICENSE for the license information.
  *
  * -------------------------------------------------------------------------- */
 
@@ -14,6 +15,7 @@
  * @file: belief_isam2.h
  * @brief:
  * @author: Tal Regev
+ * @author: Asaf Feniger
  */
 
 #ifndef BELIEF_ISAM2_H
