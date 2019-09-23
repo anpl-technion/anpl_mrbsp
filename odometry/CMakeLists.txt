@@ -72,7 +72,7 @@ target_link_libraries(odometry_icp_laser
 )
 
 # Doxygen documentation - enabling options in subfolder
-if (DOXYGEN_FOUND)
-    add_subdirectory(doc)
-endif()
+#if (DOXYGEN_FOUND)
+#    add_subdirectory(doc)
+#endif()
 

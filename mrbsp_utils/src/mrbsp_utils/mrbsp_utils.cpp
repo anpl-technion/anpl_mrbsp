@@ -19,6 +19,7 @@
 
 
 #include "mrbsp_utils/mrbsp_utils.h"
+#include "mrbsp_utils/gtsam_serialization.h"
 
 #include <exception>
 #include <boost/filesystem.hpp>
@@ -264,19 +265,19 @@ void MRBSP::Utils::saveFactorsToFile(const std::string &file_name, const gtsam::
     file.open(file_name ,std::fstream::out);
 
     file << "New graph: \n";
-    file << new_graph;
+    file << gtsam::serialize(new_graph);
 
     file << "New values: \n";
-    file << new_values;
+    file << gtsam::serialize(new_values);
 
     gtsam::NonlinearFactorGraph isam_graph  = isam.getFactorsUnsafe();
     gtsam::Values               isam_values = isam.calculateBestEstimate();
 
     file << "ISAM graph: \n";
-    file << isam_graph;
+    file << gtsam::serialize(isam_graph);
 
     file << "ISAM values: \n";
-    file << isam_values;
+    file << gtsam::serialize(isam_values);
 
     file.close();
     std::string file_name_to_save(file_name);
