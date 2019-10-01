@@ -1,0 +1,4 @@
+# parameters for robots map
+map_filename: octomap.ot
+map_resolution: 0.05 #0.005
+save_incremental_map: false # if enabled, on every update, the map will be saved. Otherwise, only the final map

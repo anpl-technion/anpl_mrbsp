@@ -1,0 +1,61 @@
+<launch>
+    
+  <!-- Parameters to change each time-->
+  <arg name="researcher_name"   default="Andrej_Kitanov" />
+  <arg name="current_scenario"  default="topological_mr_active" />
+
+  <arg name="scenario_dir"      default="$(eval find(current_scenario))" />
+  <arg name="config_files_dir"  default="$(arg scenario_dir)/config_files" />
+  <arg name="robot_name" default="Robot_B" />
+
+  <!-- Putting the time back to real time-->
+  <rosparam> /use_sim_time : false </rosparam>
+  <param name="scenario_folder" value="$(arg scenario_dir)"/>
+
+  <node pkg="odometry_node" type="odometry_laser_node" name="$(arg robot_name)" clear_params="true" output="log">
+    <rosparam command="load" file="$(arg config_files_dir)/pioneer_robot_B.yaml" />
+  </node>
+
+
+  <!--node pkg="controller_node" type="controller_pioneer_node" name="$(arg robot_name)_controller_pioneer" clear_params="true" output="log">
+  <rosparam command="load" file="$(arg config_files_dir)/controller_pioneer.yaml" />
+  <param name="topics/velocity_cmd" value="/$(arg robot_name)/rosaria/cmd_vel"/>
+  <param name="robot_name" value="$(arg robot_name)"/>
+  </node-->
+
+
+  <group ns="$(arg robot_name)"> <!-- put herer nodes that need to be inside robot namespace -->
+
+  <!-- path following (pure pursuit) with obstacle avoidance (vector field histogram) -->
+    <node pkg="pure_pursuit_with_vfh" type="pure_pursuit_with_vfh_node" name="controller_pioneer" clear_params="true" output="screen">
+        <remap from="/current_pose" to="odometry"/>
+        <remap from="/next_waypoint" to="next_waypoint"/>
+        <!-- How to resolve low-level collisions -->
+          <!--remap from="/emergency_stop" to="Collision_warning"/--> <!-- Uncomment to stop the robot when collision detected and decide in the state machine what to do. -->
+        <remap from="/Collision_warning" to="Collision_warning"/> <!-- Uncomment to recover by rotating the robot in place to collision free direction and then resume following the planned trajectory. This might lead to oscillating behaviour in certain configurations. -->
+        <remap from="/scan" to="scan"/>
+        <remap from="/mobile_base/commands/velocity" to="rosaria/cmd_vel"/>
+
+       <rosparam command="load" file="$(arg config_files_dir)/pure_pursuit_vfh_controller_pioneer.yaml" />  
+    </node>
+
+  </group> 
+  
+  <node pkg="state_machine_node" type="state_machine_default_node" name="$(arg robot_name)_state_machine_default" clear_params="true" output="screen">
+    <rosparam command="load" file="$(arg config_files_dir)/state_machine_default.yaml" />
+    <param name="robot_id" value="B"/>
+    <param name="robot_name" value="Robot_B"/>
+    <!-- Load robot goals -->
+    <rosparam command="load" file="$(arg config_files_dir)/gazebo_Robot_B_goals.yaml" />
+  </node>
+
+  <node pkg="collision_detection_node" type="collosion_detection_octomap" name="$(arg robot_name)_collision_detector" clear_params="true" output="screen">
+    <rosparam command="load" file="$(arg config_files_dir)/collision_detector_octomap_pioneer_B.yaml" />
+  </node>
+
+  <!-- Create static transformation between the laser frame id to the robot pose for laser drawing in rviz -->
+  <node pkg="tf" type="static_transform_publisher" name="$(arg robot_name)_laser_link" args="0.27 -0.03 0.13 0 0 0 1 pioneer1/base_link pioneer1/hokuyo_link 100" />
+
+  <node pkg="tf" type="static_transform_publisher" name="$(arg robot_name)_base_link" args="0.0 0.0 0 0 0 0 1 $(arg robot_name) pioneer1/odom 100" />
+
+  </launch>

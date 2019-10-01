@@ -1,0 +1,36 @@
+ # SI units
+pure_pursuit: {
+  desired_lin_vel: 0.3, 
+  lookahead_dist: 1.0, 
+  max_ang_vel: 1.0
+}
+
+vfh: {
+
+  # VFH sensor parameters
+  range_dist: [0.05, 2.0], 
+  hist_thr: [3, 6],
+
+  # VFH robot parameters
+  robot_radius: 0.3, 
+  safety_dist: 0.1, 
+  min_turning_radius: 0.3,
+
+  # VFH cost function weights
+  target_dir_w: 5,
+  current_dir_w: 2,
+  prev_dir_w: 2
+}
+
+# Goal reach tolerance
+goal_radius: 0.5
+
+
+velocity_profile: {
+  enable: false,
+  v_min: 0.1, # [m/s]
+  v_max: 0.7, # [m/s]
+  a: 0.3, # [m/s^2], a>0 constant acceleration until v_max; set to zero for rectangular velocity profile between v_min and v_max
+  c: 0.5, # [m] # small velocity (v_min) zone +/-c around waypoint
+  k: 10 # reference prefilter with transfer function G(s)=k/(s+k)
+}

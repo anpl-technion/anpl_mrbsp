@@ -1,0 +1,77 @@
+<launch>
+
+  <!-- Parameters to change each time-->
+  <arg name="researcher_name"   default="Andrej_Kitanov" />
+  <arg name="current_scenario"  default="topological_mr_active" />
+
+  <arg name="scenario_dir"      default="$(eval find(current_scenario))" />
+  <arg name="config_files_dir"  default="$(arg scenario_dir)/config_files" />
+
+  <!-- Putting the time back to real time-->
+  <rosparam> /use_sim_time : false </rosparam>
+
+  <!-- Load robot params -->
+  <group ns="Robot_A">
+    <rosparam command="load" file="$(arg config_files_dir)/pioneer_robot_A.yaml" />
+  </group>
+  <group ns="Robot_B">
+    <rosparam command="load" file="$(arg config_files_dir)/pioneer_robot_B.yaml" />
+  </group>
+
+  <param name="scenario_folder" value="$(arg scenario_dir)"/>
+
+  <node pkg="config_node" type="config_setup_node" name="config_setup" clear_params="true" output="screen">
+    <rosparam command="load" file="$(arg config_files_dir)/scenario_config.yaml" />
+    <param name="researcher_name" value="$(arg researcher_name)" />
+  </node>
+
+  <node pkg="da_node" type="da_laser_node" name="da_laser" clear_params="true" output="screen">
+    <rosparam command="load" file="$(arg config_files_dir)/da_laser_csm_icp.yaml" />
+  </node>
+
+  <node pkg="belief_node" type="belief_laser_node" name="belief_laser" clear_params="true" output="screen">
+    <rosparam command="load" file="$(arg config_files_dir)/belief_isam2.yaml" />
+  </node>
+
+  <node pkg="map_node" type="map_laser_node" name="map_octomap_laser" clear_params="true" output="screen">
+    <rosparam command="load" file="$(arg config_files_dir)/map_octomap_laser.yaml" />
+  </node>
+
+
+  
+  <!-- Action generator method -->
+   <arg name="method" default="ompl" /> <!-- "ompl" | "interactive" | "mp" -->
+
+   <!-- Condition for using map in action generation. OMPL and interactive method use preloaded map for now, although it is possible to easily extend this framework to use dynamically built SLAM map. -->
+   <arg name="use_preloaded_map_in_AG" value="$(eval method == 'ompl' or method == 'interactive')" />
+   
+   <!-- If no map is used don't load anything (for faster rendering) -->
+   <arg unless="$(arg use_preloaded_map_in_AG)" name="world_octomap" value=""/>
+   <!-- The world map that will be used for action generator in interactive and OMPL mode. This assumes that the environment is known a priori when generating cadidate actions. This map, however, is not used anywhere else, for e.g. in the inference process. More general case would be to use the inferred map instead. This is not crutial for BSP as we can view the process of action generation as independent of the current map estimate. -->
+   <!--arg if="$(arg use_preloaded_map_in_AG)" name="world_octomap" value="$(find action_generator_node)/worlds/willowgarage_center_21_0.bt" /-->
+   <!--arg name="rviz_config" value="$(find action_generator_node)/config/planning_30Hz_2d.rviz"-->
+   <arg if="$(arg use_preloaded_map_in_AG)" name="world_octomap" value="$(find action_generator_node)/worlds/ANPL-Hyundai.ot" />
+   <arg name="rviz_config" value="$(arg config_files_dir)/planning_at_ANPL.rviz" />
+   
+
+  <node pkg="action_generator_node" type="action_generator_node" name="action_generator" clear_params="true" output="screen"> <!--launch-prefix="gnome-terminal--> <!--command"-->
+   <param name="method" value="$(arg method)" /> 
+   <param name="world_octomap" value="$(arg world_octomap)" />
+   <!-- OMPL parameters -->
+   <rosparam if="$(eval method == 'ompl')" command="load" file="$(arg config_files_dir)/ompl.yaml" />
+  </node>
+
+  <!-- GUI -->
+  <include file="$(find action_generator_node)/launch/generate_actions_interactively.launch" >
+      <arg name="map" default="$(arg world_octomap)"/>
+         <arg name="rviz_config" value="$(arg rviz_config)" />
+   </include>
+
+  <!-- Planner -->
+  <node pkg="planner_node" type="planner" name="planner" clear_params="true" output="screen">
+    <param name="planner_type" value="matlab" /> <!-- "cpp" or "matlab" -->
+    <param name="unit_tests" value="false" />
+  </node>
+
+
+  </launch>

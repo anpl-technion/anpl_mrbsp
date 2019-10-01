@@ -1,0 +1,1 @@
+rosservice call /world/get_octomap '{bounding_box_origin: {x: 0, y: 0, z: 0}, bounding_box_lengths: {x: 100, y: 100, z: 3}, leaf_size: 0.25, filename: '/home/andrej/ANPL/infrastructure/planning_ws/src/mrbsp_ros/action_generator_node/worlds/ground.bt'}'

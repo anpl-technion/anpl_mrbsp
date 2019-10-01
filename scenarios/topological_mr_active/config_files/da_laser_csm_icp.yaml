@@ -1,0 +1,55 @@
+# parameters for da node
+
+#error_dynamic_percentage: 0.1
+#is_incremental_update: false
+
+loop_closure: { perform: true, parallel: true, min_index_range: 5, spatial_search_range: 2.0}
+# default: true, 10, 5
+multi_robot: {perform: true, parallel: true, spatial_search_range: 5}
+# default: true, 2
+
+icp: {
+  max_iters: 50,
+  stopping_thresh: 0.000001, # [m] 1E-6;
+  inlier_thresh_sq: 0.09, # [m^2] RMSE = 0.3 m
+  nn_matching_percentage: {
+    sliding_window: 0.00,
+    loop_closure: 0.80,
+    multi_robot: 0.80
+  }
+}
+
+noise_model: {
+  prior: {
+# 1e-6, 1e-6, 1e-6, 0.001, 0.001, 0.001
+    sigma_yaw:   0.000001, # [rad]
+    sigma_pitch: 0.000001, # [rad]
+    sigma_roll:  0.000001, # [rad]
+    sigma_x:     0.001,    # [m]
+    sigma_y:     0.001,    # [m]
+    sigma_z:     0.001     # [m]
+  },
+  odom: {
+# 0.085, 0.085, 0.085, 0.1, 0.1, 0.1
+    sigma_yaw:   0.01, # [rad]
+    sigma_pitch: 0.01, # [rad]
+    sigma_roll:  0.01, # [rad]
+    sigma_x:     0.1,   # [m]
+    sigma_y:     0.1,   # [m]
+    sigma_z:     0.1    # [m]
+  },
+  icp: {
+    dynamic_error_percentage: 0, #0.1, # if <= 0 -> const noise
+# 0.085, 0.085, 0.085, 0.1, 0.1, 0.1
+    sigma_yaw:   0.01, # [rad]
+    sigma_pitch: 0.01, # [rad]
+    sigma_roll:  0.01, # [rad]
+    sigma_x:     0.1,   # [m]
+    sigma_y:     0.1,   # [m]
+    sigma_z:     0.1    # [m]
+  }
+}
+
+# check consistency of DA using ground truth if available
+# in that case make sure that a correct ground truth source is given in the robot configuration file
+enforce_perfect_DA: false

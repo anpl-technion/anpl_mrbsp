@@ -1,0 +1,29 @@
+<launch>
+
+<arg name="world_octomap" value="$(find action_generator_node)/worlds/willowgarage_center_21_0.bt" />>
+
+<arg name="method" default="ompl" />    <!-- "ompl" | "interactive" | "mp" -->
+
+
+<!-- launch-prefix="gnome-terminal --><!--command" -->
+  <group ns="action_generator">
+	    <!-- set parameters -->
+   <param name="method" value="$(arg method)" /> 
+   <!-- world map -->
+   <param name="world_octomap" value="$(arg world_octomap)" />
+   <!-- OMPL parameters -->
+   <rosparam if="$(eval method == 'ompl')" command="load" file="$(find action_generator_node)/config/ompl.yaml" />
+
+  </group>
+
+  <include file="$(find action_generator_node)/launch/generate_actions_interactively.launch">
+      <arg name="map" default="$(arg world_octomap)"/>
+  </include>
+
+  <group ns="planner">
+    <param name="planner_type" value="cpp" /> <!-- "cpp" or "matlab" -->
+    <param name="unit_tests" value="true" />
+  </group>
+
+
+  </launch>

@@ -1,6 +1,8 @@
 #request fields
-
+std_msgs/Bool getDeltas # flag to signalize weather to send only new factors and vars between this call and the last call when this is true
 -------
 #response fields
 string graph_string
 string values_string
+string edges_list
+string nodes_list

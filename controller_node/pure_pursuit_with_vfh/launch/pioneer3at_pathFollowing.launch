@@ -1,0 +1,16 @@
+<launch>
+    <arg name="robot1_name" default="pioneer1"/>
+    
+    <!-- path following (pure pursuit) with obstacle avoidance (vector field histogram) -->
+    <node name="pathFollowingWithOA" pkg="pure_pursuit_with_vfh" type="pure_pursuit_with_vfh_node" output="screen">
+         <remap from="/current_pose" to="$(arg robot1_name)/odom"/>
+         <remap from="/scan" to="$(arg robot1_name)/laser/scan"/>
+         <remap from="/mobile_base/commands/velocity" to="$(arg robot1_name)/cmd_vel"/>
+
+	<rosparam command="load" file="$(find pure_pursuit_with_vfh)/config/default.yaml" />
+	
+    </node>
+
+
+</launch>
+

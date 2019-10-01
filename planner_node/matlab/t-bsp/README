@@ -1,0 +1,8 @@
+Matlab Topological BSP * 
+
+* optional dependencies:
+
+1. Java YAML parser for MATLAB: https://github.com/ewiger/yamlmatlab
+
+    - dependency if Matlab functions need to read settings from ROS YAML files
+

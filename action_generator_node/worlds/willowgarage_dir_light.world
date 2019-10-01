@@ -1,0 +1,1766 @@
+<sdf version='1.6'>
+  <world name='default'>
+    <model name='ground_plane'>
+      <static>1</static>
+      <link name='link'>
+        <collision name='collision'>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>100 100</size>
+            </plane>
+          </geometry>
+          <surface>
+            <friction>
+              <ode>
+                <mu>100</mu>
+                <mu2>50</mu2>
+              </ode>
+              <torsional>
+                <ode/>
+              </torsional>
+            </friction>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+          </surface>
+          <max_contacts>10</max_contacts>
+        </collision>
+        <visual name='visual'>
+          <cast_shadows>0</cast_shadows>
+          <geometry>
+            <plane>
+              <normal>0 0 1</normal>
+              <size>100 100</size>
+            </plane>
+          </geometry>
+          <material>
+            <script>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+              <name>Gazebo/Grey</name>
+            </script>
+          </material>
+        </visual>
+        <self_collide>0</self_collide>
+        <kinematic>0</kinematic>
+        <gravity>1</gravity>
+      </link>
+    </model>
+    <light name='sun' type='directional'>
+      <cast_shadows>1</cast_shadows>
+      <pose frame=''>0 0 10 0 -0 0</pose>
+      <diffuse>0.8 0.8 0.8 1</diffuse>
+      <specular>0.1 0.1 0.1 1</specular>
+      <attenuation>
+        <range>1000</range>
+        <constant>0.9</constant>
+        <linear>0.01</linear>
+        <quadratic>0.001</quadratic>
+      </attenuation>
+      <direction>-0.5 0.5 -1</direction>
+    </light>
+    <model name='willowgarage'>
+      <static>1</static>
+      <pose frame=''>-20 -20 0 0 -0 0</pose>
+      <link name='walls'>
+        <collision name='collision'>
+          <geometry>
+            <mesh>
+              <uri>model://willowgarage/meshes/willowgarage_collision.dae</uri>
+              <scale>1 1 1</scale>
+            </mesh>
+          </geometry>
+          <max_contacts>10</max_contacts>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <bounce/>
+            <friction>
+              <torsional>
+                <ode/>
+              </torsional>
+              <ode/>
+            </friction>
+          </surface>
+        </collision>
+        <visual name='visual'>
+          <geometry>
+            <mesh>
+              <uri>model://willowgarage/meshes/willowgarage_visual.dae</uri>
+              <scale>1 1 1</scale>
+            </mesh>
+          </geometry>
+          <cast_shadows>0</cast_shadows>
+        </visual>
+        <self_collide>0</self_collide>
+        <kinematic>0</kinematic>
+        <gravity>1</gravity>
+      </link>
+    </model>
+    <plugin name='gazebo_octomap' filename='librotors_gazebo_octomap_plugin.so'/>
+    <gui fullscreen='0'>
+      <camera name='eye_camera'>
+        <pose frame=''>23.3075 -11.5213 13.7511 0 1.1058 1.16166</pose>
+        <view_controller>orbit</view_controller>
+        <projection_type>perspective</projection_type>
+      </camera>
+    </gui>
+    <gravity>0 0 -9.8</gravity>
+    <magnetic_field>6e-06 2.3e-05 -4.2e-05</magnetic_field>
+    <atmosphere type='adiabatic'/>
+    <physics name='default_physics' default='0' type='ode'>
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1</real_time_factor>
+      <real_time_update_rate>1000</real_time_update_rate>
+    </physics>
+    <scene>
+      <ambient>0.4 0.4 0.4 1</ambient>
+      <background>0.7 0.7 0.7 1</background>
+      <shadows>1</shadows>
+    </scene>
+    <spherical_coordinates>
+      <surface_model>EARTH_WGS84</surface_model>
+      <latitude_deg>0</latitude_deg>
+      <longitude_deg>0</longitude_deg>
+      <elevation>0</elevation>
+      <heading_deg>0</heading_deg>
+    </spherical_coordinates>
+    <model name='pioneer1'>
+      <link name='base_link'>
+        <pose frame=''>0 0 0 0 -0 0</pose>
+        <inertial>
+          <pose frame=''>-0.095186 0 0.174739 0 -0 0</pose>
+          <mass>22.6</mass>
+          <inertia>
+            <ixx>11.365</ixx>
+            <ixy>-6.60484e-19</ixy>
+            <ixz>0.00451317</ixz>
+            <iyy>11.5163</iyy>
+            <iyz>1.2125e-18</iyz>
+            <izz>11.391</izz>
+          </inertia>
+        </inertial>
+        <collision name='base_link_collision'>
+          <pose frame=''>0 0 0.177 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/home/andrej/ANPL/infrastructure/base_ws/src/amr-ros-config/description/meshes/p3at_meshes/chassis.stl</uri>
+            </mesh>
+          </geometry>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <friction>
+              <ode/>
+              <torsional>
+                <ode/>
+              </torsional>
+            </friction>
+            <bounce/>
+          </surface>
+          <max_contacts>10</max_contacts>
+        </collision>
+        <collision name='base_link_fixed_joint_lump__hokuyo_link_collision_1'>
+          <pose frame=''>0 0 0.31 0 -0 0</pose>
+          <geometry>
+            <box>
+              <size>0.1 0.1 0.1</size>
+            </box>
+          </geometry>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <friction>
+              <ode/>
+              <torsional>
+                <ode/>
+              </torsional>
+            </friction>
+            <bounce/>
+          </surface>
+          <max_contacts>10</max_contacts>
+        </collision>
+        <collision name='base_link_fixed_joint_lump__p3at_back_left_axle_collision_2'>
+          <pose frame=''>-0.134 0.156 0.111 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/home/andrej/ANPL/infrastructure/base_ws/src/amr-ros-config/description/meshes/p3at_meshes/axle.stl</uri>
+            </mesh>
+          </geometry>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <friction>
+              <ode/>
+              <torsional>
+                <ode/>
+              </torsional>
+            </friction>
+            <bounce/>
+          </surface>
+          <max_contacts>10</max_contacts>
+        </collision>
+        <collision name='base_link_fixed_joint_lump__p3at_back_left_hub_collision_3'>
+          <pose frame=''>-0.134 0.197 0.111 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/home/andrej/ANPL/infrastructure/base_ws/src/amr-ros-config/description/meshes/p3at_meshes/left_hubcap.stl</uri>
+            </mesh>
+          </geometry>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <friction>
+              <ode/>
+              <torsional>
+                <ode/>
+              </torsional>
+            </friction>
+            <bounce/>
+          </surface>
+          <max_contacts>10</max_contacts>
+        </collision>
+        <collision name='base_link_fixed_joint_lump__p3at_back_right_axle_collision_4'>
+          <pose frame=''>-0.134 -0.156 0.111 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/home/andrej/ANPL/infrastructure/base_ws/src/amr-ros-config/description/meshes/p3at_meshes/axle.stl</uri>
+            </mesh>
+          </geometry>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <friction>
+              <ode/>
+              <torsional>
+                <ode/>
+              </torsional>
+            </friction>
+            <bounce/>
+          </surface>
+          <max_contacts>10</max_contacts>
+        </collision>
+        <collision name='base_link_fixed_joint_lump__p3at_back_right_hub_collision_5'>
+          <pose frame=''>-0.134 -0.197 0.111 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/home/andrej/ANPL/infrastructure/base_ws/src/amr-ros-config/description/meshes/p3at_meshes/right_hubcap.stl</uri>
+            </mesh>
+          </geometry>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <friction>
+              <ode/>
+              <torsional>
+                <ode/>
+              </torsional>
+            </friction>
+            <bounce/>
+          </surface>
+          <max_contacts>10</max_contacts>
+        </collision>
+        <visual name='base_link_visual'>
+          <pose frame=''>0 0 0.177 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/home/andrej/ANPL/infrastructure/base_ws/src/amr-ros-config/description/meshes/p3at_meshes/chassis.stl</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/Red</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+        <visual name='base_link_fixed_joint_lump__back_sonar_visual_1'>
+          <pose frame=''>-0.187 0 0.247 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/home/andrej/ANPL/infrastructure/base_ws/src/amr-ros-config/description/meshes/p3at_meshes/back_sonar.stl</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/Yellow</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+        <visual name='base_link_fixed_joint_lump__front_sonar_visual_2'>
+          <pose frame=''>0.193 0 0.25 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/home/andrej/ANPL/infrastructure/base_ws/src/amr-ros-config/description/meshes/p3at_meshes/front_sonar.stl</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/Yellow</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+        <visual name='base_link_fixed_joint_lump__p3at_front_left_axle_visual_3'>
+          <pose frame=''>0.135 0.156 0.111 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/home/andrej/ANPL/infrastructure/base_ws/src/amr-ros-config/description/meshes/p3at_meshes/axle.stl</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/Grey</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+        <visual name='base_link_fixed_joint_lump__p3at_front_left_hub_visual_4'>
+          <pose frame=''>0.135 0.197 0.111 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/home/andrej/ANPL/infrastructure/base_ws/src/amr-ros-config/description/meshes/p3at_meshes/left_hubcap.stl</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/Yellow</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+        <visual name='base_link_fixed_joint_lump__p3at_front_right_axle_visual_5'>
+          <pose frame=''>0.135 -0.156 0.111 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/home/andrej/ANPL/infrastructure/base_ws/src/amr-ros-config/description/meshes/p3at_meshes/axle.stl</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/Grey</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+        <visual name='base_link_fixed_joint_lump__p3at_front_right_hub_visual_6'>
+          <pose frame=''>0.135 -0.197 0.111 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/home/andrej/ANPL/infrastructure/base_ws/src/amr-ros-config/description/meshes/p3at_meshes/right_hubcap.stl</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/Yellow</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+        <visual name='base_link_fixed_joint_lump__top_plate_visual_7'>
+          <pose frame=''>0.003 0 0.274 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/home/andrej/ANPL/infrastructure/base_ws/src/amr-ros-config/description/meshes/p3at_meshes/top.stl</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/Black</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+        <visual name='base_link_fixed_joint_lump__hokuyo_link_visual_8'>
+          <pose frame=''>0 0 0.31 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/home/andrej/ANPL/infrastructure/base_ws/src/anpl_inf/gazebo_models/hokuyo/meshes/hokuyo.dae</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <script>
+              <uri>__default__</uri>
+              <name>__default__</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='base_link_fixed_joint_lump__p3at_back_left_axle_visual_9'>
+          <pose frame=''>-0.134 0.156 0.111 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/home/andrej/ANPL/infrastructure/base_ws/src/amr-ros-config/description/meshes/p3at_meshes/axle.stl</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/Grey</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+        <visual name='base_link_fixed_joint_lump__p3at_back_left_hub_visual_10'>
+          <pose frame=''>-0.134 0.197 0.111 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/home/andrej/ANPL/infrastructure/base_ws/src/amr-ros-config/description/meshes/p3at_meshes/left_hubcap.stl</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/Yellow</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+        <visual name='base_link_fixed_joint_lump__p3at_back_right_axle_visual_11'>
+          <pose frame=''>-0.134 -0.156 0.111 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/home/andrej/ANPL/infrastructure/base_ws/src/amr-ros-config/description/meshes/p3at_meshes/axle.stl</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/Grey</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+        <visual name='base_link_fixed_joint_lump__p3at_back_right_hub_visual_12'>
+          <pose frame=''>-0.134 -0.197 0.111 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/home/andrej/ANPL/infrastructure/base_ws/src/amr-ros-config/description/meshes/p3at_meshes/right_hubcap.stl</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/Yellow</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+        <velocity_decay/>
+        <velocity_decay/>
+        <velocity_decay/>
+        <velocity_decay/>
+        <velocity_decay/>
+        <velocity_decay/>
+        <velocity_decay/>
+        <velocity_decay/>
+        <velocity_decay/>
+        <sensor name='head_hokuyo_sensor' type='ray'>
+          <visualize>0</visualize>
+          <update_rate>40</update_rate>
+          <ray>
+            <scan>
+              <horizontal>
+                <samples>720</samples>
+                <resolution>1</resolution>
+                <min_angle>-2.35619</min_angle>
+                <max_angle>2.35619</max_angle>
+              </horizontal>
+              <vertical>
+                <samples>1</samples>
+                <min_angle>0</min_angle>
+                <max_angle>0</max_angle>
+              </vertical>
+            </scan>
+            <range>
+              <min>0.1</min>
+              <max>30</max>
+              <resolution>0.01</resolution>
+            </range>
+            <noise>
+              <type>gaussian</type>
+              <mean>0</mean>
+              <stddev>0.01</stddev>
+            </noise>
+          </ray>
+          <plugin name='gazebo_ros_head_hokuyo_controller' filename='libgazebo_ros_laser.so'>
+            <topicName>laser/scan</topicName>
+            <frameName>hokuyo_link</frameName>
+            <robotNamespace>/pioneer1/</robotNamespace>
+          </plugin>
+          <pose frame=''>0 0 0.31 0 -0 0</pose>
+        </sensor>
+        <velocity_decay/>
+        <velocity_decay/>
+        <velocity_decay/>
+        <gravity>1</gravity>
+        <velocity_decay/>
+        <self_collide>0</self_collide>
+        <kinematic>0</kinematic>
+      </link>
+      <link name='p3at_front_left_wheel'>
+        <pose frame=''>0.135 0.197 0.111 0 -0 0</pose>
+        <inertial>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <mass>1.2</mass>
+          <inertia>
+            <ixx>0.0124118</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.0152182</iyy>
+            <iyz>0</iyz>
+            <izz>0.011764</izz>
+          </inertia>
+        </inertial>
+        <collision name='p3at_front_left_wheel_collision'>
+          <pose frame=''>0 0 0 -1.5708 0 0</pose>
+          <geometry>
+            <cylinder>
+              <length>0.075</length>
+              <radius>0.111</radius>
+            </cylinder>
+          </geometry>
+          <surface>
+            <contact>
+              <ode>
+                <kp>1e+06</kp>
+                <kd>100</kd>
+                <max_vel>1</max_vel>
+                <min_depth>0</min_depth>
+              </ode>
+            </contact>
+            <friction>
+              <ode>
+                <mu>1</mu>
+                <mu2>1</mu2>
+              </ode>
+              <torsional>
+                <ode/>
+              </torsional>
+            </friction>
+            <bounce/>
+          </surface>
+          <max_contacts>10</max_contacts>
+        </collision>
+        <visual name='p3at_front_left_wheel_visual'>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/home/andrej/ANPL/infrastructure/base_ws/src/amr-ros-config/description/meshes/p3at_meshes/wheel.stl</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/Black</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+        <velocity_decay/>
+        <gravity>1</gravity>
+        <velocity_decay/>
+        <self_collide>0</self_collide>
+        <kinematic>0</kinematic>
+      </link>
+      <joint name='p3at_front_left_wheel_joint' type='revolute'>
+        <child>p3at_front_left_wheel</child>
+        <parent>base_link</parent>
+        <axis>
+          <xyz>0 1 0</xyz>
+          <limit>
+            <lower>-1e+16</lower>
+            <upper>1e+16</upper>
+          </limit>
+          <dynamics>
+            <spring_reference>0</spring_reference>
+            <spring_stiffness>0</spring_stiffness>
+          </dynamics>
+          <use_parent_model_frame>1</use_parent_model_frame>
+        </axis>
+      </joint>
+      <link name='p3at_front_right_wheel'>
+        <pose frame=''>0.135 -0.197 0.111 0 -0 0</pose>
+        <inertial>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <mass>1.2</mass>
+          <inertia>
+            <ixx>0.0124118</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.0152182</iyy>
+            <iyz>0</iyz>
+            <izz>0.011764</izz>
+          </inertia>
+        </inertial>
+        <collision name='p3at_front_right_wheel_collision'>
+          <pose frame=''>0 0 0 -1.5708 0 0</pose>
+          <geometry>
+            <cylinder>
+              <length>0.075</length>
+              <radius>0.111</radius>
+            </cylinder>
+          </geometry>
+          <surface>
+            <contact>
+              <ode>
+                <kp>1e+06</kp>
+                <kd>100</kd>
+                <max_vel>1</max_vel>
+                <min_depth>0</min_depth>
+              </ode>
+            </contact>
+            <friction>
+              <ode>
+                <mu>1</mu>
+                <mu2>1</mu2>
+              </ode>
+              <torsional>
+                <ode/>
+              </torsional>
+            </friction>
+            <bounce/>
+          </surface>
+          <max_contacts>10</max_contacts>
+        </collision>
+        <visual name='p3at_front_right_wheel_visual'>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/home/andrej/ANPL/infrastructure/base_ws/src/amr-ros-config/description/meshes/p3at_meshes/wheel.stl</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/Black</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+        <velocity_decay/>
+        <gravity>1</gravity>
+        <velocity_decay/>
+        <self_collide>0</self_collide>
+        <kinematic>0</kinematic>
+      </link>
+      <joint name='p3at_front_right_wheel_joint' type='revolute'>
+        <child>p3at_front_right_wheel</child>
+        <parent>base_link</parent>
+        <axis>
+          <xyz>0 1 0</xyz>
+          <limit>
+            <lower>-1e+16</lower>
+            <upper>1e+16</upper>
+          </limit>
+          <dynamics>
+            <spring_reference>0</spring_reference>
+            <spring_stiffness>0</spring_stiffness>
+          </dynamics>
+          <use_parent_model_frame>1</use_parent_model_frame>
+        </axis>
+      </joint>
+      <link name='p3at_back_left_wheel'>
+        <pose frame=''>-0.134 0.197 0.111 0 -0 0</pose>
+        <inertial>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <mass>1.2</mass>
+          <inertia>
+            <ixx>0.0124118</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.0152182</iyy>
+            <iyz>0</iyz>
+            <izz>0.011764</izz>
+          </inertia>
+        </inertial>
+        <collision name='p3at_back_left_wheel_collision'>
+          <pose frame=''>0 0 0 -1.5708 0 0</pose>
+          <geometry>
+            <cylinder>
+              <length>0.075</length>
+              <radius>0.111</radius>
+            </cylinder>
+          </geometry>
+          <surface>
+            <contact>
+              <ode>
+                <kp>1e+06</kp>
+                <kd>100</kd>
+                <max_vel>1</max_vel>
+                <min_depth>0</min_depth>
+              </ode>
+            </contact>
+            <friction>
+              <ode>
+                <mu>1</mu>
+                <mu2>1</mu2>
+              </ode>
+              <torsional>
+                <ode/>
+              </torsional>
+            </friction>
+            <bounce/>
+          </surface>
+          <max_contacts>10</max_contacts>
+        </collision>
+        <visual name='p3at_back_left_wheel_visual'>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/home/andrej/ANPL/infrastructure/base_ws/src/amr-ros-config/description/meshes/p3at_meshes/wheel.stl</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/Black</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+        <velocity_decay/>
+        <gravity>1</gravity>
+        <velocity_decay/>
+        <self_collide>0</self_collide>
+        <kinematic>0</kinematic>
+      </link>
+      <joint name='p3at_back_left_wheel_joint' type='revolute'>
+        <child>p3at_back_left_wheel</child>
+        <parent>base_link</parent>
+        <axis>
+          <xyz>0 1 0</xyz>
+          <limit>
+            <lower>-1e+16</lower>
+            <upper>1e+16</upper>
+          </limit>
+          <dynamics>
+            <spring_reference>0</spring_reference>
+            <spring_stiffness>0</spring_stiffness>
+          </dynamics>
+          <use_parent_model_frame>1</use_parent_model_frame>
+        </axis>
+      </joint>
+      <link name='p3at_back_right_wheel'>
+        <pose frame=''>-0.134 -0.197 0.111 0 -0 0</pose>
+        <inertial>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <mass>1.2</mass>
+          <inertia>
+            <ixx>0.0124118</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.0152182</iyy>
+            <iyz>0</iyz>
+            <izz>0.011764</izz>
+          </inertia>
+        </inertial>
+        <collision name='p3at_back_right_wheel_collision'>
+          <pose frame=''>0 0 0 -1.5708 0 0</pose>
+          <geometry>
+            <cylinder>
+              <length>0.075</length>
+              <radius>0.111</radius>
+            </cylinder>
+          </geometry>
+          <surface>
+            <contact>
+              <ode>
+                <kp>1e+06</kp>
+                <kd>100</kd>
+                <max_vel>1</max_vel>
+                <min_depth>0</min_depth>
+              </ode>
+            </contact>
+            <friction>
+              <ode>
+                <mu>1</mu>
+                <mu2>1</mu2>
+              </ode>
+              <torsional>
+                <ode/>
+              </torsional>
+            </friction>
+            <bounce/>
+          </surface>
+          <max_contacts>10</max_contacts>
+        </collision>
+        <visual name='p3at_back_right_wheel_visual'>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/home/andrej/ANPL/infrastructure/base_ws/src/amr-ros-config/description/meshes/p3at_meshes/wheel.stl</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/Black</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+        <velocity_decay/>
+        <gravity>1</gravity>
+        <velocity_decay/>
+        <self_collide>0</self_collide>
+        <kinematic>0</kinematic>
+      </link>
+      <joint name='p3at_back_right_wheel_joint' type='revolute'>
+        <child>p3at_back_right_wheel</child>
+        <parent>base_link</parent>
+        <axis>
+          <xyz>0 1 0</xyz>
+          <limit>
+            <lower>-1e+16</lower>
+            <upper>1e+16</upper>
+          </limit>
+          <dynamics>
+            <spring_reference>0</spring_reference>
+            <spring_stiffness>0</spring_stiffness>
+          </dynamics>
+          <use_parent_model_frame>1</use_parent_model_frame>
+        </axis>
+      </joint>
+      <static>0</static>
+      <plugin name='skid_steer_drive_controller' filename='libgazebo_ros_skid_steer_drive.so'>
+        <updateRate>100.0</updateRate>
+        <robotNamespace>pioneer1</robotNamespace>
+        <leftFrontJoint>p3at_front_left_wheel_joint</leftFrontJoint>
+        <rightFrontJoint>p3at_front_right_wheel_joint</rightFrontJoint>
+        <leftRearJoint>p3at_back_left_wheel_joint</leftRearJoint>
+        <rightRearJoint>p3at_back_right_wheel_joint</rightRearJoint>
+        <wheelSeparation>0.4</wheelSeparation>
+        <wheelDiameter>0.215</wheelDiameter>
+        <robotBaseFrame>base_link</robotBaseFrame>
+        <MaxForce>5.0</MaxForce>
+        <torque>200</torque>
+        <commandTopic>cmd_vel</commandTopic>
+        <odometryTopic>odom</odometryTopic>
+        <odometryFrame>odom</odometryFrame>
+        <broadcastTF>1</broadcastTF>
+        <covariance_x>0.0001</covariance_x>
+        <covariance_y>0.0001</covariance_y>
+        <covariance_yaw>0.01</covariance_yaw>
+      </plugin>
+      <pose frame=''>19.9 -0.1 0 0 -0 3.14</pose>
+    </model>
+    <model name='pioneer2'>
+      <link name='base_link'>
+        <pose frame=''>0 0 0 0 -0 0</pose>
+        <inertial>
+          <pose frame=''>-0.095186 0 0.174739 0 -0 0</pose>
+          <mass>22.6</mass>
+          <inertia>
+            <ixx>11.365</ixx>
+            <ixy>-6.60484e-19</ixy>
+            <ixz>0.00451317</ixz>
+            <iyy>11.5163</iyy>
+            <iyz>1.2125e-18</iyz>
+            <izz>11.391</izz>
+          </inertia>
+        </inertial>
+        <collision name='base_link_collision'>
+          <pose frame=''>0 0 0.177 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/home/andrej/ANPL/infrastructure/base_ws/src/amr-ros-config/description/meshes/p3at_meshes/chassis.stl</uri>
+            </mesh>
+          </geometry>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <friction>
+              <ode/>
+              <torsional>
+                <ode/>
+              </torsional>
+            </friction>
+            <bounce/>
+          </surface>
+          <max_contacts>10</max_contacts>
+        </collision>
+        <collision name='base_link_fixed_joint_lump__hokuyo_link_collision_1'>
+          <pose frame=''>0 0 0.31 0 -0 0</pose>
+          <geometry>
+            <box>
+              <size>0.1 0.1 0.1</size>
+            </box>
+          </geometry>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <friction>
+              <ode/>
+              <torsional>
+                <ode/>
+              </torsional>
+            </friction>
+            <bounce/>
+          </surface>
+          <max_contacts>10</max_contacts>
+        </collision>
+        <collision name='base_link_fixed_joint_lump__p3at_back_left_axle_collision_2'>
+          <pose frame=''>-0.134 0.156 0.111 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/home/andrej/ANPL/infrastructure/base_ws/src/amr-ros-config/description/meshes/p3at_meshes/axle.stl</uri>
+            </mesh>
+          </geometry>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <friction>
+              <ode/>
+              <torsional>
+                <ode/>
+              </torsional>
+            </friction>
+            <bounce/>
+          </surface>
+          <max_contacts>10</max_contacts>
+        </collision>
+        <collision name='base_link_fixed_joint_lump__p3at_back_left_hub_collision_3'>
+          <pose frame=''>-0.134 0.197 0.111 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/home/andrej/ANPL/infrastructure/base_ws/src/amr-ros-config/description/meshes/p3at_meshes/left_hubcap.stl</uri>
+            </mesh>
+          </geometry>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <friction>
+              <ode/>
+              <torsional>
+                <ode/>
+              </torsional>
+            </friction>
+            <bounce/>
+          </surface>
+          <max_contacts>10</max_contacts>
+        </collision>
+        <collision name='base_link_fixed_joint_lump__p3at_back_right_axle_collision_4'>
+          <pose frame=''>-0.134 -0.156 0.111 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/home/andrej/ANPL/infrastructure/base_ws/src/amr-ros-config/description/meshes/p3at_meshes/axle.stl</uri>
+            </mesh>
+          </geometry>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <friction>
+              <ode/>
+              <torsional>
+                <ode/>
+              </torsional>
+            </friction>
+            <bounce/>
+          </surface>
+          <max_contacts>10</max_contacts>
+        </collision>
+        <collision name='base_link_fixed_joint_lump__p3at_back_right_hub_collision_5'>
+          <pose frame=''>-0.134 -0.197 0.111 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/home/andrej/ANPL/infrastructure/base_ws/src/amr-ros-config/description/meshes/p3at_meshes/right_hubcap.stl</uri>
+            </mesh>
+          </geometry>
+          <surface>
+            <contact>
+              <ode/>
+            </contact>
+            <friction>
+              <ode/>
+              <torsional>
+                <ode/>
+              </torsional>
+            </friction>
+            <bounce/>
+          </surface>
+          <max_contacts>10</max_contacts>
+        </collision>
+        <visual name='base_link_visual'>
+          <pose frame=''>0 0 0.177 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/home/andrej/ANPL/infrastructure/base_ws/src/amr-ros-config/description/meshes/p3at_meshes/chassis.stl</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/Red</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+        <visual name='base_link_fixed_joint_lump__back_sonar_visual_1'>
+          <pose frame=''>-0.187 0 0.247 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/home/andrej/ANPL/infrastructure/base_ws/src/amr-ros-config/description/meshes/p3at_meshes/back_sonar.stl</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/Yellow</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+        <visual name='base_link_fixed_joint_lump__front_sonar_visual_2'>
+          <pose frame=''>0.193 0 0.25 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/home/andrej/ANPL/infrastructure/base_ws/src/amr-ros-config/description/meshes/p3at_meshes/front_sonar.stl</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/Yellow</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+        <visual name='base_link_fixed_joint_lump__p3at_front_left_axle_visual_3'>
+          <pose frame=''>0.135 0.156 0.111 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/home/andrej/ANPL/infrastructure/base_ws/src/amr-ros-config/description/meshes/p3at_meshes/axle.stl</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/Grey</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+        <visual name='base_link_fixed_joint_lump__p3at_front_left_hub_visual_4'>
+          <pose frame=''>0.135 0.197 0.111 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/home/andrej/ANPL/infrastructure/base_ws/src/amr-ros-config/description/meshes/p3at_meshes/left_hubcap.stl</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/Yellow</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+        <visual name='base_link_fixed_joint_lump__p3at_front_right_axle_visual_5'>
+          <pose frame=''>0.135 -0.156 0.111 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/home/andrej/ANPL/infrastructure/base_ws/src/amr-ros-config/description/meshes/p3at_meshes/axle.stl</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/Grey</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+        <visual name='base_link_fixed_joint_lump__p3at_front_right_hub_visual_6'>
+          <pose frame=''>0.135 -0.197 0.111 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/home/andrej/ANPL/infrastructure/base_ws/src/amr-ros-config/description/meshes/p3at_meshes/right_hubcap.stl</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/Yellow</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+        <visual name='base_link_fixed_joint_lump__top_plate_visual_7'>
+          <pose frame=''>0.003 0 0.274 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/home/andrej/ANPL/infrastructure/base_ws/src/amr-ros-config/description/meshes/p3at_meshes/top.stl</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/Black</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+        <visual name='base_link_fixed_joint_lump__hokuyo_link_visual_8'>
+          <pose frame=''>0 0 0.31 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/home/andrej/ANPL/infrastructure/base_ws/src/anpl_inf/gazebo_models/hokuyo/meshes/hokuyo.dae</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <script>
+              <uri>__default__</uri>
+              <name>__default__</name>
+            </script>
+          </material>
+        </visual>
+        <visual name='base_link_fixed_joint_lump__p3at_back_left_axle_visual_9'>
+          <pose frame=''>-0.134 0.156 0.111 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/home/andrej/ANPL/infrastructure/base_ws/src/amr-ros-config/description/meshes/p3at_meshes/axle.stl</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/Grey</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+        <visual name='base_link_fixed_joint_lump__p3at_back_left_hub_visual_10'>
+          <pose frame=''>-0.134 0.197 0.111 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/home/andrej/ANPL/infrastructure/base_ws/src/amr-ros-config/description/meshes/p3at_meshes/left_hubcap.stl</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/Yellow</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+        <visual name='base_link_fixed_joint_lump__p3at_back_right_axle_visual_11'>
+          <pose frame=''>-0.134 -0.156 0.111 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/home/andrej/ANPL/infrastructure/base_ws/src/amr-ros-config/description/meshes/p3at_meshes/axle.stl</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/Grey</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+        <visual name='base_link_fixed_joint_lump__p3at_back_right_hub_visual_12'>
+          <pose frame=''>-0.134 -0.197 0.111 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/home/andrej/ANPL/infrastructure/base_ws/src/amr-ros-config/description/meshes/p3at_meshes/right_hubcap.stl</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/Yellow</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+        <velocity_decay/>
+        <velocity_decay/>
+        <velocity_decay/>
+        <velocity_decay/>
+        <velocity_decay/>
+        <velocity_decay/>
+        <velocity_decay/>
+        <velocity_decay/>
+        <velocity_decay/>
+        <sensor name='head_hokuyo_sensor' type='ray'>
+          <visualize>0</visualize>
+          <update_rate>40</update_rate>
+          <ray>
+            <scan>
+              <horizontal>
+                <samples>720</samples>
+                <resolution>1</resolution>
+                <min_angle>-2.35619</min_angle>
+                <max_angle>2.35619</max_angle>
+              </horizontal>
+              <vertical>
+                <samples>1</samples>
+                <min_angle>0</min_angle>
+                <max_angle>0</max_angle>
+              </vertical>
+            </scan>
+            <range>
+              <min>0.1</min>
+              <max>30</max>
+              <resolution>0.01</resolution>
+            </range>
+            <noise>
+              <type>gaussian</type>
+              <mean>0</mean>
+              <stddev>0.01</stddev>
+            </noise>
+          </ray>
+          <plugin name='gazebo_ros_head_hokuyo_controller' filename='libgazebo_ros_laser.so'>
+            <topicName>laser/scan</topicName>
+            <frameName>hokuyo_link</frameName>
+            <robotNamespace>/pioneer2/</robotNamespace>
+          </plugin>
+          <pose frame=''>0 0 0.31 0 -0 0</pose>
+        </sensor>
+        <velocity_decay/>
+        <velocity_decay/>
+        <velocity_decay/>
+        <gravity>1</gravity>
+        <velocity_decay/>
+        <self_collide>0</self_collide>
+        <kinematic>0</kinematic>
+      </link>
+      <link name='p3at_front_left_wheel'>
+        <pose frame=''>0.135 0.197 0.111 0 -0 0</pose>
+        <inertial>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <mass>1.2</mass>
+          <inertia>
+            <ixx>0.0124118</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.0152182</iyy>
+            <iyz>0</iyz>
+            <izz>0.011764</izz>
+          </inertia>
+        </inertial>
+        <collision name='p3at_front_left_wheel_collision'>
+          <pose frame=''>0 0 0 -1.5708 0 0</pose>
+          <geometry>
+            <cylinder>
+              <length>0.075</length>
+              <radius>0.111</radius>
+            </cylinder>
+          </geometry>
+          <surface>
+            <contact>
+              <ode>
+                <kp>1e+06</kp>
+                <kd>100</kd>
+                <max_vel>1</max_vel>
+                <min_depth>0</min_depth>
+              </ode>
+            </contact>
+            <friction>
+              <ode>
+                <mu>1</mu>
+                <mu2>1</mu2>
+              </ode>
+              <torsional>
+                <ode/>
+              </torsional>
+            </friction>
+            <bounce/>
+          </surface>
+          <max_contacts>10</max_contacts>
+        </collision>
+        <visual name='p3at_front_left_wheel_visual'>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/home/andrej/ANPL/infrastructure/base_ws/src/amr-ros-config/description/meshes/p3at_meshes/wheel.stl</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/Black</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+        <velocity_decay/>
+        <gravity>1</gravity>
+        <velocity_decay/>
+        <self_collide>0</self_collide>
+        <kinematic>0</kinematic>
+      </link>
+      <joint name='p3at_front_left_wheel_joint' type='revolute'>
+        <child>p3at_front_left_wheel</child>
+        <parent>base_link</parent>
+        <axis>
+          <xyz>0 1 0</xyz>
+          <limit>
+            <lower>-1e+16</lower>
+            <upper>1e+16</upper>
+          </limit>
+          <dynamics>
+            <spring_reference>0</spring_reference>
+            <spring_stiffness>0</spring_stiffness>
+          </dynamics>
+          <use_parent_model_frame>1</use_parent_model_frame>
+        </axis>
+      </joint>
+      <link name='p3at_front_right_wheel'>
+        <pose frame=''>0.135 -0.197 0.111 0 -0 0</pose>
+        <inertial>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <mass>1.2</mass>
+          <inertia>
+            <ixx>0.0124118</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.0152182</iyy>
+            <iyz>0</iyz>
+            <izz>0.011764</izz>
+          </inertia>
+        </inertial>
+        <collision name='p3at_front_right_wheel_collision'>
+          <pose frame=''>0 0 0 -1.5708 0 0</pose>
+          <geometry>
+            <cylinder>
+              <length>0.075</length>
+              <radius>0.111</radius>
+            </cylinder>
+          </geometry>
+          <surface>
+            <contact>
+              <ode>
+                <kp>1e+06</kp>
+                <kd>100</kd>
+                <max_vel>1</max_vel>
+                <min_depth>0</min_depth>
+              </ode>
+            </contact>
+            <friction>
+              <ode>
+                <mu>1</mu>
+                <mu2>1</mu2>
+              </ode>
+              <torsional>
+                <ode/>
+              </torsional>
+            </friction>
+            <bounce/>
+          </surface>
+          <max_contacts>10</max_contacts>
+        </collision>
+        <visual name='p3at_front_right_wheel_visual'>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/home/andrej/ANPL/infrastructure/base_ws/src/amr-ros-config/description/meshes/p3at_meshes/wheel.stl</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/Black</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+        <velocity_decay/>
+        <gravity>1</gravity>
+        <velocity_decay/>
+        <self_collide>0</self_collide>
+        <kinematic>0</kinematic>
+      </link>
+      <joint name='p3at_front_right_wheel_joint' type='revolute'>
+        <child>p3at_front_right_wheel</child>
+        <parent>base_link</parent>
+        <axis>
+          <xyz>0 1 0</xyz>
+          <limit>
+            <lower>-1e+16</lower>
+            <upper>1e+16</upper>
+          </limit>
+          <dynamics>
+            <spring_reference>0</spring_reference>
+            <spring_stiffness>0</spring_stiffness>
+          </dynamics>
+          <use_parent_model_frame>1</use_parent_model_frame>
+        </axis>
+      </joint>
+      <link name='p3at_back_left_wheel'>
+        <pose frame=''>-0.134 0.197 0.111 0 -0 0</pose>
+        <inertial>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <mass>1.2</mass>
+          <inertia>
+            <ixx>0.0124118</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.0152182</iyy>
+            <iyz>0</iyz>
+            <izz>0.011764</izz>
+          </inertia>
+        </inertial>
+        <collision name='p3at_back_left_wheel_collision'>
+          <pose frame=''>0 0 0 -1.5708 0 0</pose>
+          <geometry>
+            <cylinder>
+              <length>0.075</length>
+              <radius>0.111</radius>
+            </cylinder>
+          </geometry>
+          <surface>
+            <contact>
+              <ode>
+                <kp>1e+06</kp>
+                <kd>100</kd>
+                <max_vel>1</max_vel>
+                <min_depth>0</min_depth>
+              </ode>
+            </contact>
+            <friction>
+              <ode>
+                <mu>1</mu>
+                <mu2>1</mu2>
+              </ode>
+              <torsional>
+                <ode/>
+              </torsional>
+            </friction>
+            <bounce/>
+          </surface>
+          <max_contacts>10</max_contacts>
+        </collision>
+        <visual name='p3at_back_left_wheel_visual'>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/home/andrej/ANPL/infrastructure/base_ws/src/amr-ros-config/description/meshes/p3at_meshes/wheel.stl</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/Black</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+        <velocity_decay/>
+        <gravity>1</gravity>
+        <velocity_decay/>
+        <self_collide>0</self_collide>
+        <kinematic>0</kinematic>
+      </link>
+      <joint name='p3at_back_left_wheel_joint' type='revolute'>
+        <child>p3at_back_left_wheel</child>
+        <parent>base_link</parent>
+        <axis>
+          <xyz>0 1 0</xyz>
+          <limit>
+            <lower>-1e+16</lower>
+            <upper>1e+16</upper>
+          </limit>
+          <dynamics>
+            <spring_reference>0</spring_reference>
+            <spring_stiffness>0</spring_stiffness>
+          </dynamics>
+          <use_parent_model_frame>1</use_parent_model_frame>
+        </axis>
+      </joint>
+      <link name='p3at_back_right_wheel'>
+        <pose frame=''>-0.134 -0.197 0.111 0 -0 0</pose>
+        <inertial>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <mass>1.2</mass>
+          <inertia>
+            <ixx>0.0124118</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>0.0152182</iyy>
+            <iyz>0</iyz>
+            <izz>0.011764</izz>
+          </inertia>
+        </inertial>
+        <collision name='p3at_back_right_wheel_collision'>
+          <pose frame=''>0 0 0 -1.5708 0 0</pose>
+          <geometry>
+            <cylinder>
+              <length>0.075</length>
+              <radius>0.111</radius>
+            </cylinder>
+          </geometry>
+          <surface>
+            <contact>
+              <ode>
+                <kp>1e+06</kp>
+                <kd>100</kd>
+                <max_vel>1</max_vel>
+                <min_depth>0</min_depth>
+              </ode>
+            </contact>
+            <friction>
+              <ode>
+                <mu>1</mu>
+                <mu2>1</mu2>
+              </ode>
+              <torsional>
+                <ode/>
+              </torsional>
+            </friction>
+            <bounce/>
+          </surface>
+          <max_contacts>10</max_contacts>
+        </collision>
+        <visual name='p3at_back_right_wheel_visual'>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <geometry>
+            <mesh>
+              <scale>1 1 1</scale>
+              <uri>/home/andrej/ANPL/infrastructure/base_ws/src/amr-ros-config/description/meshes/p3at_meshes/wheel.stl</uri>
+            </mesh>
+          </geometry>
+          <material>
+            <script>
+              <name>Gazebo/Black</name>
+              <uri>file://media/materials/scripts/gazebo.material</uri>
+            </script>
+          </material>
+        </visual>
+        <velocity_decay/>
+        <gravity>1</gravity>
+        <velocity_decay/>
+        <self_collide>0</self_collide>
+        <kinematic>0</kinematic>
+      </link>
+      <joint name='p3at_back_right_wheel_joint' type='revolute'>
+        <child>p3at_back_right_wheel</child>
+        <parent>base_link</parent>
+        <axis>
+          <xyz>0 1 0</xyz>
+          <limit>
+            <lower>-1e+16</lower>
+            <upper>1e+16</upper>
+          </limit>
+          <dynamics>
+            <spring_reference>0</spring_reference>
+            <spring_stiffness>0</spring_stiffness>
+          </dynamics>
+          <use_parent_model_frame>1</use_parent_model_frame>
+        </axis>
+      </joint>
+      <static>0</static>
+      <plugin name='skid_steer_drive_controller' filename='libgazebo_ros_skid_steer_drive.so'>
+        <updateRate>100.0</updateRate>
+        <robotNamespace>pioneer2</robotNamespace>
+        <leftFrontJoint>p3at_front_left_wheel_joint</leftFrontJoint>
+        <rightFrontJoint>p3at_front_right_wheel_joint</rightFrontJoint>
+        <leftRearJoint>p3at_back_left_wheel_joint</leftRearJoint>
+        <rightRearJoint>p3at_back_right_wheel_joint</rightRearJoint>
+        <wheelSeparation>0.4</wheelSeparation>
+        <wheelDiameter>0.215</wheelDiameter>
+        <robotBaseFrame>base_link</robotBaseFrame>
+        <MaxForce>5.0</MaxForce>
+        <torque>200</torque>
+        <commandTopic>cmd_vel</commandTopic>
+        <odometryTopic>odom</odometryTopic>
+        <odometryFrame>odom</odometryFrame>
+        <broadcastTF>1</broadcastTF>
+        <covariance_x>0.0001</covariance_x>
+        <covariance_y>0.0001</covariance_y>
+        <covariance_yaw>0.01</covariance_yaw>
+      </plugin>
+      <pose frame=''>26.9 -6.07 0 0 -0 1.57</pose>
+    </model>
+    <light name='sun_0' type='directional'>
+      <cast_shadows>1</cast_shadows>
+      <pose frame=''>22.8627 1.10075 10 0 -0 0</pose>
+      <diffuse>0.8 0.8 0.8 1</diffuse>
+      <specular>0.1 0.1 0.1 1</specular>
+      <attenuation>
+        <range>1000</range>
+        <constant>0.9</constant>
+        <linear>0.01</linear>
+        <quadratic>0.001</quadratic>
+      </attenuation>
+      <direction>-0.5 0.5 -1</direction>
+    </light>
+    <light name='sun_0' type='directional'>
+      <cast_shadows>1</cast_shadows>
+      <pose frame=''>24.4999 16.8478 10 0 -0 0</pose>
+      <diffuse>0.8 0.8 0.8 1</diffuse>
+      <specular>0.1 0.1 0.1 1</specular>
+      <attenuation>
+        <range>1000</range>
+        <constant>0.9</constant>
+        <linear>0.01</linear>
+        <quadratic>0.001</quadratic>
+      </attenuation>
+      <direction>-0.5 0.5 -1</direction>
+    </light>
+    <light name='sun_0' type='directional'>
+      <cast_shadows>1</cast_shadows>
+      <pose frame=''>25.8599 -0.982492 10 0 -0 0</pose>
+      <diffuse>0.8 0.8 0.8 1</diffuse>
+      <specular>0.1 0.1 0.1 1</specular>
+      <attenuation>
+        <range>1000</range>
+        <constant>0.9</constant>
+        <linear>0.01</linear>
+        <quadratic>0.001</quadratic>
+      </attenuation>
+      <direction>-0.5 0.5 -1</direction>
+    </light>
+    <light name='user_directional_light_0' type='directional'>
+      <pose frame=''>24.2889 0.082746 1 0 -0 0</pose>
+      <diffuse>0.5 0.5 0.5 1</diffuse>
+      <specular>0.1 0.1 0.1 1</specular>
+      <direction>0.1 0.1 -0.9</direction>
+      <attenuation>
+        <range>20</range>
+        <constant>0.5</constant>
+        <linear>0.01</linear>
+        <quadratic>0.001</quadratic>
+      </attenuation>
+      <cast_shadows>1</cast_shadows>
+    </light>
+    <state world_name='default'>
+      <sim_time>18 301000000</sim_time>
+      <real_time>19 585754540</real_time>
+      <wall_time>1546958315 722045217</wall_time>
+      <iterations>18301</iterations>
+      <model name='ground_plane'>
+        <pose frame=''>0 0 0 0 -0 0</pose>
+        <scale>1 1 1</scale>
+        <link name='link'>
+          <pose frame=''>0 0 0 0 -0 0</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name='pioneer1'>
+        <pose frame=''>19.9 -0.1 -3.3e-05 -0 -0.000145 3.14</pose>
+        <scale>1 1 1</scale>
+        <link name='base_link'>
+          <pose frame=''>19.9 -0.1 -3.3e-05 -0 -0.000145 3.14</pose>
+          <velocity>0 0 7.4e-05 0 -4e-06 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+        <link name='p3at_back_left_wheel'>
+          <pose frame=''>20.0337 -0.297213 0.110947 0 -0.000166 3.14</pose>
+          <velocity>0 0 7.4e-05 0 -3e-06 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+        <link name='p3at_back_right_wheel'>
+          <pose frame=''>20.0343 0.096786 0.110947 0 -0.000167 3.14</pose>
+          <velocity>0 0 7.4e-05 0 -3e-06 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+        <link name='p3at_front_left_wheel'>
+          <pose frame=''>19.7647 -0.296785 0.110986 0 -0.00016 3.14</pose>
+          <velocity>0 0 7.3e-05 0 -3e-06 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+        <link name='p3at_front_right_wheel'>
+          <pose frame=''>19.7653 0.097215 0.110986 0 -0.00016 3.14</pose>
+          <velocity>0 0 7.3e-05 0 -3e-06 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name='pioneer2'>
+        <pose frame=''>26.9 -6.07 -3.3e-05 -0 -0.000145 1.57</pose>
+        <scale>1 1 1</scale>
+        <link name='base_link'>
+          <pose frame=''>26.9 -6.07 -3.3e-05 -0 -0.000145 1.57</pose>
+          <velocity>0 0 7.4e-05 -4e-06 0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+        <link name='p3at_back_left_wheel'>
+          <pose frame=''>26.7029 -6.20386 0.110947 0 -0.000166 1.57</pose>
+          <velocity>0 0 7.4e-05 -3e-06 0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+        <link name='p3at_back_right_wheel'>
+          <pose frame=''>27.0969 -6.20418 0.110947 0 -0.000167 1.57</pose>
+          <velocity>0 0 7.4e-05 -3e-06 0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+        <link name='p3at_front_left_wheel'>
+          <pose frame=''>26.7031 -5.93486 0.110986 0 -0.00016 1.57</pose>
+          <velocity>0 0 7.3e-05 -3e-06 0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+        <link name='p3at_front_right_wheel'>
+          <pose frame=''>27.0971 -5.93518 0.110986 0 -0.00016 1.57</pose>
+          <velocity>0 0 7.3e-05 -3e-06 0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+      </model>
+      <model name='willowgarage'>
+        <pose frame=''>-20 -20 0 0 -0 0</pose>
+        <scale>1 1 1</scale>
+        <link name='walls'>
+          <pose frame=''>-20 -20 0 0 -0 0</pose>
+          <velocity>0 0 0 0 -0 0</velocity>
+          <acceleration>0 0 0 0 -0 0</acceleration>
+          <wrench>0 0 0 0 -0 0</wrench>
+        </link>
+      </model>
+      <light name='sun'>
+        <pose frame=''>0 0 20 0 -0 0</pose>
+      </light>
+      <light name='sun_0'>
+        <pose frame=''>22.8627 1.10075 10 0 -0 0</pose>
+      </light>
+      <light name='user_directional_light_0'>
+        <pose frame=''>24.2889 0.082746 7 -3.14159 -0.3 3.14</pose>
+      </light>
+    </state>
+  </world>
+</sdf>

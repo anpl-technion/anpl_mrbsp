@@ -1,0 +1,12 @@
+diff -r 860944096ac0 src/ompl/geometric/planners/prm/src/SPARStwo.cpp
+--- a/src/ompl/geometric/planners/prm/src/SPARStwo.cpp	Mon Jun 09 12:24:12 2014 -0500
++++ b/src/ompl/geometric/planners/prm/src/SPARStwo.cpp	Tue Jun 10 11:00:57 2014 -0500
+@@ -172,7 +172,7 @@
+ 
+ bool ompl::geometric::SPARStwo::reachedTerminationCriterion() const
+ {
+-    return consecutiveFailures_ >= maxFailures_ || addedSolution_;
++    return consecutiveFailures_ >= maxFailures_;    /*(cav2) || addedSolution_;*/
+ }
+ 
+ void ompl::geometric::SPARStwo::constructRoadmap(const base::PlannerTerminationCondition &ptc, bool stopOnMaxFail)

@@ -1,0 +1,9 @@
+
+Dependencies: OMPL (http://ompl.kavrakilab.org/)
+
+Building: Just run 'make'
+
+Running: 'build/bin/diverse' gives full usage instructions
+
+
+

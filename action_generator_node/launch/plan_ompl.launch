@@ -1,0 +1,47 @@
+<launch>
+
+<arg name="world_octomap" value="$(find action_generator_node)/worlds/willowgarage_center_21_0.bt" />
+<arg name="rviz_config" value="$(find action_generator_node)/config/planning_30Hz_2d.rviz" />
+
+<!--arg name="world_octomap" value="$(find action_generator_node)/worlds/ANPL-10.bt" />
+<arg name="rviz_config" value="$(find action_generator_node)/config/planning_at_ANPL.rviz" /-->
+  
+<arg name="method" default="ompl" />    <!-- "ompl" | "interactive" | "mp" -->
+
+
+
+<!-- launch-prefix="gnome-terminal --><!--command" -->
+  <node pkg="action_generator_node" type="action_generator_node" name="action_generator" clear_params="true" output="screen" >
+    
+   <!-- set parameters -->
+	 <param name="method" value="$(arg method)" /> 
+	 <!-- world map -->
+	 <param name="world_octomap" value="$(arg world_octomap)" />
+	   <!-- OMPL parameters -->
+	 <rosparam if="$(eval method == 'ompl')" command="load" file="$(find action_generator_node)/config/ompl.yaml" />
+  </node>
+
+  <include file="$(find action_generator_node)/launch/generate_actions_interactively.launch">
+      <arg name="map" default="$(arg world_octomap)"/>
+      <arg name="rviz_config" default="$(arg rviz_config)"/>
+  </include>
+
+  <node pkg="planner_node" type="planner" name="planner" clear_params="true" output="log">
+    <param name="planner_type" value="cpp" /> <!-- "cpp" or "matlab" -->
+    <param name="unit_tests" value="true" />
+  </node>
+
+
+  
+
+<!-- visualize projected_map, gridmap, ...
+  <rosparam command="load" file="$(find grid_map_demos)/config/octomap_to_gridmap_demo.yaml" /> -->
+
+  <!-- Load the octomap -->
+  <!--node pkg="octomap_server" type="octomap_server_static" name="octomap_server" args="$(arg world_octomap)" output="screen"/-->
+  <!-- Launch the octomap conversion node -->
+  <!--node pkg="grid_map_demos" type="octomap_to_gridmap_demo" name="octomap_to_gridmap_demo" output="screen" /-->
+
+  
+
+  </launch>

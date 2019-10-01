@@ -1,0 +1,71 @@
+<?xml version="1.0" ?>
+<sdf version="1.6">
+  <world name="default">
+    <include>
+      <uri>model://ground_plane</uri>
+    </include>
+    <include>
+      <uri>model://sun</uri>
+    </include>
+    <include>
+      <pose frame=''>0.079097 -0.839942 0 0 -0 0</pose>
+      <scale>1 1 1</scale>
+      <uri>model://ANPL_Lab_Extended_0</uri>
+    </include>
+
+    <include>
+      <pose frame=''>-13.886 9.34363 0 0 -0 0</pose>
+      <scale>1 1 1</scale>
+      <uri>model://ANPL_Lab_Extended_1</uri>
+    </include>
+
+    <include>
+      <pose frame=''>-20.8331 -1.98878 0.5 0 -0 0</pose>
+      <scale>1 1 1</scale>
+      <uri>model://unit_box</uri>
+    </include>
+
+    <include>
+      <pose frame=''>-16.6927 -2.04585 0.5 0 -0 0</pose>
+      <scale>1 1 1</scale>
+      <uri>model://unit_box</uri>
+    </include>
+
+    <include>
+      <pose frame=''>-20.8331 -6.27341 0.5 0 -0 0</pose>
+      <scale>1 1 1</scale>
+      <uri>model://unit_box</uri>
+    </include>
+
+    <include>
+      <pose frame=''>-16.6927 -6.27341 0.5 0 -0 0</pose>
+      <scale>1 1 1</scale>
+      <uri>model://unit_box</uri>
+    </include>
+
+
+    <include>
+        <pose frame=''>-5.12882 -5.35988 0 0 -0 0</pose>
+        <uri>model://textured_shapes_T</uri>
+    </include>
+
+    <include>
+        <pose frame=''>1.96963 -4.0417 0 0 -0 0</pose>
+        <uri>model://construction_cone</uri>
+    </include>
+
+
+    <gui fullscreen='0'>
+      <camera name='eye_camera'>
+        <pose frame=''>-2.00895 -6.04144 10.3036 1e-06 1.01164 0.896194</pose>
+        <view_controller>orbit</view_controller>
+        <projection_type>perspective</projection_type>
+      </camera>
+    </gui>
+
+    <plugin name='gazebo_octomap' filename='librotors_gazebo_octomap_plugin.so'/>
+
+  </world>
+
+
+</sdf>

@@ -1,0 +1,15 @@
+<launch>
+
+ <!-- Putting the time back to real time-->
+ <rosparam>
+   /use_sim_time : false
+ </rosparam>
+
+  <!-- Publish static octomap of the Gazebo world -->
+  <!--node pkg="octomap_server" type="octomap_server_node" name="world_octomap" args="$(find map_node)/worlds/willowgarage.bt"/-->
+  <node pkg="octomap_server" type="octomap_server_node" name="world_octomap" args="$(find map_node)/worlds/octomap_final_.ot">
+    <param name="frame_id" value="world"/>
+  </node>
+
+ 
+</launch>

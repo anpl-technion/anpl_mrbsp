@@ -1,0 +1,35 @@
+<launch>
+
+
+  <!-- Load the URDF, SRDF and other .yaml configuration files on the param server -->
+  <!--include file="$(find powerbot_moveit_config)/launch/planning_context.launch"-->
+    <!--arg name="load_robot_description" value="true"/-->
+  <!--/include-->
+
+  <!-- If needed, broadcast static tf for robots' initial poses in the map -->
+    <!--node pkg="tf" type="static_transform_publisher" name="static_broadcaster_map_odom1" args="-9.22 -19.36 0 1.5708 0.0 0.0 map pioneer1/odom 10" /-->
+    <!--node pkg="tf" type="static_transform_publisher" name="static_broadcaster_map_odom2" args="-3.3 24.5 0 -1.5708 0.0 0.0 map pioneer2/odom 10" /-->
+    <!--node pkg="tf" type="static_transform_publisher" name="static_broadcaster_map_odom1" args="19.9 -0.1 0 3.14 0.0 0.0 map pioneer1/odom 10" /-->
+    <!--node pkg="tf" type="static_transform_publisher" name="static_broadcaster_map_odom2" args="26.9 -6.07 0 1.57 0.0 0.0 map pioneer2/odom 10" /-->
+
+
+
+  
+  <!-- Run Gazebo multirobot world scenario -->
+  <!--include file="$(find anpl_inf)/launch/pioneer3at_world.launch"-->
+    <!-- arg name="config" value="true"/ -->
+    <!-- arg name="debug" value="$(arg debug)"/ -->
+  <!--/include-->
+
+  <node pkg="rviz" type="rviz" name="visualization" args="-d $(find action_generator_node)/config/planning_30Hz_2d.rviz"/>
+
+  <!-- Publish static octomap of the Gazebo world -->
+  <!--node pkg="octomap_server" type="octomap_server_node" name="world_octomap" args="$(find action_generator_node)/worlds/willowgarage.bt"/-->
+  <node pkg="octomap_server" type="octomap_server_node" name="world_octomap" args="$(find action_generator_node)/worlds/ground.bt">
+    <param name="frame_id" value="world"/>
+    <param name="occupancy_min_z" value="0.5"/>
+  </node>
+
+  
+
+</launch>

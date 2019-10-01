@@ -1,0 +1,56 @@
+%
+% Pseudocode for my K-Diverse Short Paths algorithm
+%
+\documentclass[letterpaper,12pt]{article}
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+\usepackage{amssymb}
+\usepackage{caption}
+
+\renewcommand\algorithmiccomment[1]{
+  \hfill// {#1}
+}
+\DeclareCaptionFormat{algor}{
+  \hrulefill\par\offinterlineskip\vskip1pt
+    \textbf{#1#2}#3\offinterlineskip\hrulefill}
+\DeclareCaptionStyle{algori}{singlelinecheck=off,format=algor,labelsep=space}
+\captionsetup[algorithm]{style=algori}
+
+\begin{document}
+
+\captionof{algorithm}{Diverse Short Paths}
+\hangindent=20pt\hspace*{20pt}\textbf{KDiverseShort}$(G,s,g,k,b,\rho)$
+\\*\textbf{input:} A graph $G=(V,E)$ embedded in a space $\mathcal{C}$ with\
+distance metric $d_1:\mathcal{C}\times \mathcal{C}\to\mathbb{R}$; start and\
+goal vertices $s,g\in V$; number of paths requested, $k\ge0$; branching factor\
+$b\ge1$; ball radius $\rho>0$.
+\\*\textbf{output:} At most $k$ diverse, short paths in $G$ from $s$ to $g$.
+\begin{algorithmic}[1]
+\State $U\gets EmptyQueue$
+\State $p\gets \Call{ShortestPath}{G,s,g}$\Comment{Returns a path $p$ in $\mathcal{C}$}
+\If{$p\textbf{ not empty}$}
+    \State $U.enqueue((p,\varnothing))$
+\EndIf
+\State $S\gets\varnothing$
+\While{$\left\vert{S}\right\vert<k\textbf{ and }U\textbf{ not empty}$}
+    \State $(p,A)\gets U.dequeue()$
+    \For{$i\gets 1, b$}
+        \State $\mathbf{c}\gets \Call{SampleUniform}{p}$\Comment{Returns a point $\mathbf{c}$ along $p$}
+        \State $A'\gets A\cup\left\{\mathbf{x}\in \mathcal{C}:d_1(\mathbf{x},\mathbf{c})<\rho\right\}$
+        \State $E'\gets\left\{{e\in E:e\cap A'=\varnothing}\right\}$
+        \State $p'\gets \Call{ShortestPath}{G'=(V,E'),s,g}$
+        \If{$p'\textbf{ not empty}$}
+            \State $U.enqueue((p',A'))$
+            \If{$\Call{Filter}{p'}$}
+                \State $S\gets S\cup\left\{p\right\}$
+                \If{$\left\vert{S}\right\vert=k$}
+                    \State $\textbf{break}$
+                \EndIf
+            \EndIf
+        \EndIf
+    \EndFor
+\EndWhile
+\State \textbf{return }$S$
+\end{algorithmic}
+
+\end{document}

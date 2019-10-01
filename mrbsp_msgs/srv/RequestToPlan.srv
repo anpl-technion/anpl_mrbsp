@@ -3,6 +3,8 @@ geometry_msgs/Pose start
 geometry_msgs/Pose goal
 string gtsam_values_str
 string gtsam_factors_str
+string edges_list
+string nodes_list
 char robot_id
 octomap_msgs/Octomap incremental_map
 -------
