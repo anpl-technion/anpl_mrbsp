@@ -79,7 +79,9 @@ BeliefIsam2::BeliefIsam2(const ros::NodeHandle &nh_private) :
     initLogger(m_privateNodeHandle);
     loadParameter();
 
-    m_central_prefix = "/Central/";
+    //m_central_prefix = "/Central/";
+    m_central_prefix = "/";
+
     
     m_factors_and_values_sub    = m_privateNodeHandle.subscribe(m_central_prefix + "belief_input", 100, &BeliefIsam2::factorAndValuesCallback, this);
     m_memory_update_pub         = m_privateNodeHandle.advertise<mrbsp_msgs::GtsamSerValues>(m_central_prefix + "Belief/memory_update", 100);
@@ -157,7 +159,7 @@ void BeliefIsam2::factorAndValuesCallback(const mrbsp_msgs::GtsamFactorGraphCons
     gtsam::Values optimize_vals(m_isam.calculateBestEstimate());
     mrbsp_msgs::GtsamSerValues vals_ser_msg;
     vals_ser_msg.header.seq = 0; // TODO: add counter
-    vals_ser_msg.header.frame_id = "belief";
+    vals_ser_msg.header.frame_id = "world";
     vals_ser_msg.header.stamp = ros::Time::now();
     vals_ser_msg.ser_values = gtsam::serialize(optimize_vals);
 

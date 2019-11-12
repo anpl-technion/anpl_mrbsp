@@ -7,12 +7,13 @@
   <arg name="scenario_dir"      default="$(eval find(current_scenario))" />
   <arg name="config_files_dir"  default="$(arg scenario_dir)/config_files" />
   <arg name="robot_name" default="Robot_A" />
+  <arg name="odometry_type"     default="odometry_external"/> <!-- odometry_icp_laser|odometry_external-->
 
   <!-- Putting the time back to real time-->
   <rosparam> /use_sim_time : false </rosparam>
   <param name="scenario_folder" value="$(arg scenario_dir)/$(arg current_scenario)"/>
 
-  <node pkg="odometry" type="odometry_external" name="$(arg robot_name)" clear_params="true" output="screen">
+  <node pkg="odometry" type="$(arg odometry_type)" name="$(arg robot_name)" clear_params="true" output="screen" > <!-- launch-prefix="xterm -e gdb -ex run [MinusMinus]args" -->
     <rosparam command="load" file="$(arg config_files_dir)/gazebo_robot_A.yaml" />
   </node>
 
@@ -37,7 +38,7 @@
 
     <!--include file="$(arg scenario_dir)/launch/controller_setup_gazebo_A.launch" /-->
 
-<group ns="$(arg robot_name)">
+<!--group ns="$(arg robot_name)" -->
   <node pkg="state_machine_node" type="state_machine_default_node" name="state_machine_default" clear_params="true" output="screen">
     <rosparam command="load" file="$(arg config_files_dir)/state_machine_default.yaml" />
     <!-- Load robot goals -->
@@ -51,7 +52,7 @@
     <rosparam command="load" file="$(arg config_files_dir)/collision_detector_octomap_gazebo_A.yaml" />
   </node>
 
-</group>
+<!-- /group -->
 
 
   <!-- Create static transformation between the laser frame id to the robot pose for laser drawing in rviz -->

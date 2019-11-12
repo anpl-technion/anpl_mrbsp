@@ -136,6 +136,7 @@ void MRBSP::Utils::initLogger(const ros::NodeHandle &pnh) {
 
     loggerPath.append(node_name);
     loggerPath.append(".txt");
+    ROS_WARN("Adding log: %s", loggerPath.c_str());
     file_logger = spdlog::basic_logger_mt(node_name + "_file", loggerPath);
     spdlog::flush_every(std::chrono::seconds(flush_freq));
     Globals::is_file_logger_init = true;

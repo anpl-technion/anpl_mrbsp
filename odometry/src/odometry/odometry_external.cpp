@@ -214,8 +214,10 @@ OdometryExternal::OdometryExternal(const ros::NodeHandle &nh_private) :
 
     std::string name_space_sub = "/" + m_robot_name;
     std::string name_space_pub = "/Robot_" +  std::string(1,m_robot_id);
-    m_central_prefix = "/Central/";
-    m_robots_prefix  = "/Robots/";
+    //m_central_prefix = "/Central/";
+    m_central_prefix = "/";
+    //m_robots_prefix  = "/Robots/";
+    m_robots_prefix  = "/";
 
     m_odom_sub = m_privateNodeHandle.subscribe(name_space_sub + m_odom_topic, 1, &OdometryExternal::odomCallback, this);
     

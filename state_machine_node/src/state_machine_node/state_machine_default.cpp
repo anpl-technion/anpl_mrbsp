@@ -372,7 +372,7 @@ void StateMachineDefault::requestToPlan() {
 
         b_m_logger_msg << "SM: Ask for current belief in " << planner_mode << " mode.";
         //ANPL::anplLogMessage(b_m_p_sm_logger, info, 1, b_m_logger_msg);
-        b_m_p_sm_logger->flush();
+        //b_m_p_sm_logger->flush();
 
         if (m_get_belief_client.call(belief_request)) {
             graph_serialized = belief_request.response.graph_string;

@@ -1,0 +1,9 @@
+#==== logger node ====
+researcher_name:        Andrej Kitanov #
+log_level:              1         #default 1
+is_file_logger:         true      #default true
+is_console_logger:      true      #default true
+is_ros_console:         false     #default false
+log_tags:               all       #default all [all utils logger odometry da belief]
+logger_flash_frequency: 5         #default 5 sec
+

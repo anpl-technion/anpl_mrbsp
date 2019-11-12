@@ -95,8 +95,10 @@ DaIcpLaser::DaIcpLaser(const ros::NodeHandle &nh_private) :
     initLogger(m_privateNodeHandle);
     loadParameter();
 
-    m_central_prefix = "/Central/";
-    m_robots_prefix  = "/Robots/";
+    //m_central_prefix = "/Central/";
+    m_central_prefix = "/";
+    //m_robots_prefix  = "/Robots/";
+    m_robots_prefix  = "/";
     
     // keyframes with pointclouds
     m_keyframe_init_rgbd_sub = m_privateNodeHandle.subscribe(m_robots_prefix + "Odometry/keyframe/withPointcloud", 1, &DaIcpLaser::KeyframeRgbdCallback, this);

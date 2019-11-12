@@ -5,6 +5,8 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(odometry)
 
+#set (CMAKE_BUILD_TYPE Debug)
+
 # Set the version number for the library
 set (NODE_VERSION_MAJOR 0)
 set (NODE_VERSION_MINOR 1)

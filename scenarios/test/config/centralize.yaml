@@ -28,7 +28,7 @@ enforce_perfect_DA: false   #default false
 icp: {
     max_iters: 50,              #default 50
     stopping_thresh: 0.000001,  #[m] default 0.000001;
-    inlier_thresh_sq: 0.5,      #[m] default 0.5
+    inlier_thresh_sq: 0.09,      #[m^2] default 0.3^2
     nn_matching_percentage: {
         sliding_window: 0.00,   #[%] default 0.00
         loop_closure: 0.80,     #[%] default 0.8

@@ -33,7 +33,7 @@ is_noised_odom: false
 error_dynamic_percentage: 0.1
 
 # where are the ground truth messages coming from (gazebo, mocap, n.a.)
-ground_truth_source: gazebo
+ground_truth_source: n.a.
 
 # how many previous sampled ground truth poses to keep for visualizations. Number <=0 means keep all
 gt_buffer_size: 20

@@ -8,22 +8,16 @@
   <arg name="config_files_dir"  default="$(arg scenario_dir)/config_files" />
 
   <!-- For putting the time back to real time, set this param to false -->
-  <rosparam> /use_sim_time : true </rosparam>
-
-  <!-- ANPL logger's log level threshold. Messages with log level higher or equal to this will be logged. -->
-  <!-- Currently, zero value means log everything -->
-  <rosparam> /anpl_log_level_thr: 1 </rosparam>
+  <rosparam> /use_sim_time : false </rosparam>
 
   <!-- Load robot params -->
   <group ns="Robot_A">
     <rosparam command="load" file="$(arg config_files_dir)/gazebo_robot_A.yaml" />
   </group>
-  <group ns="Robot_B">
-    <rosparam command="load" file="$(arg config_files_dir)/gazebo_robot_B.yaml" />
-  </group>
-
+  
   <param name="scenario_folder" value="$(arg scenario_dir)"/>
 
+  <!-- this node might be redundant -->
   <node pkg="config_node" type="config_setup_node" name="config_setup" clear_params="true" output="screen">
     <rosparam command="load" file="$(arg config_files_dir)/scenario_config.yaml" />
     <param name="researcher_name" value="$(arg researcher_name)" />
@@ -31,6 +25,10 @@
     <rosparam> ros_boost_archive_version: "serialization::archive 12" </rosparam> <!-- ROS Kinetic v12 -->
     <rosparam> matlab_boost_archive_version: "serialization::archive 11" </rosparam> <!-- Matlab 2017b v11 -->
   </node>
+
+  <node pkg="logger" type="logger" name="logger" clear_params="true" output="screen">
+    <rosparam command="load" file="$(arg config_files_dir)/logger.yaml" />
+   </node>
 
   <node pkg="da" type="da_icp_laser" name="da_laser" clear_params="true" output="screen">
     <rosparam command="load" file="$(arg config_files_dir)/da_laser_csm_icp.yaml" />
@@ -43,7 +41,6 @@
   <node pkg="map_node" type="map_laser_node" name="map_octomap_laser" clear_params="true" output="screen">
     <rosparam command="load" file="$(arg config_files_dir)/map_octomap_laser.yaml" />
   </node>
-
 
   
   <!-- Action generator method -->
