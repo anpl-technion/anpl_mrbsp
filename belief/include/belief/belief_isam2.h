@@ -77,6 +77,9 @@ namespace MRBSP {
         /// string for logger msgs
         std::stringstream m_logger_msg;
 
+        /// string for graph msgs
+        //std::stringstream m_graph_sstream;
+
         /// path to current run folder
         std::string m_logger_path;
 
@@ -106,6 +109,24 @@ namespace MRBSP {
 
         /// ros service server to rqeust the controller to move the robot
         ros::ServiceServer m_get_belief_service;
+
+        /// factors added between two consecutive planning sessions
+        gtsam::NonlinearFactorGraph m_delta_factors;
+
+        /// variables added between two consecutive planning sessions
+        gtsam::Values m_delta_values;
+
+        /** graph edges added between two consecutive planning sessions
+         * as a list of symbolic variables involved in a factor for all factors added.
+         * Factors are separated with ';' and variables in a factor with '-'
+        */
+        std::string m_delta_edges;
+
+        /** graph nodes added between two consecutive planning sessions
+         * as a list of symbolic variables.
+         * Variables are separated with ';'
+        */
+        std::string m_delta_nodes;
 
         /**
          * Add new factors and values into the belief

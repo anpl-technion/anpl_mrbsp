@@ -172,6 +172,12 @@ void BeliefIsam2::handleNewFactorsAndValues(NewFactorsAndValues& new_factors_and
     gtsam::NonlinearFactorGraph new_graph(new_factors_and_values.first);
     gtsam::Values new_values(new_factors_and_values.second);
 
+    m_logger_msg << "NEW FACTORS AND VALS CALLBACK START.";
+    logMessage(info, LOG_INFO_LVL, m_logger_msg, m_tag);
+    m_delta_factors.add(new_graph);
+    m_delta_values.insert(new_values);
+
+
     gtsam::KeyList new_keys = new_values.keys();
     for(auto key : new_keys) {
         gtsam::Symbol symbol(key);
@@ -187,7 +193,12 @@ void BeliefIsam2::handleNewFactorsAndValues(NewFactorsAndValues& new_factors_and
                 m_last_values_map.at(symbol.chr()) = static_cast<unsigned int>(symbol.index());
             }
         }
+
+        m_delta_nodes += symbol.chr();
+        m_delta_nodes += std::to_string(symbol.index()) + ";";
+
     }
+
 
     for(auto factor : new_graph) {
         std::vector<char> robot_ids;
@@ -203,6 +214,8 @@ void BeliefIsam2::handleNewFactorsAndValues(NewFactorsAndValues& new_factors_and
 
         // debug information
         // assume only priors and between factors
+        std::stringstream m_graph_sstream;
+
         if(factor_indexes.size() > 1) {
             // not a prior factor
 
@@ -211,6 +224,8 @@ void BeliefIsam2::handleNewFactorsAndValues(NewFactorsAndValues& new_factors_and
                 m_logger_msg << "Belief: Loop closure factor added for robot " << robot_ids.at(0)
                              << ", between index " << factor_indexes.at(0) << " and index " << factor_indexes.at(1);
                 logMessage(info, LOG_INFO_LVL, m_logger_msg, m_tag);
+                m_graph_sstream << robot_ids.at(0) << factor_indexes.at(0) << "--" << robot_ids.at(0) << factor_indexes.at(1) << ";";
+                m_delta_edges += m_graph_sstream.str();
             }
             else if(robot_ids.size() > 1) {
                 // multi robot factor
@@ -218,6 +233,12 @@ void BeliefIsam2::handleNewFactorsAndValues(NewFactorsAndValues& new_factors_and
                              << "robot " << robot_ids.at(0) << "index " << factor_indexes.at(0)
                              << ", and robot " << robot_ids.at(1) << " index " << factor_indexes.at(1);
                 logMessage(info, LOG_INFO_LVL, m_logger_msg, m_tag);
+                m_graph_sstream << robot_ids.at(0) << factor_indexes.at(0) << "--" << robot_ids.at(1) << factor_indexes.at(1) << ";";
+                m_delta_edges += m_graph_sstream.str();
+            } else {
+                // motion factor
+                m_graph_sstream << robot_ids.at(0) << factor_indexes.at(0) << "--" << robot_ids.at(0) << factor_indexes.at(1) << ";";
+                m_delta_edges += m_graph_sstream.str();
             }
         }
         else {
@@ -226,6 +247,8 @@ void BeliefIsam2::handleNewFactorsAndValues(NewFactorsAndValues& new_factors_and
             logMessage(info, LOG_INFO_LVL, m_logger_msg, m_tag);
         }
     }
+    ROS_WARN_STREAM("New nodes " << m_delta_nodes);
+    ROS_WARN_STREAM("New edges " << m_delta_edges);
 
     m_isam.update(new_graph, new_values);
 
@@ -266,6 +289,8 @@ void BeliefIsam2::handleNewFactorsAndValues(NewFactorsAndValues& new_factors_and
             m_optimized_pose_pub.at(current_robot_id).publish(pose3_ser_msg);
         }
     }
+    m_logger_msg << "NEW FACTORS AND VALS CALLBACK END.";
+    logMessage(info, LOG_INFO_LVL, m_logger_msg, m_tag);
 }
 
 void BeliefIsam2::savePoseWithCovToFile(const std::string& file_name, const gtsam::ISAM2& isam) {
@@ -366,28 +391,93 @@ void BeliefIsam2::serializeResultsToFile(const std::string& file_name, const gts
 bool BeliefIsam2::getBeliefCallback(mrbsp_msgs::RequestBelief::Request& req, mrbsp_msgs::RequestBelief::Response& res) {
     FUNCTION_LOGGER(m_tag);
 
-    gtsam::NonlinearFactorGraph sm_graph(m_isam.getFactorsUnsafe());
-    gtsam::Values sm_vals(m_isam.calculateEstimate());
-
+    m_logger_msg << "SERVICE CALLBACK START.";
+    logMessage(info, LOG_INFO_LVL, m_logger_msg, m_tag);
+    const gtsam::NonlinearFactorGraph* p_sm_graph;
+    const gtsam::Values* p_sm_vals;
     std::string graph_serialized;
     std::string values_serialized;
-    try {
-        graph_serialized = gtsam::serialize(sm_graph);
-        values_serialized = gtsam::serialize(sm_vals);
-    }
-    catch (...) {
-        m_logger_msg << "Belief: Unable to serialize belief, send empty string";
-        logMessage(info, LOG_INFO_LVL, m_logger_msg, m_tag);
+
+    if (req.getDeltas.data) {
+
+        // send belief update between calls
+        try {
+
+            p_sm_graph = &m_delta_factors;
+            p_sm_vals = &m_delta_values;
+            graph_serialized = gtsam::serialize(m_delta_factors);
+            values_serialized = gtsam::serialize(m_delta_values);
+
+            m_logger_msg << "Belief: Send delta factor graph with " << p_sm_graph->size() << " factors and " << p_sm_vals->size()
+                         << " delta values to state machine.\n"
+                        << "Graph edges added:\n" << m_delta_edges
+                    << "\nGraph nodes added:\n" << m_delta_nodes;
+
+        }
+        catch (...) {
+            m_logger_msg << "Belief: Unable to serialize belief, send empty string";
+            logMessage(info, LOG_INFO_LVL, m_logger_msg, m_tag);
+            return false;
+        }
+
+        // reset deltas
+        // TODO check thread safety!!!
+
+        // Directly resize the number of factors in the graph.
+        // If the new size is less than the original, factors at the end will be removed. If the new size is larger than the original, null factors will be appended.
+        m_delta_factors.resize(0);
+        m_delta_values.clear();
+
+
+    } else { // send the whole belief
+
+        try {
+            // TODO consider sending ISAM, (de)serialization works in C++ and Matlab
+            //std::cout << "ISAM object serialized: " << gtsam::serialize(m_isam)
+            //          << std::endl;
+
+            gtsam::NonlinearFactorGraph sm_graph(m_isam.getFactorsUnsafe());
+            gtsam::Values sm_vals = m_isam.calculateEstimate();
+            p_sm_graph = &sm_graph;
+            p_sm_vals = &sm_vals;
+
+            graph_serialized = gtsam::serialize(sm_graph);
+            values_serialized = gtsam::serialize(sm_vals);
+
+            m_logger_msg << "Belief: Send factor graph with " << p_sm_graph->size() << " factors and " << p_sm_vals->size()
+                         << " values to state machine.\n"
+                    << "Graph edges are:\n" << m_delta_edges
+                    << "\nGraph nodes are:\n" << m_delta_nodes;
+        }
+        catch (...) {
+            m_logger_msg << "Belief: Unable to serialize belief, send empty string";
+            logMessage(info, LOG_INFO_LVL, m_logger_msg, m_tag);
+            return false;
+        }
+
     }
 
-    //graph_serialized = "graph_serialized";
     res.graph_string = graph_serialized;
     res.values_string = values_serialized;
+    res.edges_list = m_delta_edges;
+    res.nodes_list = m_delta_nodes;
+    // in incremental mode, deltas contain information between two planning requests
+    // otherwise, whole topological graph since beginning of time
+    if (req.getDeltas.data) {
+        m_delta_edges.clear();
+        m_delta_nodes.clear();
+    }
 
-    m_logger_msg << "Belief: Send factor graph with "  << sm_graph.size() << " factors and " << sm_vals.size() << " values to state machine.";
+
     logMessage(info, LOG_INFO_LVL, m_logger_msg, m_tag);
-    m_logger_msg << "Belief: graph string size "  << res.graph_string.size() << " Values string size " << res.values_string.size() << " values to state machine.";
+    m_logger_msg << "Belief: graph string size " << res.graph_string.size() << "; Values string size "
+                 << res.values_string.size() << " [Bytes].";
     logMessage(info, LOG_INFO_LVL, m_logger_msg, m_tag);
+
+
+    m_logger_msg << "SERVICE CALLBACK END.";
+    logMessage(info, LOG_INFO_LVL, m_logger_msg, m_tag);
+    return true;
 }
 
 BeliefIsam2::~BeliefIsam2() {
