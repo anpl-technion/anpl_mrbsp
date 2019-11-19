@@ -134,6 +134,7 @@ void MRBSP::Utils::initLogger(const ros::NodeHandle &pnh) {
     Globals::node_name = node_name;
     console = spdlog::stdout_color_mt(node_name);
 
+    std::replace(node_name.begin(), node_name.end(), '/', '_');//A.K.
     loggerPath.append(node_name);
     loggerPath.append(".txt");
     ROS_WARN("Adding log: %s", loggerPath.c_str());

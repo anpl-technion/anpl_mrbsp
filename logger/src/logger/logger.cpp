@@ -69,11 +69,11 @@ Logger::Logger(ros::NodeHandle& privateNodeHandle) :
                 << "results" << Globals::file_separator;
     createFolder(loggerPath.str());
 
-    loggerPath  << m_researcher_name << Globals::file_separator;
-    createFolder(loggerPath.str());
+//    loggerPath  << m_researcher_name << Globals::file_separator;
+//    createFolder(loggerPath.str());
 
-    loggerPath  << scenario_name << "_"
-                << m_researcher_name << "_"
+//    loggerPath  << scenario_name << "_"
+    loggerPath  << m_researcher_name << "_"
                 << getCurrentTime() << Globals::file_separator;
     createFolder(loggerPath.str());
 

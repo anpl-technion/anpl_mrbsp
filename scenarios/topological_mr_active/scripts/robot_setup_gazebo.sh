@@ -1,7 +1,7 @@
 #!/bin/bash
 # Start decentralized nodes. 
 # First argument is the robot ID.
-# Second argument is the time_delay in seconds between starting different groups of nodes
+# Optional second argument is the time_delay in seconds between starting different groups of nodes. Controller shoud start only after all other nodes are initialized. 
 
 
 # start odomtery node, state machine, collision detection ...

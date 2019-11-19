@@ -3,7 +3,7 @@ robot_name: Robot_A
 robot_id: A
 
 state_switching_conditions: {
-  mpc: true,
+  mpc: false,
   time_horizon: 5, #  execute this number of immediate actions before triggering mpc again
   prediction_horizon: 1,
   passive_planner: false
