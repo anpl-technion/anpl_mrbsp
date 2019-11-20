@@ -98,6 +98,7 @@ void MRBSP::Utils::initLogger(const ros::NodeHandle &pnh) {
     {
         // sleep for 1 sec
         ros::Duration(1).sleep();
+        ROS_WARN("Set the parameter /logger/loggerPath or run the logger node on this machine ...");
     }
 
     std::string loggerPath;
@@ -105,6 +106,8 @@ void MRBSP::Utils::initLogger(const ros::NodeHandle &pnh) {
     int flush_freq;
 
     pnh.getParam("/logger/loggerPath", loggerPath);
+    if (!isFolderExist(loggerPath))
+        createFolder(loggerPath);
     pnh.getParam("/logger/researcher_name", Globals::researcher_name);
     pnh.param("/logger/log_level", Globals::log_level, 1);
     pnh.param("/logger/is_file_logger", Globals::is_file_logger, true);

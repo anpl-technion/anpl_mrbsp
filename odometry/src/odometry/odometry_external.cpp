@@ -125,6 +125,8 @@ void OdometryExternal::loadParameter() {
     m_privateNodeHandle.param("index_timeout_threshold", m_optimize_pose_index_timeout_threshold, 50);
 
     m_privateNodeHandle.param("is_print_icp_results", m_is_print_icp_results, true);
+    m_privateNodeHandle.param("gt_buffer_size", m_gt_buffer_size, 100);
+
 
     m_logger_msg << "robot_name: " << m_robot_name;
     logMessage(info, LOG_INFO_LVL, m_logger_msg, m_tag);
@@ -179,6 +181,10 @@ void OdometryExternal::loadParameter() {
 
     m_logger_msg << "is_print_icp_results: " << m_is_print_icp_results;
     logMessage(info, LOG_INFO_LVL, m_logger_msg, m_tag);
+
+    m_logger_msg << "gt_buffer_size: " << m_gt_buffer_size;
+    logMessage(info, LOG_INFO_LVL, m_logger_msg, m_tag);
+
 
     m_logger_msg << "=====================";
     logMessage(info, LOG_INFO_LVL, m_logger_msg, m_tag);

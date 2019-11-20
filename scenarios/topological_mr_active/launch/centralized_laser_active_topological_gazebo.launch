@@ -1,7 +1,6 @@
 <launch>
 
-  <!-- Parameters to change each time-->
-  <arg name="researcher_name"   default="Andrej_Kitanov" />
+  <!-- Parameters and processes on the central machine-->
   <arg name="current_scenario"  default="topological_mr_active" />
 
   <arg name="scenario_dir"      default="$(eval find(current_scenario))" />
@@ -14,11 +13,13 @@
   <group ns="Robot_A">
     <rosparam command="load" file="$(arg config_files_dir)/gazebo_robot_A.yaml" />
   </group>
+  <!--group ns="Robot_B">
+    <rosparam command="load" file="$(arg config_files_dir)/gazebo_robot_B.yaml" />
+  </group-->
   
   <param name="scenario_folder" value="$(arg scenario_dir)"/>
 
   <node pkg="logger" type="logger" name="logger" clear_params="true" output="screen">
-    <param name="researcher_name" value="$(arg researcher_name)" />
     <rosparam command="load" file="$(arg config_files_dir)/logger.yaml" />
 
      <!-- Boost archive version used by ROS and Matlab -->
@@ -72,7 +73,7 @@
   <!-- Planner -->
   <node pkg="planner" type="planner" name="planner" clear_params="true" output="screen" > <!-- launch-prefix="xterm -e gdb -ex run [MinusMinus]args" -->
     <param name="planner_type" value="matlab" /> <!-- "cpp", "matlab" or "julia" -->
-    <param name="mode" value="batch"/> <!-- incremental or batch -->
+    <param name="mode" value="incremental"/> <!-- incremental or batch -->
 	<param name="alg" value="t-bsp"/> <!-- BSP algorithm: "standard", "t-bsp",...-->	
     <param name="unit_tests" value="false" />
   </node>

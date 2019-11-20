@@ -8,7 +8,8 @@ state_switching_conditions: {
   prediction_horizon: 1,
   passive_planner: false
 }
-  
+
+# how the state machine communicates with the controller (via service or topics)
 request_to_move_with_service: false
 
 # relevant only for mpc planner, 

@@ -10,7 +10,7 @@ SPATIAL_SEARCH_RADIUS = Inf;
 % sparsify ON = removing low informative edges, e.g. if a node = 5 and its neighbors
 % are [1 2 4 6 30 31 32], after sparsification [1 4 6 32] will be left
 sparsify = false;
-NUM_RUNS = 10; % number of times to run the stopwatch (for precise timing increase it)
+NUM_RUNS = 1; % number of times to run the stopwatch (for precise timing increase it)
 
 %if save_plots
     base_dir = [base_dir 'session_' sprintf('%02d', session_num) '/'];

@@ -41,21 +41,27 @@ CollisionDetectionOctomap::CollisionDetectionOctomap():
 {
     ros::NodeHandle nh_private("~");
 
-    if(!nh_private.hasParam("/logger/loggerPath")) {
+    /*if(!nh_private.hasParam("/logger/loggerPath")) {
         ROS_WARN("Unable to find log folder...");
         ros::Duration(1.0).sleep();
         if(nh_private.hasParam("/logger/loggerPath")) {
             nh_private.getParam("/logger/loggerPath", b_m_path_to_log_folder);
         }
         else {
-            b_m_path_to_log_folder = "~/.ros";
+			const char * home = getenv ("HOME");
+    		if (home == NULL)
+	            b_m_path_to_log_folder = "./";
+    		else
+	            b_m_path_to_log_folder = std::string(home) + "/.ros/";
+			ROS_WARN("CD logging set to %s", b_m_path_to_log_folder.c_str());
+
             MRBSP::Utils::createFolder(b_m_path_to_log_folder);
         }
     }
     else {
         nh_private.getParam("/logger/loggerPath", b_m_path_to_log_folder);
     }
-    std::cout << b_m_path_to_log_folder << std::endl;
+    std::cout << b_m_path_to_log_folder << std::endl;*/
     MRBSP::Utils::initLogger(nh_private);
 
     b_m_logger_msg << "CD: Initialize octomap collision detector logger";

@@ -42,20 +42,25 @@ StateMachineDefault::StateMachineDefault():
 {
     ros::NodeHandle pnh("~");
 
-    if(!pnh.hasParam("/logger/loggerPath")) {
+/*    if(!pnh.hasParam("/logger/loggerPath")) {
         ROS_WARN("Unable to find log folder...");
         ros::Duration(1.0).sleep();
         if(pnh.hasParam("/logger/loggerPath")) {
             pnh.getParam("/logger/loggerPath", b_m_path_to_log_folder);
         }
         else {
-            b_m_path_to_log_folder = "~/.ros";
+			const char * home = getenv ("HOME");
+            if (home == NULL)
+                b_m_path_to_log_folder = "./";
+            else
+                b_m_path_to_log_folder = std::string(home) + "/.ros/";
+            ROS_WARN("CD logging set to %s", b_m_path_to_log_folder.c_str());
             MRBSP::Utils::createFolder(b_m_path_to_log_folder);
         }
     }
     else {
         pnh.getParam("/logger/loggerPath", b_m_path_to_log_folder);
-    }
+    }*/
     MRBSP::Utils::initLogger(pnh);
 
     b_m_logger_msg << "SM: Initialize state machine logger";

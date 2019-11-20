@@ -23,7 +23,7 @@ std::ofstream Topology::time_ofs;
 
 Graph::Graph(const AdjacencyMatrix& other) {
 
-    // by default activate all signatures
+    // by default activate these signatures
     signature.active[VN_exact] = false;
     signature.active[VN] = true;
     signature.active[ST] = true;
@@ -39,7 +39,7 @@ Graph::Graph(const AdjacencyMatrix& other) {
 // in batch mode replace the graph with the provided edges and nodes, in incremental add them to the graph
 void Graph::updateGraph(std::string &edges, std::string &nodes, bool replace) {
 
-    // by default activate all signatures and incremental VN only if it is not batch mode
+    // by default activate these signatures and incremental VN only if it is not batch mode
     signature.active[VN_exact] = false;
     signature.active[VN] = true;
     signature.active[ST] = true;

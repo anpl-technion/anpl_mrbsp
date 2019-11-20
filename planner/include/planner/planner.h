@@ -283,12 +283,12 @@ protected:
        if (replan) { // for both modes after information from all robots was sent
             MR_info_generated = false; // flag to signal that regenerating MR info is required
 
-           std::string path_to_log_folder = ".";
+           /*std::string path_to_log_folder = ".";
            _n.getParam("/logger/loggerPath", path_to_log_folder);
            std::stringstream session_id;
            session_id << std::setw( 3 ) << std::setfill( '0' ) << n_session;
            gtsam::serializeToFile(prior_graph, path_to_log_folder+"/reconstructed_graph_session_" + session_id.str());
-           gtsam::serializeToFile(prior_values, path_to_log_folder+"/reconstructed_values_session_" + session_id.str());
+           gtsam::serializeToFile(prior_values, path_to_log_folder+"/reconstructed_values_session_" + session_id.str());*/
            n_session++;
         }
 
