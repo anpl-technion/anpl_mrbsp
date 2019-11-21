@@ -72,7 +72,7 @@
 
   <!-- Planner -->
   <node pkg="planner" type="planner" name="planner" clear_params="true" output="screen" > <!-- launch-prefix="xterm -e gdb -ex run [MinusMinus]args" -->
-    <param name="planner_type" value="matlab" /> <!-- "cpp", "matlab" or "julia" -->
+    <param name="planner_type" value="cpp" /> <!-- "cpp", "matlab" or "julia" -->
     <param name="mode" value="incremental"/> <!-- incremental or batch -->
 	<param name="alg" value="t-bsp"/> <!-- BSP algorithm: "standard", "t-bsp",...-->	
     <param name="unit_tests" value="false" />

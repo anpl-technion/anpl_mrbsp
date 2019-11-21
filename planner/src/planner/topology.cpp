@@ -482,7 +482,7 @@ void Graph::updateGraphAndSignature(std::string &delta_edges, std::string &delta
 
     gttoc_(updateTBSPposterior);
 
-    showGraph();
+    //showGraph();
 
     ROS_WARN("Topological graph and signatures updated.");
     tictoc_print_(); // Optional
@@ -530,7 +530,30 @@ Topology::Topology() :
         }
     }
 
-    Topology::time_ofs.open ("/home/andrej/timing.txt", std::ofstream::out);
+
+    std::string b_m_path_to_log_folder;
+    ros::NodeHandle nh_private("~");
+
+    if(!nh_private.hasParam("/logger/loggerPath")) {
+        ROS_WARN("Unable to find log folder, retrying after 3 s...");
+        ros::Duration(3.0).sleep();
+        if(nh_private.hasParam("/logger/loggerPath")) {
+            nh_private.getParam("/logger/loggerPath", b_m_path_to_log_folder);
+        }
+        else {
+			const char * home = getenv ("HOME");
+    		if (home == NULL)
+	            b_m_path_to_log_folder = "./";
+    		else
+	            b_m_path_to_log_folder = std::string(home) + "/.ros/";
+        }
+    }
+    else {
+        nh_private.getParam("/logger/loggerPath", b_m_path_to_log_folder);
+    }
+    ROS_INFO("Planner log folder: %s", b_m_path_to_log_folder.c_str());
+
+    Topology::time_ofs.open (b_m_path_to_log_folder + "timing.txt", std::ofstream::out);
 
     ROS_WARN("Topology init. OK");
 
@@ -605,10 +628,10 @@ void Topology::updatePrior(std::string &edges, std::string &nodes, gtsam::Values
     tictoc_getNode(tUpdatePriorGraph, updatePriorGraph);
     time_ofs << tUpdatePriorGraph.get()->wall() << " ";
 
-    prior_graph.calculateSignature();
+    prior_graph.calculateSignature(); // TODO not needed in BATCH?
     gttoc_(updateTBSPprior);
 
-    prior_graph.showGraph();
+    //prior_graph.showGraph();
 
     ROS_WARN("Prior topology created in %s mode.", inBatchMode?"BATCH":"INCR");
 

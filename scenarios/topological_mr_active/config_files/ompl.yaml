@@ -25,7 +25,7 @@ waypoint_density: 1.0
 kds: {
 
 #number of paths to try to find
-num_candidate_paths: 3,
+num_candidate_paths: 10,
 
 k_diverse_short_alg: 'v', # {'e' == EPPSTEIN, 'v' == VOSS};
 # path distance measure to use

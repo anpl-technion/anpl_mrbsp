@@ -38,6 +38,7 @@ Planner::Planner() {
     parameters.factorization = ISAM2Params::Factorization::QR;
     isam2 = new ISAM2(parameters);
 
+    ros::param::param<std::string>("/planner/alg", planner_algorithm, "standard");
 }
 
 void Planner::constructLocalFGs(char robot_id, mrbsp_msgs::Actions& controls, bool isBatchMode) {
@@ -258,12 +259,12 @@ void Planner::constructMultiRobotFGsForTwoRobots(bool isBatchMode) {
 unsigned int Planner::evaluateObjFn(const std::vector<NonlinearFactorGraph>& graph, const std::vector<Values>& initialEstimate, bool inBatchMode) {
 
 
-    unsigned int idx_opt = 0;
-    double J_opt;
+    unsigned int idx_opt = 0, t_idx_opt = 0;
+    double J_opt, J_t, s_opt;
 
-    if (inBatchMode) {
+    if (inBatchMode) { // batch standard and topological BSP
 
-        ROS_WARN("Calculate posterior beliefs in BATCH mode");
+        ROS_WARN("Calculate posterior beliefs and topologies in BATCH mode");
 
         // 4. Optimize the initial values using a Gauss-Newton nonlinear optimizer
         // The optimizer accepts an optional set of configuration parameters,
@@ -279,24 +280,39 @@ unsigned int Planner::evaluateObjFn(const std::vector<NonlinearFactorGraph>& gra
 
         for (int i = 0; i < graph.size(); i++) {
 
+            ROS_WARN("|\nAction %ld", i);
+            double J;
+            Values result;
             // Create the optimizer ...
             try {
 
                 GaussNewtonOptimizer optimizer(graph[i], initialEstimate[i], parameters);
 
                 // ... and optimize
-                Values result = optimizer.optimize();
-                result.print("Final Result:\n");
+                result = optimizer.optimize();
+                //result.print("Final Result:\n");
 
                 // 5. Calculate and print marginal covariances for all variables
                 cout.precision(3);
                 Marginals marginals(graph[i], result);
-                cout << "keys size of graph " << i << " is " << graph[i].keys().size() << endl;
+                /*cout << "keys size of graph " << i << " is " << graph[i].keys().size() << endl;
                 gtsam::Matrix cov_end_pose = marginals.marginalCovariance(initialEstimate[i].keys().back());
                 Symbol last_pose(initialEstimate[i].keys().back());
                 cout << "x(k+L) covariance [" << last_pose.chr() << last_pose.index() << "]:\n" << cov_end_pose
                      << endl; // uncertainty of the last pose of the i-th action
-                double J = cov_end_pose.determinant();
+                J = cov_end_pose.determinant();*/
+                result.erase(Key(Symbol('A', 0))); // this is deterministic var
+                JointMarginal JointInf = marginals.jointMarginalInformation(KeyVector(result.keys()));
+                gtsam::Matrix R_mat = gtsam::RtR(JointInf.fullMatrix()); // Cholesky factorization Lambda = R'R
+
+                J = R_mat.rows()/2.0 * log(2*M_PI*M_E);
+                double logDetR = 0;
+                for (unsigned i = 0; i < R_mat.rows(); ++i) {
+                    logDetR += std::log(fabs(R_mat(i, i)));
+                    //logDetR2 += std::log(fabs(R.coeff(i, i)));
+                }
+
+                J -= 2*logDetR;
 
                 if (i == 0) {
                     idx_opt = 0;
@@ -314,13 +330,33 @@ unsigned int Planner::evaluateObjFn(const std::vector<NonlinearFactorGraph>& gra
                 initialEstimate[i].print();
 
             }
-        }
-    } else { // incremental standard BSP
 
-        ROS_WARN("Calculate posterior beliefs in INCR mode");
+            // t-bsp
+            Graph posterior_topological_graph;
+            std::string post_E = plannData.prior_edges + delta_edges[0][i]; // single robot for now, TODO MR
+            std::string post_V = plannData.prior_nodes + delta_nodes[0][i];
+            posterior_topological_graph.updateGraph(post_E, post_V, true);
+            posterior_topological_graph.calculateSignature();
+
+            if (i == 0) {
+                t_idx_opt = 0;
+                s_opt = posterior_topological_graph.signature.s_VN;
+                J_t = J;
+
+            } else if (posterior_topological_graph.signature.s_VN > s_opt) {
+                t_idx_opt = i;
+                s_opt = posterior_topological_graph.signature.s_VN;
+                J_t = J;
+            }
+
+        }
+    } else { // incremental standard and topological BSP
+
+        ROS_WARN("Calculate posterior beliefs and topologies in INCR mode");
 
         for (int i = 0; i < graph.size(); i++) {
 
+            ROS_WARN("|\nAction %ld", i);
 
             gttic_(isam2BSP);
 
@@ -451,8 +487,11 @@ unsigned int Planner::evaluateObjFn(const std::vector<NonlinearFactorGraph>& gra
 
             //result.print("Final estimate:\n");
 
-            ROS_WARN("Calculate posterior topologies in INCR mode");
+            // t-bsp
             Graph posterior_topological_graph = T->prior_graph;
+            posterior_topological_graph.signature.active[VN_incr] = true;
+            posterior_topological_graph.signature.active[VN] = true; // only for testing and time comparison, otherwise can be turned off
+
             //cout << "Edges of action " << i << ": " << delta_edges[0][i] << endl;
             //cout << "Nodes of action " << i << ": " << delta_nodes[0][i] << endl;
             posterior_topological_graph.updateGraphAndSignature(delta_edges[0][i], delta_nodes[0][i], result); // single robot for now, TODO MR
@@ -460,6 +499,16 @@ unsigned int Planner::evaluateObjFn(const std::vector<NonlinearFactorGraph>& gra
 
             //delta_edges[i]
 
+            if (i == 0) {
+                t_idx_opt = 0;
+                s_opt = posterior_topological_graph.signature.s_VN_incr;
+                J_t = J;
+
+            } else if (posterior_topological_graph.signature.s_VN_incr > s_opt) {
+                t_idx_opt = i;
+                s_opt = posterior_topological_graph.signature.s_VN_incr;
+                J_t = J;
+            }
 
             // save posterior factor graph as graphviz dot file
             // Render to PDF using "fdp fg.dot -Tpdf > fg.pdf"
@@ -483,14 +532,20 @@ unsigned int Planner::evaluateObjFn(const std::vector<NonlinearFactorGraph>& gra
             std::getline(std::cin, tempStr);*/
 
         }
-        delta_edges[0].clear(); // TODO MR
-        delta_nodes[0].clear();
-
     }
+    delta_edges[0].clear(); // TODO MR
+    delta_nodes[0].clear();
 
     Topology::time_ofs << "\n"; // terminate planning session
     tictoc_finishedIteration_();
-    return idx_opt;
+    ROS_WARN_STREAM("Opt. action by: (standard bsp, t-bsp) = (" << idx_opt << ", " << t_idx_opt << ")");
+    ROS_WARN("Relative error: %lf", (J_t-J_opt)/J_opt);
+
+    // what action should be the selected
+    if (planner_algorithm == "t-bsp") // topological bsp
+        return t_idx_opt;
+    else // standard bsp
+        return idx_opt;
 
 }
 

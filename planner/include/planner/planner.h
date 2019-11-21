@@ -324,6 +324,7 @@ public:
     }
 
     PlannData plannData;
+    std::string planner_algorithm;
     enum planner_status {SUCCESS, FAIL, NA} status;
     std::vector<NonlinearFactorGraph> local_graphs[NUM_ROBOTS];
     std::vector<Values> local_values[NUM_ROBOTS];

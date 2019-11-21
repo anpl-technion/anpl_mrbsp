@@ -205,7 +205,7 @@ int main(int argc, char** argv) {
                         idx_opt[r] = planner.evaluateObjFn(planner.local_graphs[r], planner.local_values[r], isBatchMode);
 
                     opt_joint_action.actions.push_back(srv[r].response.actions.actions[idx_opt[r]]);
-                    std::cout << "Opt. action of robot " << (char)(r+'A') << " is action " << idx_opt[r] << std::endl;
+                    std::cout << "Select. action of robot " << (char)(r+'A') << " is action " << idx_opt[r] << std::endl;
                 }
             } else { // using MR factors
 
