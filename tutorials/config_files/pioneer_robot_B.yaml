@@ -1,0 +1,30 @@
+# parameters for robots odometry
+robot_name: Robot_B
+robot_id: B
+init_pose: {
+  position:    {X: 0.792, Y: 3.625, Z: 0.0},
+  orientation: {Yaw: -1.5708, Pitch: 0.0, Roll: 0.0}
+}
+topics: {pulse: /rosaria/pose, odom: /rosaria/pose, laser: /scan, ground_truth: /ground_truth, pointcloud: /camera/depth/points}
+sensor_pose: {
+  odom: {
+    position:    {X: 0.0, Y: 0.0, Z: 0.0},
+    orientation: {qX: 0.0, qY: 0.0, qZ: 0.0, qW: 0.0}
+  },
+  laser: {
+    position:    {X: 0.32, Y: 0.0, Z: 0.16},
+    orientation: {qX: 0.0, qY: 0.0, qZ: 0.0, qW: 0.0}
+  },
+  pointcloud: {
+    position:    {X: 0.25, Y: 0.5, Z: 0.31},
+    orientation: {qX: 0.5, qY: -0.5, qZ: 0.5, qW: -0.5}
+  }
+}
+
+informative_condition: {distance: 0.5, yaw: 0.2618}
+
+visualize_laser: true
+is_3D_vis: true
+index_timeout_threshold: 50
+is_noised_odom: false
+error_dynamic_percentage: 0.1

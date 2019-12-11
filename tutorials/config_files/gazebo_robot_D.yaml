@@ -1,0 +1,30 @@
+# parameters for robots odometry
+robot_name: pioneer4
+robot_id: D
+init_pose: {
+  position:    {X: 29.0, Y: 8.2, Z: 0.0},
+  orientation: {Yaw: 3.141592654, Pitch: 0.0, Roll: 0.0}
+}
+topics: {pulse: /odom, odom: /odom, laser: /laser, ground_truth: /ground_truth}
+sensor_pose: {
+  odom: {
+    position:    {X: 0.0, Y: 0.0, Z: 0.0},
+    orientation: {qX: 0.0, qY: 0.0, qZ: 0.0, qW: 1.0}
+  },
+  laser: {
+    position:    {X: 0.0, Y: 0.0, Z: 0.0},
+    orientation: {qX: 0.0, qY: 0.0, qZ: 0.0, qW: 0.0}
+  },
+  pointcloud: {
+    position:    {X: 0.0, Y: 0.0, Z: 0.0},
+    orientation: {qX: 0.0, qY: 0.0, qZ: 0.0, qW: 0.0}
+  }
+}
+
+informative_condition: {distance: 2.0, yaw: 0.2618}
+
+visualize_laser: true
+is_3D_vis: false
+index_timeout_threshold: 50
+is_noised_odom: false
+error_dynamic_percentage: 0.1

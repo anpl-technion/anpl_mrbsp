@@ -1,0 +1,10 @@
+# parameters for the default state machine
+robot_name: Robot_A
+robot_id: A
+
+state_switching_conditions: {
+  mpc: false, 
+  passive_palnner: false
+}
+  
+request_to_move_with_service: false

@@ -1,0 +1,41 @@
+ompl: {
+# OMPL state space boundaries. Consider part of the map to do planning in
+# [ x_min, x_max, y_min, y_max ]
+# If it is not given, octomap boundaries will be used for a predefined map.
+# If there is no octomap, no bounds will exist if we don't specify them here.
+#  map_boundary: [-10.0, 35.0, -10.0, 10.0],
+
+# minimum number of random point samples in the roadmap
+min_vertices: 500,
+
+max_planning_time: 5.0, # [s]
+
+min_edge_length: 0.2,
+max_edge_length: 5.0,
+
+# State validity checking resolution 0.5 %
+resolution: 0.005,
+
+# waypoint density, number of waypoints per meter
+waypoint_density: 1.0
+
+}
+
+
+kds: {
+
+#number of paths to try to find
+num_candidate_paths: 20,
+
+k_diverse_short_alg: 'v', # {'e' == EPPSTEIN, 'v' == VOSS};
+# path distance measure to use
+path_distance_measure_alg: 'l', # {'l' == LEVENSHTEIN, 'f' == FRECHET, 'h' == HAUSDORFF};
+# method used to measure distance to center of neighborhood
+avoid_method: 0, # {0 == CSPACE, 1 == GRAPH, 2 == UNKNOWN};
+
+max_path_length: 1000,
+min_path_pairwise_distance: 1,
+# radius of avoided regions as a factor of shortest path length
+radius_factor: 0.3
+
+}

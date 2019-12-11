@@ -1,0 +1,32 @@
+<launch>
+
+  <!-- Parameters to change each time-->
+  <arg name="current_scenario"  default="mrbsp_ros_tutorials" />
+
+  <arg name="scenario_dir"      default="$(eval find(current_scenario))" />
+  <arg name="config_files_dir"  default="$(arg scenario_dir)/config_files" />
+
+  <!-- Putting the time back to real time-->
+  <rosparam> /use_sim_time : false </rosparam>
+
+  <!-- Load robot params -->
+  <group ns="Robot_A">
+    <rosparam command="load" file="$(arg config_files_dir)/gazebo_robot_A.yaml" />
+  </group>
+
+  <param name="scenario_folder" value="$(arg scenario_dir)"/>
+
+  <node pkg="da" type="da_icp_laser" name="da_laser" clear_params="true" output="screen">
+    <rosparam command="load" file="$(arg config_files_dir)/da_laser_csm_icp.yaml" />
+  </node>
+
+  <node pkg="belief" type="belief_isam2" name="belief_isam2" clear_params="true" output="screen"> <!-- launch-prefix="xterm -e gdb -ex run [MinusMinus]args" -->
+    <rosparam command="load" file="$(arg config_files_dir)/belief_isam2.yaml" />
+  </node>
+
+  <node pkg="mapper" type="map_laser_node" name="map_octomap_laser" clear_params="true" output="screen">
+    <rosparam command="load" file="$(arg config_files_dir)/map_octomap_laser.yaml"/>
+  </node>
+
+
+  </launch>

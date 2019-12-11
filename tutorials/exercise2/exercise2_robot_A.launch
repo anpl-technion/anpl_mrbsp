@@ -1,0 +1,24 @@
+<launch>
+    
+  <!-- Parameters to change each time-->
+  <arg name="current_scenario"  default="mrbsp_ros_tutorials" />
+
+  <arg name="scenario_dir"      default="$(eval find(current_scenario))" />
+  <arg name="config_files_dir"  default="$(arg scenario_dir)/config_files" />
+  <arg name="robot_name" default="Robot_A" />
+  <arg name="odometry_type"     default="odometry_external"/> <!-- odometry_icp_laser|odometry_external-->
+
+  <!-- Putting the time back to real time-->
+  <rosparam> /use_sim_time : false </rosparam>
+  <param name="scenario_folder" value="$(arg scenario_dir)"/>
+
+  <node pkg="odometry" type="$(arg odometry_type)" name="$(arg robot_name)" clear_params="true" output="screen" > <!-- launch-prefix="xterm -e gdb -ex run [MinusMinus]args" -->
+    <rosparam command="load" file="$(arg config_files_dir)/gazebo_robot_A.yaml" />
+  </node>
+
+  <!-- Create static transformation between the laser frame id to the robot pose for laser drawing in rviz -->
+  <node pkg="tf" type="static_transform_publisher" name="$(arg robot_name)_laser_link" args="0.27 -0.03 0.13 0 0 0 1 pioneer1/base_link pioneer1/hokuyo_link 100" />
+
+  <node pkg="tf" type="static_transform_publisher" name="$(arg robot_name)_base_link" args="0.0 0.0 0 0 0 0 1 $(arg robot_name) pioneer1/odom 100" />
+
+  </launch>

@@ -1,0 +1,8 @@
+<launch>
+  <arg name="rvizconfig" default="$(find mrbsp_ros_tutorials)/rviz/exercise1_rviz.rviz" />
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true" />
+
+  <node pkg="tf" type="static_transform_publisher" name="pioneer1_hokuyo" args="0.0 0.0 0 0 0 0 1 pioneer1/hokuyo_link pioneer1/odom 100" />
+
+</launch>
+

@@ -1,0 +1,59 @@
+# parameters for 4 robots
+num_of_robots: 4
+
+# odometry node params
+robots_params: {
+  robot1: {
+    name: pioneer1,
+    bag_name: pioneer_laser_01.bag,
+    id: A,
+    odom_topic: /pioneer1/odom,
+    laser_topic: /pioneer1/laser,
+    init_pose: {
+      position: {X: -09.22, Y: -19.36, Z: 0.0},
+      rotation: {Yaw: 1.570796327, Pitch: 0.0, Roll: 0.0}
+    }
+  },
+  robot2: {
+    name: pioneer2,
+    bag_name: pioneer_laser_02.bag,
+    id: B,
+    odom_topic: /pioneer1/odom,
+    laser_topic: /pioneer1/laser,
+    init_pose: {
+      position: {X: -03.3, Y: 24.5, Z: 0.0},
+      rotation: {Yaw: -1.570796327, Pitch: 0.0, Roll: 0.0}
+    }
+  },
+  robot3: {
+    name: pioneer3,
+    bag_name: pioneer_laser_03.bag,
+    id: C,
+    odom_topic: /pioneer1/odom,
+    laser_topic: /pioneer1/laser,
+    init_pose: {
+      position: {X: 29.0, Y: -15.2, Z: 0.0},
+      rotation: {Yaw: 3.141592654, Pitch: 0.0, Roll: 0.0}
+    }
+  },
+  robot4: {
+    name: pioneer4,
+    bag_name: pioneer_laser_04.bag,
+    id: D,
+    odom_topic: /pioneer1/odom,
+    laser_topic: /pioneer1/laser,
+    init_pose: {
+      position: {X: 29.0, Y: 8.2, Z: 0.0},
+      rotation: {Yaw: 3.141592654, Pitch: 0.0, Roll: 0.0}
+    }
+  }
+}
+
+# DA params:
+
+# Belief params:
+save: {matlab_results: true, serialized_files: true}
+
+# Map params:
+map_filename: octomap.ot
+map_resolution: 0.1
