@@ -50,7 +50,7 @@
    <!-- If no map is used don't load anything (for faster rendering) -->
    <arg unless="$(arg use_preloaded_map_in_AG)" name="world_octomap" value=""/>
    <!-- The world map that will be used for action generator in interactive and OMPL mode. This assumes that the environment is known a priori when generating cadidate actions. This map, however, is not used anywhere else, for e.g. in the inference process. More general case would be to use the inferred map instead. This is not crutial for BSP as we can view the process of action generation as independent of the current map estimate. -->
-   <arg if="$(arg use_preloaded_map_in_AG)" name="world_octomap" value="$(find action_generator)/worlds/ANPL_topological.bt" />
+   <arg if="$(arg use_preloaded_map_in_AG)" name="world_octomap" value="$(find action_generator)/worlds/ANPL-Hyundai.ot" />
    <!--arg if="$(arg use_preloaded_map_in_AG)" name="world_octomap" value="$(find action_generator_node)/worlds/ANPL-10.bt" /-->
    
    <arg name="rviz_config" value="$(find action_generator)/config/planning_15Hz_2d.rviz" />
