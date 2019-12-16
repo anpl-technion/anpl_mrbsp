@@ -12,9 +12,9 @@
     </node>
 
     <!-- connect to astra rgbd camera -->
-    <include file="$(find astra_launch)/launch/astra.launch" >
-      <param name="camera/driver/data_skip" values="5"/>
-    </include>
+    <!--include file="$(find astra_launch)/launch/astra.launch" -->
+      <!--param name="camera/driver/data_skip" values="5"/-->
+    <!--/include-->
 
     <!-- connect to lidar -->
    
