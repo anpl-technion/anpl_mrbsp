@@ -1,0 +1,13 @@
+# parameters for pioneer robot controller
+topics: {velocity_cmd: /pioneer/cmd_vel} 
+max_velocity: {linear: 0.5, angular: 0.15} # {[m/sec], [rad/sec]}
+max_range: {linear: 5, angular: 0.785} # {[m], [rad]} pre filters for the controller - currently not in use
+pid_constants: {
+  linear:  {p: 0.100, i: 0.001, d: 0.000},
+  angular: {p: 0.100, i: 0.001, d: 0.000}
+}
+controller_rate: -1 # [Hz] - currently not in use
+# default: -1 - no controll of the rate
+
+error_threshold: {linear: 0.1, angular: 0.1} # {[m], [rad]}
+# defaults: {0.1, 0.1}
