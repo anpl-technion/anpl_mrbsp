@@ -19,15 +19,15 @@
   
   <param name="scenario_folder" value="$(arg scenario_dir)"/>
 
-  <!-- <node pkg="logger" type="logger" name="logger" clear_params="true" output="screen"> -->
-    <!-- <rosparam command="load" file="$(arg config_files_dir)/logger.yaml" /> -->
+  <node pkg="logger" type="logger" name="logger" clear_params="true" output="screen">
+    <rosparam command="load" file="$(arg config_files_dir)/logger.yaml" />
 
      <!-- Boost archive version used by ROS and Matlab -->
-    <!-- <rosparam> ros_boost_archive_version: "serialization::archive 12" </rosparam>  -->
+    <rosparam> ros_boost_archive_version: "serialization::archive 12" </rosparam> 
     <!-- ROS Kinetic v12 -->
-    <!-- <rosparam> matlab_boost_archive_version: "serialization::archive 11" </rosparam>  -->
+    <rosparam> matlab_boost_archive_version: "serialization::archive 11" </rosparam> 
     <!-- Matlab 2017b v11 -->
-   <!-- </node> -->
+   </node>
 
   <node pkg="da" type="da_icp_laser" name="da_laser" clear_params="true" output="screen">
     <rosparam command="load" file="$(arg config_files_dir)/da_laser_csm_icp.yaml" />

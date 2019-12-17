@@ -11,7 +11,7 @@ printf "Will run:
 		(2) masterdiscovery 	[$cmd2]
 		(3) mastersynch     	[$cmd3]"
 
-gnome-terminal --geometry 100x17-1100-600 --tab  --command="bash -c '$cmd1; $SHELL'" \
+gnome-terminal --geometry 100x17-1150-500 --tab  --command="bash -c '$cmd1; $SHELL'" \
                --tab  --command="bash -c '$cmd2; $SHELL'" \
                --tab  --command="bash -c '$cmd3; $SHELL'"
 
