@@ -1,5 +1,5 @@
 #==== logger node ====
-researcher_name:        Andrej_Kitanov
+researcher_name:        ANPL_Researcher
 log_level:              1         #default 1
 is_file_logger:         false      #default true
 is_console_logger:      false      #default true

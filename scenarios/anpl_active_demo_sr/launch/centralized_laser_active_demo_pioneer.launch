@@ -1,7 +1,7 @@
 <launch>
 
   <!-- Parameters and processes on the central machine-->
-  <arg name="current_scenario"  default="topological_mr_active" />
+  <arg name="current_scenario"  default="anpl_active_demo_sr" />
 
   <arg name="scenario_dir"      default="$(eval find(current_scenario))" />
   <arg name="config_files_dir"  default="$(arg scenario_dir)/config_files" />
@@ -13,19 +13,21 @@
   <group ns="Robot_A">
     <rosparam command="load" file="$(arg config_files_dir)/pioneer_robot_A.yaml" />
   </group>
-  <group ns="Robot_B">
+  <!-- <group ns="Robot_B">
     <rosparam command="load" file="$(arg config_files_dir)/pioneer_robot_B.yaml" />
-  </group>
+  </group> -->
   
   <param name="scenario_folder" value="$(arg scenario_dir)"/>
 
-  <node pkg="logger" type="logger" name="logger" clear_params="true" output="screen">
-    <rosparam command="load" file="$(arg config_files_dir)/logger.yaml" />
+  <!-- <node pkg="logger" type="logger" name="logger" clear_params="true" output="screen"> -->
+    <!-- <rosparam command="load" file="$(arg config_files_dir)/logger.yaml" /> -->
 
      <!-- Boost archive version used by ROS and Matlab -->
-    <rosparam> ros_boost_archive_version: "serialization::archive 12" </rosparam> <!-- ROS Kinetic v12 -->
-    <rosparam> matlab_boost_archive_version: "serialization::archive 11" </rosparam> <!-- Matlab 2017b v11 -->
-   </node>
+    <!-- <rosparam> ros_boost_archive_version: "serialization::archive 12" </rosparam>  -->
+    <!-- ROS Kinetic v12 -->
+    <!-- <rosparam> matlab_boost_archive_version: "serialization::archive 11" </rosparam>  -->
+    <!-- Matlab 2017b v11 -->
+   <!-- </node> -->
 
   <node pkg="da" type="da_icp_laser" name="da_laser" clear_params="true" output="screen">
     <rosparam command="load" file="$(arg config_files_dir)/da_laser_csm_icp.yaml" />
