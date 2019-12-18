@@ -73,9 +73,10 @@ while true
     %
     % and send back the result
 
-    index_to_send = 1;
+    index_to_send = input('Action Number (1,2,...): ');
+%     index_to_send = 1;
     msg = rosmessage(matlab_pub);
-    msg.Data = index_to_send(1)-1; % first maximum, index in C-style
+    msg.Data = int32(index_to_send)-1; % first maximum, index in C-style
     matlab_pub.send(msg);
 
     disp (['Chosen Path: ' num2str(index_to_send)]);

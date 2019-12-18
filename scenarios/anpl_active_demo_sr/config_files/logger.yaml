@@ -1,7 +1,7 @@
 #==== logger node ====
 researcher_name:        ANPL_Researcher
-log_level:              1         #default 1
-is_file_logger:         false      #default true
+log_level:              3         #default 1
+is_file_logger:         true      #default true
 is_console_logger:      false      #default true
 is_ros_console:         false     #default false
 log_tags:               all       #default all [all utils logger odometry da belief]
