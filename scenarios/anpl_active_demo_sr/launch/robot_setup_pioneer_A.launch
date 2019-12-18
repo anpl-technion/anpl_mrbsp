@@ -36,8 +36,8 @@
       <remap from="/mobile_base/commands/velocity" to="rosaria/cmd_vel"/>
       <param name="robot_name" value="$(arg robot_name)"/>
       
-      <rosparam command="load" file="$(find pure_pursuit_with_vfh)/config/default.yaml" />
-      
+      <!-- <rosparam command="load" file="$(find pure_pursuit_with_vfh)/config/default.yaml" />  -->
+      <rosparam command="load" file="$(arg config_files_dir)/pure_pursuit_vfh_controller_pioneer.yaml" />
   
     </node>
 
