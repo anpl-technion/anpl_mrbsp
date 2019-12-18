@@ -29,8 +29,8 @@ goal_radius: 0.5
 velocity_profile: {
   enable: false,
   v_min: 0.1, # [m/s]
-  v_max: 0.7, # [m/s]
-  a: 0.3, # [m/s^2], a>0 constant acceleration until v_max; set to zero for rectangular velocity profile between v_min and v_max
-  c: 0.5, # [m] # small velocity (v_min) zone +/-c around waypoint
-  k: 10 # reference prefilter with transfer function G(s)=k/(s+k)
+  v_max: 0.3, # [m/s] #(0.7)#
+  a: 0.2, # [m/s^2]   #(0.3)#, a>0 constant acceleration until v_max; set to zero for rectangular velocity profile between v_min and v_max
+  c: 0.2, # [m]       #(0.5)#  small velocity (v_min) zone +/-c around waypoint
+  k: 0.2  #           #(10 )# reference prefilter with transfer function G(s)=k/(s+k)
 }
