@@ -1,0 +1,41 @@
+<launch>
+  <arg name="robot_name"/>
+  <arg name="robot_serial_port" default="/dev/ttyUSB0"/>
+  <arg name="is_lidar_usb" default="False"/>
+  <arg name="lidar_serial_port" default="/dev/ttyACM0"/>
+  <arg name="lidar_ip_adress" default="192.168.7.10"/>
+  
+  <group ns="$(arg robot_name)">
+    <!-- connect to pioneer robot -->
+    <node pkg="rosaria" type="RosAria" name="rosaria" output="screen">
+      <param name="_port" value="$(arg robot_serial_port)"/>
+    </node>
+
+    <!-- connect to astra rgbd camera -->
+    <!--include file="$(find astra_launch)/launch/astra.launch" -->
+      <!--param name="camera/driver/data_skip" values="5"/-->
+    <!--/include-->
+
+    <!-- connect to lidar -->
+   
+    <!-- Hokuyo UTM 30-LX lidar -->
+    <group if="$(arg is_lidar_usb)">
+      <node pkg="urg_node" type="urg_node" name="urg_node" output="screen">
+        <param name="serial_port" value="$(arg lidar_serial_port)"/>
+    	<param name="angle_min" value="-1.5707963"/> <!-- (-)PI, min value = -2.2689 -->
+    	<param name="angle_max" value="1.5707963"/>  <!-- (+)PI, max value =  2.2689 -->
+      </node>
+    </group>
+
+    <!-- Hokuyo UST 10-LX lidar -->
+    <group unless="$(arg is_lidar_usb)">
+      <node pkg="urg_node" type="urg_node" name="urg_node" output="screen">
+        <param name="ip_address" value="$(arg lidar_ip_adress)"/>
+    	<param name="angle_min" value="-1.5707963"/> <!-- (-)PI, min value = -2.2689 -->
+    	<param name="angle_max" value="1.5707963"/>  <!-- (+)PI, max value =  2.2689 -->
+    	<param name="range_max" value="10.0"/>
+      </node>
+    </group>
+
+  </group>
+</launch>

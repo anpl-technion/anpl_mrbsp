@@ -1,0 +1,19 @@
+# parameters for the default state machine
+robot_name: Robot_A
+robot_id: A
+
+state_switching_conditions: {
+  mpc: false,
+  time_horizon: 3, #  execute this number of immediate actions before triggering mpc again
+  prediction_horizon: 1,
+  passive_planner: false
+}
+
+# how the state machine communicates with the controller (via service or topics)
+request_to_move_with_service: false
+
+# relevant only for mpc planner, 
+# when true do mpc planning session, but stay with previous plan until the next goal 
+# - main use for planner benchmarking in static environments with ground truth actions and avoiding oscillations
+stay_on_global_path: true 
+goal_oriented_mpc: false # each mpc step replan to the goal, otherwise look ahead for fixed prediction horizon
