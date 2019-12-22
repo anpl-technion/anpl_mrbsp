@@ -1,0 +1,36 @@
+# parameters for robots odometry
+robot_name: pioneer2
+robot_id: B
+init_pose: {
+  position:    {X: 26.9, Y: -6.07, Z: 0.0},
+  orientation: {Yaw: 1.57, Pitch: 0.0, Roll: 0.0}
+}
+topics: {pulse: /odom, odom: /odom, laser: /laser/scan, ground_truth: /ground_truth}
+sensor_pose: {
+  odom: {
+    position:    {X: 0.0, Y: 0.0, Z: 0.0},
+    orientation: {qX: 0.0, qY: 0.0, qZ: 0.0, qW: 1.0}
+  },
+  laser: {
+    position:    {X: 0.0, Y: 0.0, Z: 0.0},
+    orientation: {qX: 0.0, qY: 0.0, qZ: 0.0, qW: 1.0}
+  },
+  pointcloud: {
+    position:    {X: 0.0, Y: 0.0, Z: 0.0},
+    orientation: {qX: 0.0, qY: 0.0, qZ: 0.0, qW: 1.0}
+  }
+}
+
+# maximum robot's acceleration [ m/s^2 ]
+robot_accel_max: 1.0
+
+informative_condition: {distance: 1.0, yaw: 0.2618}
+
+visualize_laser: true
+is_3D_vis: false
+index_timeout_threshold: 50
+is_noised_odom: false
+error_dynamic_percentage: 0.1
+
+# where are the ground truth messages coming from (gazebo, mocap, n.a.)
+ground_truth_source: gazebo
