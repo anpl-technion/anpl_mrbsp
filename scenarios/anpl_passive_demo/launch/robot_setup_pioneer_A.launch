@@ -40,27 +40,12 @@
       <rosparam command="load" file="$(arg config_files_dir)/pure_pursuit_vfh_controller_pioneer.yaml" />
   
     </node>
-
-
-    
-  
-   
-<group ns="$(arg robot_name)">
-  <node pkg="state_machine" type="state_machine_default_node" name="state_machine_default" clear_params="true" output="screen">
-    <rosparam command="load" file="$(arg config_files_dir)/state_machine_default.yaml" />
-    <!-- Load robot goals -->
-    <rosparam command="load" file="$(arg config_files_dir)/pioneer_robot_A_goals.yaml" />
-  </node>
-
+ 
   <!-- start in GDB -->
   <!--node pkg="collision_detection_node" type="collosion_detection_octomap" name="$(arg robot_name)_collision_detector" clear_params="true" output="screen" launch-prefix="xterm -e gdb -ex run [MinusMinus]args" -->
   <node pkg="collision_detection" type="collosion_detection_octomap" name="collision_detector" clear_params="true" output="screen">
-  
-    <rosparam command="load" file="$(arg config_files_dir)/collision_detector_octomap_pioneer_A.yaml" />
+     <rosparam command="load" file="$(arg config_files_dir)/collision_detector_octomap_pioneer_A.yaml" />
   </node>
-
-</group>
-
 
   <!-- Create static transformation between the laser frame id to the robot pose for laser drawing in rviz -->
   <node pkg="tf" type="static_transform_publisher" name="$(arg robot_name)_laser_link" args="0.27 -0.03 0.13 0 0 0 1 pioneer1/base_link pioneer1/hokuyo_link 10" />
