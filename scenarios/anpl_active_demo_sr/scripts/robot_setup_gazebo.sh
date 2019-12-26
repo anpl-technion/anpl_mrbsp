@@ -1,11 +1,16 @@
 #!/bin/bash
+# Fish-out scenario name from dir path
+scenario_name=$(awk -F/ '{print $(NF-1)}' <<< "$(pwd)")
+#echo "$TEST"
+
 # Start decentralized nodes. 
 # First argument is the robot ID.
-# Optional second argument is the time_delay in seconds between starting different groups of nodes. Controller shoud start only after all other nodes are initialized. 
+# Optional second argument is the time_delay in seconds between starting different groups of nodes.
+# Controller shoud start only after all other nodes are initialized. 
 
 
 # start odomtery node, state machine, collision detection ...
-roslaunch topological_mr_active robot_setup_gazebo_$1.launch &
+roslaunch $scenario_name robot_setup_gazebo_$1.launch &
 
 # make sure nodes are initialized before starting a controller
 if [ -z "$2" ]; then
@@ -17,7 +22,7 @@ else
 fi
 
 # start the controller
-roslaunch topological_mr_active controller_setup_gazebo_$1.launch
+roslaunch $scenario_name controller_setup_gazebo_$1.launch
 
 
 # terminate all started processes including this script when SIGNAL received
