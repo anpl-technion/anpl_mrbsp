@@ -1,0 +1,40 @@
+<launch>
+  <arg name="world_name" default="ANPL_topological.world"/>
+  <arg name="robot1_name" default="pioneer1"/>
+  <arg name="robot2_name" default="pioneer2"/>
+  <!--
+  <env name="GAZEBO_MODEL_PATH" value="$GAZEBO_MODEL_PATH:$(find amr_robots_gazebo)/models" />
+  <env name="GAZEBO_RESOURCE_PATH" value="$GAZEBO_RESOURCE_PATH:$(find amr_robots_gazebo)/models" />
+-->
+
+  <!-- <arg name="world" default="worlds/empty.world" /> -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+	<arg name="world_name" value="$(find anpl_inf)/gazebo_worlds/$(arg world_name)" />
+  </include>
+
+    <!-- spawn the two robots -->
+    <group ns="$(arg robot1_name)">
+        <param name="tf_prefix" value="$(arg robot1_name)"/>
+        <include file="$(find anpl_inf)/launch/spawn_pioneer3at_NoKey.launch">
+          <arg name="robot_name" value="$(arg robot1_name)" />
+          <arg name="init_pose" value="-x -0.15 -y -6.86 -z 0 -Y 0.0 -R 0.0 -P 0.0"/>
+        </include>
+    </group>
+
+    <!-- spawn the two robots-->
+    <group ns="$(arg robot2_name)">
+        <param name="tf_prefix" value="$(arg robot2_name)"/>
+        <include file="$(find anpl_inf)/launch/spawn_pioneer3at_NoKey.launch">
+          <arg name="robot_name" default="$(arg robot2_name)" />
+          <arg name="init_pose" value="-x 26.9 -y -6.07 -z 0 -Y 1.57 -R 0.0 -P 0.0"/>
+        </include>
+    </group>
+
+<!-- robot keyop controller
+  <node name="pioneer_gazebo_keyop" pkg="pioneer_keyop" type="pioneer_gazebo_keyop" output="screen">
+    <rosparam param="robotName" subst_value="True">$(arg robot_name)</rosparam>
+  </node>
+-->
+
+</launch>
+

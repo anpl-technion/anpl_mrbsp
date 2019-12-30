@@ -1,7 +1,7 @@
 <launch>
     
   <!-- Parameters to change each time-->
-  <arg name="current_scenario"  default="anpl_active_demo_sr" />
+  <arg name="current_scenario"  default="anpl_passive_demo" />
 
   <arg name="scenario_dir"      default="$(eval find(current_scenario))" />
   <arg name="config_files_dir"  default="$(arg scenario_dir)/config_files" />
@@ -41,7 +41,7 @@
   <node pkg="state_machine" type="state_machine_default_node" name="state_machine_default" clear_params="true" output="screen">
     <rosparam command="load" file="$(arg config_files_dir)/state_machine_default.yaml" />
     <!-- Load robot goals -->
-    <rosparam command="load" file="$(arg config_files_dir)/gazebo_Robot_A_goals.yaml" />
+    <!-- <rosparam command="load" file="$(arg config_files_dir)/gazebo_Robot_A_goals.yaml" /> -->
   </node>
 
   <!-- start in GDB -->

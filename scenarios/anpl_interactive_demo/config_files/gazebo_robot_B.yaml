@@ -1,8 +1,8 @@
 # parameters for robots odometry
-robot_name: pioneer1
-robot_id: A
+robot_name: pioneer2
+robot_id: B
 init_pose: {
-  position:    {X: 20.0, Y: 0.0, Z: 0.0},
+  position:    {X: 26.9, Y: -6.07, Z: 0.0},
   orientation: {Yaw: 1.57, Pitch: 0.0, Roll: 0.0}
 }
 topics: {pulse: /odom, odom: /odom, laser: /laser/scan, ground_truth: /ground_truth}
@@ -34,6 +34,3 @@ error_dynamic_percentage: 0.1
 
 # where are the ground truth messages coming from (gazebo, mocap, n.a.)
 ground_truth_source: gazebo
-
-# how many previous sampled ground truth poses to keep for visualizations. Number <=0 means keep all
-gt_buffer_size: 20

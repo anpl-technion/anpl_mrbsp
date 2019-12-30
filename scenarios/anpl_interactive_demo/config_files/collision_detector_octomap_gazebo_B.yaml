@@ -1,0 +1,9 @@
+# parameters for octomap collision detector
+robot_name: pioneer2
+robot_id: B
+depth_sensor: {type: laser, topic: /laser/scan, max_dist: 30}
+odometry: {topic: /odom}
+local_map: {resolution: 0.1}
+robot_size: {
+  box: {X: 0.5, Y: 0.5, Z: 0.5}
+}

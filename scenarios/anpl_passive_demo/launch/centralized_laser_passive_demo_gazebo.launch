@@ -11,12 +11,12 @@
 
   <!-- Load robot params -->
   <group ns="Robot_A">
-    <rosparam command="load" file="$(arg config_files_dir)/pioneer_robot_A.yaml" />
+    <rosparam command="load" file="$(arg config_files_dir)/gazebo_robot_A.yaml" />
   </group>
 
-  <!-- <group ns="Robot_B">
-    <rosparam command="load" file="$(arg config_files_dir)/pioneer_robot_B.yaml" />
-  </group> -->
+  <group ns="Robot_B">
+    <rosparam command="load" file="$(arg config_files_dir)/gazebo_robot_B.yaml" />
+  </group>
   
   <param name="scenario_folder" value="$(arg scenario_dir)"/>
 
@@ -41,8 +41,8 @@
 		<rosparam command="load" file="$(arg config_files_dir)/map_octomap_laser.yaml" />
   </node>
 
-  <arg name="world_octomap" value="$(find action_generator)/worlds/ANPL-Hyundai.ot" />
-  <arg name="rviz_config" value="$(find action_generator)/config/planning_15Hz_2d.rviz" />
+  <arg name="world_octomap" value="$(find action_generator)/worlds/willowgarage_center_21_0.bt" />
+  <arg name="rviz_config" value="$(find action_generator)/config/planning_30Hz_2d.rviz" />
    
 
   <!-- GUI -->

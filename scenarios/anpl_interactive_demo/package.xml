@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>anpl_interactive_demo_sr</name>
+  <name>anpl_interactive_demo</name>
   <version>0.0.0</version>
   <description>The anpl_interactive_demo_sr package</description>
 

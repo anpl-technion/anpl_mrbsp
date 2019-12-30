@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(anpl_interactive_demo_sr)
+project(anpl_interactive_demo)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
