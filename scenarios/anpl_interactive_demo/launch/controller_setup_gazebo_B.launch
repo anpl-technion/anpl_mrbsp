@@ -2,13 +2,13 @@
 
 <arg name="current_scenario"  default="anpl_interactive_demo" />
 <arg name="scenario_dir"      default="$(eval find(current_scenario))" />
-  <arg name="config_files_dir"  default="$(arg scenario_dir)/config_files" />
+<arg name="config_files_dir"  default="$(arg scenario_dir)/config_files" />
 <arg name="robot_name" default="Robot_B" />
 
 
 	<!--node pkg="pid_controller_node" type="controller_pioneer_node" name="$(arg robot_name)_controller_pioneer" clear_params="true" output="log">
     <rosparam command="load" file="$(arg config_files_dir)/pid_controller_gazebo.yaml" />
-    <param name="topics/velocity_cmd" value="/pioneer1/cmd_vel"/>
+    <param name="topics/velocity_cmd" value="/pioneer2/cmd_vel"/>
     <param name="robot_name" value="$(arg robot_name)"/>
   </node-->
 

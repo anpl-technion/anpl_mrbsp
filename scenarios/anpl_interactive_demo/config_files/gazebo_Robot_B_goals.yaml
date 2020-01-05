@@ -1,0 +1,6 @@
+# goals for robot B
+
+goals: { # [X, Y, Z]
+ goal1: [12.0, 8.0, 0.0],
+ goal2: [26.9, -6.07, 0.0]
+}

@@ -24,7 +24,7 @@ sensor_pose: {
 # maximum robot's acceleration [ m/s^2 ]
 robot_accel_max: 1.0
 
-informative_condition: {distance: 1.0, yaw: 0.2618}
+informative_condition: {distance: 2.0, yaw: 0.2618}
 
 visualize_laser: true
 is_3D_vis: false

@@ -9,10 +9,11 @@
   <arg name="odometry_type"     default="odometry_external"/> <!-- odometry_icp_laser|odometry_external-->
 
   <!-- Putting the time back to real time-->
-  <rosparam> /use_sim_time : false </rosparam>
-  <param name="scenario_folder" value="$(arg scenario_dir)/$(arg current_scenario)"/>
+  <rosparam> /use_sim_time : true </rosparam>
+  <!-- <param name="scenario_folder" value="$(arg scenario_dir)/$(arg current_scenario)"/> -->
+  <param name="scenario_folder" value="$(arg scenario_dir)"/>
 
-  <node pkg="odometry" type="$(arg odometry_type)" name="$(arg robot_name)" clear_params="true" output="screen" > <!-- launch-prefix="xterm -e gdb -ex run [MinusMinus]args" -->
+  <node pkg="odometry" type="$(arg odometry_type)" name="$(arg robot_name)" clear_params="true" output="screen"> <!-- launch-prefix="xterm -e gdb -ex run [MinusMinus]args" -->
     <rosparam command="load" file="$(arg config_files_dir)/gazebo_robot_A.yaml" />
   </node>
 
@@ -24,7 +25,7 @@
 
 <!-- -remapping /mobile_base/commands/velocity causes Gazebo problems, teleporting the robot to (0,0), run in separate terminal controller_setup_gazebo_A.launch -->
   <!-- path following (pure pursuit) with obstacle avoidance (vector field histogram) -->
-    <node pkg="pure_pursuit_with_vfh" type="pure_pursuit_with_vfh_node" name="$(arg robot_name)_controller_pioneer" output="screen" launch-prefix="xterm -e">
+    <!-- <node pkg="pure_pursuit_with_vfh" type="pure_pursuit_with_vfh_node" name="$(arg robot_name)_controller_pioneer" output="screen" launch-prefix="xterm -e"> 
       <remap from="/current_pose" to="$(arg robot_name)/odometry"/>
       <remap from="/next_waypoint" to="$(arg robot_name)/next_waypoint"/>
       <remap from="/scan" to="/pioneer1/laser/scan"/>
@@ -33,7 +34,7 @@
       
       <rosparam command="load" file="$(find pure_pursuit_with_vfh)/config/default.yaml" />
   
-    </node>
+    </node-->
 
     <!-- <include file="$(arg scenario_dir)/launch/controller_setup_gazebo_A.launch" /> -->
 
@@ -41,7 +42,7 @@
   <node pkg="state_machine" type="state_machine_default_node" name="state_machine_default" clear_params="true" output="screen">
     <rosparam command="load" file="$(arg config_files_dir)/state_machine_default.yaml" />
     <!-- Load robot goals -->
-    <!-- <rosparam command="load" file="$(arg config_files_dir)/gazebo_Robot_A_goals.yaml" /> -->
+    <rosparam command="load" file="$(arg config_files_dir)/gazebo_Robot_A_goals.yaml" />
   </node>
 
   <!-- start in GDB -->

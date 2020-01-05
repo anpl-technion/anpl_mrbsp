@@ -1,3 +1,4 @@
 # parameters for robots map
 publish_optimize_pose_to_odometry: true
 save: {isam_objects: false, fg_values_pairs: false}
+# save: {matlab_results: true, serialized_files: true}
