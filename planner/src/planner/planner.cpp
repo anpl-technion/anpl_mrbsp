@@ -277,6 +277,20 @@ unsigned int Planner::evaluateObjFn(const std::vector<NonlinearFactorGraph>& gra
         // Do not perform more than N iteration steps
         parameters.maxIterations = 100;
 
+//        PATCH -- Evgeny ---------------------------------------------------
+//        int countI = 0;
+        std::string post_EE[delta_edges[0].size()*delta_edges[1].size()];
+        std::string post_VV[delta_edges[0].size()*delta_edges[1].size()];
+//        if ((USING_MR_FACTORS) && (NUM_ROBOTS > 1)) {
+//            for (int i = 0; i < delta_edges[0].size(); i++) {
+//                for (int j = 0; j < delta_edges[1].size(); j++) {
+//                    post_EE[countI] = plannData.prior_edges + delta_edges[0][i] + delta_edges[1][j];
+//                    post_VV[countI] = plannData.prior_nodes + delta_nodes[0][i] + delta_nodes[1][j];
+//                    countI++;
+//                }
+//            }
+//        }
+//        ------------------------------------------------------------------
 
         for (int i = 0; i < graph.size(); i++) {
 
@@ -331,24 +345,32 @@ unsigned int Planner::evaluateObjFn(const std::vector<NonlinearFactorGraph>& gra
 
             }
 
-            // t-bsp
-            Graph posterior_topological_graph;
-            std::string post_E = plannData.prior_edges + delta_edges[0][i]; // single robot for now, TODO MR
-            std::string post_V = plannData.prior_nodes + delta_nodes[0][i];
-            posterior_topological_graph.updateGraph(post_E, post_V, true);
-            posterior_topological_graph.calculateSignature();
+            if (false) { //PATCH - Evgeny
+                // t-bsp
+                std::string post_E;
+                std::string post_V;
+                Graph posterior_topological_graph;
+                if ((USING_MR_FACTORS) && (NUM_ROBOTS > 1)) {
+                    std::string post_E = post_EE[i];
+                    std::string post_V = post_VV[i];
+                } else {
+                    std::string post_E = plannData.prior_edges + delta_edges[0][i]; // single robot for now, TODO MR
+                    std::string post_V = plannData.prior_nodes + delta_nodes[0][i];
+                }
+                posterior_topological_graph.updateGraph(post_E, post_V, true);
+                posterior_topological_graph.calculateSignature();
 
-            if (i == 0) {
-                t_idx_opt = 0;
-                s_opt = posterior_topological_graph.signature.s_VN;
-                J_t = J;
+                if (i == 0) {
+                    t_idx_opt = 0;
+                    s_opt = posterior_topological_graph.signature.s_VN;
+                    J_t = J;
 
-            } else if (posterior_topological_graph.signature.s_VN > s_opt) {
-                t_idx_opt = i;
-                s_opt = posterior_topological_graph.signature.s_VN;
-                J_t = J;
+                } else if (posterior_topological_graph.signature.s_VN > s_opt) {
+                    t_idx_opt = i;
+                    s_opt = posterior_topological_graph.signature.s_VN;
+                    J_t = J;
+                }
             }
-
         }
     } else { // incremental standard and topological BSP
 
@@ -535,6 +557,9 @@ unsigned int Planner::evaluateObjFn(const std::vector<NonlinearFactorGraph>& gra
     }
     delta_edges[0].clear(); // TODO MR
     delta_nodes[0].clear();
+
+    J_t = J_opt; // PATCH - Evgeny
+    t_idx_opt = idx_opt; // PATCH - Evgeny
 
     Topology::time_ofs << "\n"; // terminate planning session
     tictoc_finishedIteration_();

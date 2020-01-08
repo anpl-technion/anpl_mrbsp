@@ -6,9 +6,9 @@ ompl: {
 #  map_boundary: [-10.0, 35.0, -10.0, 10.0],
 
 # minimum number of random point samples in the roadmap
-min_vertices: 300,
+min_vertices: 500,
 
-max_planning_time: 10.0, # [s]
+max_planning_time: 5.0, # [s]
 
 min_edge_length: 0.2,
 max_edge_length: 5.0,
@@ -25,7 +25,7 @@ waypoint_density: 1.0
 kds: {
 
 #number of paths to try to find
-num_candidate_paths: 10,
+num_candidate_paths: 20,
 
 k_diverse_short_alg: 'v', # {'e' == EPPSTEIN, 'v' == VOSS};
 # path distance measure to use
@@ -33,9 +33,9 @@ path_distance_measure_alg: 'l', # {'l' == LEVENSHTEIN, 'f' == FRECHET, 'h' == HA
 # method used to measure distance to center of neighborhood
 avoid_method: 0, # {0 == CSPACE, 1 == GRAPH, 2 == UNKNOWN};
 
-max_path_length: 50,
-min_path_pairwise_distance: 0.03,
+max_path_length: 1000,
+min_path_pairwise_distance: 1,
 # radius of avoided regions as a factor of shortest path length
-radius_factor: 0.01
+radius_factor: 0.3
 
 }

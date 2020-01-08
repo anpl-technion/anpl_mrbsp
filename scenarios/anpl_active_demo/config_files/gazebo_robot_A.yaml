@@ -2,8 +2,8 @@
 robot_name: pioneer1
 robot_id: A
 init_pose: {
-  position:    {X: -0.15, Y: -6.86, Z: 0.0},
-  orientation: {Yaw: 0.0, Pitch: 0.0, Roll: 0.0}
+  position:    {X: 20.0, Y: 0.0, Z: 0.0},
+  orientation: {Yaw: 1.57, Pitch: 0.0, Roll: 0.0}
 }
 topics: {pulse: /odom, odom: /odom, laser: /laser/scan, ground_truth: /ground_truth}
 sensor_pose: {

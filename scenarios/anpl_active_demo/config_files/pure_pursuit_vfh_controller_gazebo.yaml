@@ -1,6 +1,6 @@
  # SI units
 pure_pursuit: {
-  desired_lin_vel: 0.25, 
+  desired_lin_vel: 0.2, 
   lookahead_dist: 0.25, 
   max_ang_vel: 0.7
 }
@@ -23,14 +23,14 @@ vfh: {
 }
 
 # Goal reach tolerance
-goal_radius: 0.8
+goal_radius: 0.5
 
 
 velocity_profile: {
-  enable: true,
-  v_min: 0.15, # [m/s]
-  v_max: 0.35, # [m/s]
-  a: 0.1, # [m/s^2], a>0 constant acceleration until v_max; set to zero for rectangular velocity profile between v_min and v_max
-  c: 0.05, # [m] # small velocity (v_min) zone +/-c around waypoint
-  k: 10 # reference prefilter with transfer function G(s)=k/(s+k)
+ enable: true,
+ v_min: 0.15, # [m/s]
+ v_max: 0.35, # [m/s]
+ a: 0.1, # [m/s^2], a>0 constant acceleration until v_max; set to zero for rectangular velocity profile between v_min and v_max
+ c: 0.05, # [m] # small velocity (v_min) zone +/-c around waypoint
+ k: 10 # reference prefilter with transfer function G(s)=k/(s+k)
 }

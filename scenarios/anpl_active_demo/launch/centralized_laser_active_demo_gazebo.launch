@@ -1,7 +1,7 @@
 <launch>
 
   <!-- Parameters and processes on the central machine-->
-  <arg name="current_scenario"  default="anpl_active_demo_sr" />
+  <arg name="current_scenario"  default="anpl_active_demo" />
 
   <arg name="scenario_dir"      default="$(eval find(current_scenario))" />
   <arg name="config_files_dir"  default="$(arg scenario_dir)/config_files" />
@@ -13,18 +13,20 @@
   <group ns="Robot_A">
     <rosparam command="load" file="$(arg config_files_dir)/gazebo_robot_A.yaml" />
   </group>
-  <!--group ns="Robot_B">
+  <group ns="Robot_B">
     <rosparam command="load" file="$(arg config_files_dir)/gazebo_robot_B.yaml" />
-  </group-->
+  </group>
   
-  <param name="scenario_folder" value="$(arg scenario_dir)"/>
+  <param name="scenario_folder" value="$(arg scenario_dir)"/> 
 
   <node pkg="logger" type="logger" name="logger" clear_params="true" output="screen">
     <rosparam command="load" file="$(arg config_files_dir)/logger.yaml" />
 
      <!-- Boost archive version used by ROS and Matlab -->
-    <rosparam> ros_boost_archive_version: "serialization::archive 12" </rosparam> <!-- ROS Kinetic v12 -->
-    <rosparam> matlab_boost_archive_version: "serialization::archive 11" </rosparam> <!-- Matlab 2017b v11 -->
+    <rosparam> ros_boost_archive_version: "serialization::archive 12" </rosparam> 
+    <!-- ROS Kinetic v12 -->
+    <rosparam> matlab_boost_archive_version: "serialization::archive 11" </rosparam> 
+    <!-- Matlab 2017b v11 -->
    </node>
 
   <node pkg="da" type="da_icp_laser" name="da_laser" clear_params="true" output="screen">
@@ -50,10 +52,10 @@
    <!-- If no map is used don't load anything (for faster rendering) -->
    <arg unless="$(arg use_preloaded_map_in_AG)" name="world_octomap" value=""/>
    <!-- The world map that will be used for action generator in interactive and OMPL mode. This assumes that the environment is known a priori when generating cadidate actions. This map, however, is not used anywhere else, for e.g. in the inference process. More general case would be to use the inferred map instead. This is not crutial for BSP as we can view the process of action generation as independent of the current map estimate. -->
-   <!-- <arg if="$(arg use_preloaded_map_in_AG)" name="world_octomap" value="$(find action_generator)/worlds/ANPL-Hyundai.ot" /> -->
-   <arg if="$(arg use_preloaded_map_in_AG)" name="world_octomap" value="$(find action_generator)/worlds/ANPL_topological.bt" />
+   <arg if="$(arg use_preloaded_map_in_AG)" name="world_octomap" value="$(find action_generator)/worlds/willowgarage_center_21_0.bt" />
+   <!--arg if="$(arg use_preloaded_map_in_AG)" name="world_octomap" value="$(find action_generator)/worlds/ANPL-10.bt" /-->
    
-   <arg name="rviz_config" value="$(find action_generator)/config/planning_15Hz_2d.rviz" />
+   <arg name="rviz_config" value="$(find action_generator)/config/planning_30Hz_2d.rviz" />
    <!--arg name="rviz_config" value="$(arg config_files_dir)/planning_at_ANPL.rviz" /-->
    
 
@@ -74,7 +76,7 @@
   <node pkg="planner" type="planner" name="planner" clear_params="true" output="screen" > <!-- launch-prefix="xterm -e gdb -ex run [MinusMinus]args" -->
     <param name="planner_type" value="cpp" /> <!-- "cpp", "matlab" or "julia" -->
     <param name="mode" value="batch"/> <!-- incremental or batch -->
-	<param name="alg" value="t-bsp"/> <!-- BSP algorithm: "standard", "t-bsp",...-->	
+	<param name="alg" value="standard"/> <!-- BSP algorithm: "standard", "t-bsp",...-->	
     <param name="unit_tests" value="false" />
   </node>
 
