@@ -22,7 +22,7 @@
     </group>
 
     <!-- spawn the two robots-->
-    <group ns="$(arg robot2_name)">
+    <group if="$(arg Robot2_ON)" ns="$(arg robot2_name)">
         <param name="tf_prefix" value="$(arg robot2_name)"/>
         <include file="$(find anpl_inf)/launch/spawn_pioneer3at.launch">
           <arg name="robot_name" value="$(arg robot2_name)" />

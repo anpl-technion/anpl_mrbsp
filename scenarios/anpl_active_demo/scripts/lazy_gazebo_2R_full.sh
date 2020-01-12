@@ -3,9 +3,11 @@
 # Fish-out scenario name from dir path
 scenario_name=$(awk -F/ '{print $(NF-1)}' <<< "$(pwd)")
 
-cmd1="roslaunch $scenario_name pioneer3at_world.launch"
-#cmd2="roslaunch anpl_interactive_demo centralized_laser_active_demo_gazebo_debugplanner.launch"
-cmd2="roslaunch $scenario_name centralized_laser_active_demo_gazebo.launch "
+echo $1
+
+cmd1="roslaunch $scenario_name pioneer3at_world.launch Robot2_ON:=$1"
+#cmd2="roslaunch $scenario_name centralized_laser_active_demo_gazebo_debugplanner.launch"
+cmd2="roslaunch $scenario_name centralized_laser_active_demo_gazebo.launch Robot2_ON:=$1"
 cmd3="./robot_setup_gazebo.sh A 5"
 cmd4="./robot_setup_gazebo.sh B 7"
 

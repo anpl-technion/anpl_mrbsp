@@ -279,8 +279,8 @@ unsigned int Planner::evaluateObjFn(const std::vector<NonlinearFactorGraph>& gra
 
 //        PATCH -- Evgeny ---------------------------------------------------
 //        int countI = 0;
-        std::string post_EE[delta_edges[0].size()*delta_edges[1].size()];
-        std::string post_VV[delta_edges[0].size()*delta_edges[1].size()];
+//        std::string post_EE[delta_edges[0].size()*delta_edges[1].size()];
+//        std::string post_VV[delta_edges[0].size()*delta_edges[1].size()];
 //        if ((USING_MR_FACTORS) && (NUM_ROBOTS > 1)) {
 //            for (int i = 0; i < delta_edges[0].size(); i++) {
 //                for (int j = 0; j < delta_edges[1].size(); j++) {
@@ -350,9 +350,9 @@ unsigned int Planner::evaluateObjFn(const std::vector<NonlinearFactorGraph>& gra
                 std::string post_E;
                 std::string post_V;
                 Graph posterior_topological_graph;
-                if ((USING_MR_FACTORS) && (NUM_ROBOTS > 1)) {
-                    std::string post_E = post_EE[i];
-                    std::string post_V = post_VV[i];
+                if ((USING_MR_FACTORS) && (NUM_ROBOTS > 1)) { // PATCH Evgeny
+//                    std::string post_E = post_EE[i];
+//                    std::string post_V = post_VV[i];
                 } else {
                     std::string post_E = plannData.prior_edges + delta_edges[0][i]; // single robot for now, TODO MR
                     std::string post_V = plannData.prior_nodes + delta_nodes[0][i];

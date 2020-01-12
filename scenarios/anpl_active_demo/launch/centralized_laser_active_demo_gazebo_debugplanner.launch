@@ -13,8 +13,7 @@
   <group ns="Robot_A">
     <rosparam command="load" file="$(arg config_files_dir)/gazebo_robot_A.yaml" />
   </group>
-
-  <group if="$(arg Robot2_ON)" ns="Robot_B">
+  <group ns="Robot_B">
     <rosparam command="load" file="$(arg config_files_dir)/gazebo_robot_B.yaml" />
   </group>
   
@@ -74,12 +73,14 @@
    </include>
 
   <!-- Planner -->
-  <node pkg="planner" type="planner" name="planner" clear_params="true" output="screen" > <!-- launch-prefix="xterm -e gdb -ex run [MinusMinus]args" -->
+  <!-- <node pkg="planner" type="planner" name="planner" clear_params="true" output="screen" >  -->
+  <group ns="planner">
+    <!-- launch-prefix="xterm -e gdb -ex run [MinusMinus]args" -->
     <param name="planner_type" value="cpp" /> <!-- "cpp", "matlab" or "julia" -->
     <param name="mode" value="batch"/> <!-- incremental or batch -->
 	<param name="alg" value="standard"/> <!-- BSP algorithm: "standard", "t-bsp",...-->	
     <param name="unit_tests" value="false" />
-  </node>
-
+  <!-- </node> -->
+</group>
 
   </launch>
