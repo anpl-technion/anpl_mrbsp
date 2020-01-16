@@ -213,7 +213,8 @@ int main(int argc, char** argv) {
                 planner.mr_graphs.clear();
                 planner.mr_values.clear();
                 planner.action_variations.clear();
-                planner.constructMultiRobotFGsForTwoRobots(isBatchMode);
+//                planner.constructMultiRobotFGsForTwoRobots(isBatchMode);
+                planner.constructMultiRobotFGsForNRobots(isBatchMode);
                 unsigned int idx;
                 if (planner_type == "cpp") // call the base planner C++ evaluateObjFn
                     idx = planner.Planner::evaluateObjFn(planner.mr_graphs, planner.mr_values, isBatchMode); // in incr. mode, MR information refers to deltas of MR FGs and VALS

@@ -2,18 +2,21 @@
   <arg name="world_name" default="willowgarage.world"/>
   <arg name="robot1_name" default="pioneer1"/>
   <arg name="robot2_name" default="pioneer2"/>
+  <arg name="robot3_name" default="pioneer3"/>
+  <arg name="robot4_name" default="pioneer4"/>
+  
   <!--
   <env name="GAZEBO_MODEL_PATH" value="$GAZEBO_MODEL_PATH:$(find amr_robots_gazebo)/models" />
   <env name="GAZEBO_RESOURCE_PATH" value="$GAZEBO_RESOURCE_PATH:$(find amr_robots_gazebo)/models" />
--->
+  -->
 
   <!-- <arg name="world" default="worlds/empty.world" /> -->
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
 	<arg name="world_name" value="$(find anpl_inf)/gazebo_worlds/$(arg world_name)" />
   </include>
 
-    <!-- spawn the two robots -->
-    <group ns="$(arg robot1_name)">
+    <!-- spawn robot1 -->
+    <group if="$(arg A)" ns="$(arg robot1_name)">
         <param name="tf_prefix" value="$(arg robot1_name)"/>
         <include file="$(find anpl_inf)/launch/spawn_pioneer3at.launch">
           <arg name="robot_name" value="$(arg robot1_name)" />
@@ -21,12 +24,30 @@
         </include>
     </group>
 
-    <!-- spawn the two robots-->
-    <group ns="$(arg robot2_name)">
+    <!-- spawn robot2 -->
+    <group if="$(arg B)" ns="$(arg robot2_name)">
         <param name="tf_prefix" value="$(arg robot2_name)"/>
         <include file="$(find anpl_inf)/launch/spawn_pioneer3at.launch">
           <arg name="robot_name" value="$(arg robot2_name)" />
           <arg name="init_pose" value="-x 26.9 -y -6.07 -z 0.0 -Y 1.57 -R 0.0 -P 0.0"/>
+        </include>
+    </group>
+
+    <!-- spawn robot3 -->
+    <group if="$(arg C)" ns="$(arg robot3_name)">
+        <param name="tf_prefix" value="$(arg robot3_name)"/>
+        <include file="$(find anpl_inf)/launch/spawn_pioneer3at.launch">
+          <arg name="robot_name" value="$(arg robot3_name)" />
+          <arg name="init_pose" value="-x 20.0 -y -3.0 -z 0.0 -Y 1.57 -R 0.0 -P 0.0"/>
+        </include>
+    </group>
+
+    <!-- spawn robot4 -->
+    <group if="$(arg D)" ns="$(arg robot4_name)">
+        <param name="tf_prefix" value="$(arg robot4_name)"/>
+        <include file="$(find anpl_inf)/launch/spawn_pioneer3at.launch">
+          <arg name="robot_name" value="$(arg robot4_name)" />
+          <arg name="init_pose" value="-x 14.0 -y 2.0 -z 0.0 -Y 0.0 -R 0.0 -P 0.0"/>
         </include>
     </group>
 

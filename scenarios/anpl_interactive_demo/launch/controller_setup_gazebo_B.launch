@@ -3,12 +3,12 @@
 <arg name="current_scenario"  default="anpl_interactive_demo" />
 <arg name="scenario_dir"      default="$(eval find(current_scenario))" />
 <arg name="config_files_dir"  default="$(arg scenario_dir)/config_files" />
-<arg name="robot_name" default="Robot_B" />
+<arg name="robot_name"        default="Robot_B" />
+<arg name="pioneer_num"       default="pioneer2" />
 
-
-	<!--node pkg="pid_controller_node" type="controller_pioneer_node" name="$(arg robot_name)_controller_pioneer" clear_params="true" output="log">
+  <!--node pkg="pid_controller_node" type="controller_pioneer_node" name="$(arg robot_name)_controller_pioneer" clear_params="true" output="log">
     <rosparam command="load" file="$(arg config_files_dir)/pid_controller_gazebo.yaml" />
-    <param name="topics/velocity_cmd" value="/pioneer2/cmd_vel"/>
+    <param name="topics/velocity_cmd" value="/pioneer1/cmd_vel"/>
     <param name="robot_name" value="$(arg robot_name)"/>
   </node-->
 
@@ -18,8 +18,8 @@
       <!-- How to resolve low-level collisions -->
       <!--remap from="/emergency_stop" to="Collision_warning"/--> <!-- Uncomment to stop the robot when collision detected and decide in the state machine what to do. -->
       <remap from="/Collision_warning" to="Collision_warning"/> <!-- Uncomment to recover by rotating the robot in place to collision free direction and then resume following the planned trajectory. This might lead to oscillating behaviour in certain configurations. -->
-      <remap from="/scan" to="/pioneer2/laser/scan"/>
-      <remap from="/mobile_base/commands/velocity" to="/pioneer2/cmd_vel"/>
+      <remap from="/scan" to="/$(arg pioneer_num)/laser/scan"/>
+      <remap from="/mobile_base/commands/velocity" to="/$(arg pioneer_num)/cmd_vel"/>
       <param name="robot_name" value="$(arg robot_name)"/>
       
       <rosparam command="load" file="$(arg config_files_dir)/pure_pursuit_vfh_controller_gazebo.yaml" />

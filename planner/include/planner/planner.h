@@ -307,7 +307,7 @@ protected:
     }
 
 };
-
+unsigned nChoosek( unsigned n, unsigned k );
 //class PlannerExt;
 class Topology;
 class Planner {
@@ -347,6 +347,8 @@ public:
                                    Values *vals_out, NonlinearFactorGraph &residual_graph);
     void constructLocalFGs(char robot_id, mrbsp_msgs::Actions& controls, bool isBatchMode);
     void constructMultiRobotFGsForTwoRobots(bool isBatchMode);
+    void constructMultiRobotFGsForTwoRobots(bool isBatchMode, unsigned int robotFirst, unsigned int robotSecond);  // Evgeny - for N robot with bi-FG
+    void constructMultiRobotFGsForNRobots(bool isBatchMode);                                                       // Evgeny - for N robot with bi-FG
     unsigned int evaluateObjFn(const std::vector<NonlinearFactorGraph>& graph, const std::vector<Values>& initialEstimate, bool inBatchMode);
 
     void visualizeOptJointAction();

@@ -2,7 +2,6 @@
 
   <!-- Parameters and processes on the central machine-->
   <arg name="current_scenario"  default="anpl_active_demo" />
-
   <arg name="scenario_dir"      default="$(eval find(current_scenario))" />
   <arg name="config_files_dir"  default="$(arg scenario_dir)/config_files" />
 
@@ -15,6 +14,12 @@
   </group>
   <group ns="Robot_B">
     <rosparam command="load" file="$(arg config_files_dir)/gazebo_robot_B.yaml" />
+  </group>
+  <group ns="Robot_C">
+    <rosparam command="load" file="$(arg config_files_dir)/gazebo_robot_C.yaml" />
+  </group>
+  <group ns="Robot_D">
+    <rosparam command="load" file="$(arg config_files_dir)/gazebo_robot_D.yaml" />
   </group>
   
   <param name="scenario_folder" value="$(arg scenario_dir)"/> 
@@ -60,27 +65,27 @@
    
 
   <node pkg="action_generator" type="action_generator" name="action_generator" clear_params="true" output="screen" > <!-- launch-prefix="gnome-terminal --><!--command" -->
-   <param name="method" value="$(arg method)" /> 
-   <param name="world_octomap" value="$(arg world_octomap)" />
+   <param name="method"           value="$(arg method)" /> 
+   <param name="world_octomap"    value="$(arg world_octomap)" />
    <!-- OMPL parameters -->
    <rosparam if="$(eval method == 'ompl')" command="load" file="$(arg config_files_dir)/ompl.yaml" />
   </node>
 
   <!-- GUI -->
   <include file="$(find action_generator)/launch/generate_actions_interactively.launch" >
-      <arg name="map" default="$(arg world_octomap)"/>
-      <arg name="rviz_config" value="$(arg rviz_config)" />
+      <arg name="map"           default="$(arg world_octomap)"/>
+      <arg name="rviz_config"   value="$(arg rviz_config)" />
    </include>
 
   <!-- Planner -->
   <!-- <node pkg="planner" type="planner" name="planner" clear_params="true" output="screen" >  -->
   <group ns="planner">
     <!-- launch-prefix="xterm -e gdb -ex run [MinusMinus]args" -->
-    <param name="planner_type" value="cpp" /> <!-- "cpp", "matlab" or "julia" -->
-    <param name="mode" value="batch"/> <!-- incremental or batch -->
-	<param name="alg" value="standard"/> <!-- BSP algorithm: "standard", "t-bsp",...-->	
-    <param name="unit_tests" value="false" />
+    <param name="planner_type"  value="cpp" /> <!-- "cpp", "matlab" or "julia" -->
+    <param name="mode"          value="batch"/> <!-- incremental or batch -->
+	  <param name="alg"           value="standard"/> <!-- BSP algorithm: "standard", "t-bsp",...-->	
+    <param name="unit_tests"    value="false" />
   <!-- </node> -->
-</group>
+  </group>
 
   </launch>

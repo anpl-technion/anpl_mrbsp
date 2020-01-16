@@ -253,6 +253,137 @@ void Planner::constructMultiRobotFGsForTwoRobots(bool isBatchMode) {
     //mr_values.at(0).print();
 }
 
+
+
+void Planner::constructMultiRobotFGsForTwoRobots(bool isBatchMode, unsigned int robotFirst, unsigned int robotSecond) {
+
+
+    std::pair<int, int> pair_ij;
+
+
+    // joint posterior factors and values
+    for (int i  = 0;  i < local_graphs[robotFirst].size(); i++) {
+        for (int j  = 0;  j < local_graphs[robotSecond].size(); j++) {
+
+            NonlinearFactorGraph g = local_graphs[robotFirst].at(i);
+            g.add(local_graphs[robotSecond].at(j));
+            ROS_WARN("factors %d, %d joined", i, j);
+
+            Values v, vi, vj;
+            if (isBatchMode) {
+                vi = local_values[robotFirst].at(i);
+                vj = local_values[robotSecond].at(j);
+            } else { // in incremental mode we combine priors and local variables (deltas) to get all local variables belonging to each robot
+                vi = prior_local_values[robotFirst];
+                vi.insert(local_values[robotFirst].at(i));
+                vj = prior_local_values[robotSecond];
+                vj.insert(local_values[robotSecond].at(j));
+            }
+            try {
+                v.insert(vi);
+                v.insert(vj);
+                ROS_WARN("values %d, %d joined", i, j);
+            } catch( const ValuesKeyAlreadyExists e) {
+                ROS_WARN(e.what());
+            }
+
+            pair_ij.first = i;
+            pair_ij.second = j;
+            action_variations.push_back(pair_ij);
+
+            // initial transformation
+            gtsam::Pose3 p_00 = vi.at<gtsam::Pose3>(vi.keys().front());
+            gtsam::Pose3 p_10 = vj.at<gtsam::Pose3>(vj.keys().front());
+            g.add(BetweenFactor<Pose3>(Symbol('A'+robotFirst, 0), Symbol('A'+robotSecond, 0), p_00.between(p_10), mr_rel_pose_model));
+            ROS_WARN("initial transform factor added");
+
+
+
+            // loop over all values of the action 'i' and 'j' and add new MR factors
+            // consider also MR factors between future and {current, past} states, i.e.
+            // those with indexes either k > stateDimension[0] or m > stateDimension[1]
+            // prior MR factors are cloned in batch mode
+            for (int k = 0; k < vi.keys().size(); k++) {
+                for (int m = 0; m < vj.keys().size(); m++) {
+                    //KeyList ki = vi.keys();
+
+                    if (k > stateDimension[0] || m > stateDimension[1]) { // at least one future state
+                        gtsam::Pose3 p_0 = vi.at<gtsam::Pose3>(Symbol('A' + robotFirst, k));
+                        gtsam::Pose3 p_1 = vj.at<gtsam::Pose3>(Symbol('A' + robotSecond, m));
+                        Pose3 delta = p_0.between(p_1);
+                        if (delta.translation().norm() < LC_DISTANCE_THRESHOLD)
+                            // && abs(delta.theta()) < LC_RELATIVE_ORIENTATION_THRESHOLD
+                            g.add(BetweenFactor<Pose3>(Symbol('A' + robotFirst, k), Symbol('A' + robotSecond, m), delta,
+                                                       mr_rel_pose_model));
+                    }
+                }
+            }
+
+            // add prior MR factors in batch mode
+            if (isBatchMode) {
+                g.add(prior_mr_factors);
+
+            } else { // add only new future states and new factors in INCR. mode
+                v =  local_values[robotFirst].at(i);
+                v.insert(local_values[1].at(j));
+            }
+
+            mr_graphs.push_back(g);
+            mr_values.push_back(v);
+        }
+    }
+    ROS_WARN("MR factor graphs created in %s", isBatchMode?"BATCH mode.":"INCR mode.");
+    //mr_graphs.at(0).print();
+    //mr_values.at(0).print();
+}
+
+unsigned nChoosek( unsigned n, unsigned k )
+{
+    if (k > n) return 0;
+    if (k * 2 > n) k = n-k;
+    if (k == 0) return 1;
+
+    int result = n;
+    for( int i = 2; i <= k; ++i ) {
+        result *= (n-i+1);
+        result /= i;
+    }
+    return result;
+}
+
+
+
+void Planner::constructMultiRobotFGsForNRobots(bool isBatchMode) {
+
+    std::list<int> robotsArray;
+    std::list<int>::iterator it;
+    //std::list<int>::iterator itstop;
+    int arr2[nChoosek(NUM_ROBOTS,2)][2];
+    for (int i  = 0;  i < NUM_ROBOTS; i++) {
+        robotsArray.push_back(i); // 0123
+    }
+    int j = 0;
+    while (!robotsArray.empty()) {
+        //for (int i = 1; i < robotsArray.size(); i++) { // [*(&arr + 1) - arr] <-- size of array "arr"
+        for (it = robotsArray.begin(); it != std::prev(robotsArray.end());){
+            arr2[j][0] = robotsArray.front();
+            std::advance (it,1);
+            arr2[j][1] = *(it);
+
+            std::cout << " arr2[j][0] = " << arr2[j][0] << " arr2[j][1] = " << arr2[j][1] << std::endl;
+            j++;
+
+        }
+        robotsArray.pop_front();
+
+    }
+    for (int i  = 0;  i < nChoosek(NUM_ROBOTS,2); i++) {
+
+        Planner::constructMultiRobotFGsForTwoRobots(isBatchMode,arr2[i][0],arr2[i][1]);
+    }
+
+}
+
 // iterate over all beliefs and return the index of the best one
 // in batch mode, whole factor graphs are given in the graph argument and their associated initial state estimates
 // in incremental mode, prior belief is expected to be already calculated (ISAM2 object) and graphs represent new observations and motion factors that have been predicted by each action

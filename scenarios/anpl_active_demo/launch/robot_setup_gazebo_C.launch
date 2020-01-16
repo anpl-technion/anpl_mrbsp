@@ -5,9 +5,9 @@
   
   <arg name="scenario_dir"      default="$(eval find(current_scenario))" />
   <arg name="config_files_dir"  default="$(arg scenario_dir)/config_files" />
-  <arg name="robot_name"        default="Robot_A" />
-  <arg name="robot_ID"          default="A"/>
-  <arg name="pioneer_num"       default="pioneer1" />
+  <arg name="robot_name"        default="Robot_C" />
+  <arg name="robot_ID"          default="C"/>
+  <arg name="pioneer_num"       default="pioneer3" />
   <arg name="odometry_type"     default="odometry_external"/> <!-- odometry_icp_laser|odometry_external-->
 
   <!-- Putting the time back to real time-->
