@@ -31,6 +31,7 @@ find_package(catkin REQUIRED COMPONENTS
 ## Set ANPL_PREFIX directory to be used to look for certain dependencies
 set(ANPL_PREFIX /usr/ANPLprefix)
 find_package(PkgConfig       QUIET)
+
 set( ENV{PKG_CONFIG_PATH} "$ENV{PKG_CONFIG_PATH}:${ANPL_PREFIX}/lib/pkgconfig" )
 
 # add the automatically determined parts of the RPATH
@@ -52,7 +53,7 @@ find_package(CCD QUIET)
 # If ccd-config.cmake is not found, use pkg-config and/or find_path() and
 # find_library()
 if(NOT CCD_FOUND)
-    message("Searching ${LIBNAME} by CMake find_package: NOT FOUND")
+    message("Searching ${LIBNAME} by CMake find_package: NOT FOUND (CCD)")
     #set(lib_headers ccd.h)
     #findIt(CCD ${lib_headers})
     pkg_check_modules (CCD REQUIRED ccd) # on Debian
@@ -63,7 +64,7 @@ endif()
 
 find_package(FCL QUIET)
 if(NOT FCL_FOUND)
-    message("Searching ${LIBNAME} by CMake find_package: NOT FOUND")
+    message("Searching ${LIBNAME} by CMake find_package: NOT FOUND (FCL)")
     #set(lib_headers collision.h fcl.h)
     #findIt(FCL ${lib_headers})
     pkg_check_modules (FCL REQUIRED fcl) # on Debian
@@ -71,9 +72,12 @@ if(NOT FCL_FOUND)
     set(FCL_INCLUDE_DIRS ${FCL_INCLUDEDIR})
 endif()
 
-list(APPEND CMAKE_MODULE_PATH ${ANPL_PREFIX}/share/cmake)
-set(OMPL_PREFIX ${ANPL_PREFIX})
+#list(APPEND CMAKE_MODULE_PATH ${ANPL_PREFIX}/share/cmake) # if installed from apt (comment)
+# set(OMPL_PREFIX ${ANPL_PREFIX}) 			   # if installed from apt (comment)
 find_package(OMPL REQUIRED)
+
+
+
 
 find_package(OCTOMAP REQUIRED)
 set(EIGEN_INCLUDE_DIRS "/usr/ANPLprefix/include/gtsam/3rdparty/Eigen")

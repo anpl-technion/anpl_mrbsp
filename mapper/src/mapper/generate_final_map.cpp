@@ -102,7 +102,7 @@ void createMapData3D(std::map<std::string, MRBSP::Utils::MapData3D>& data_3d_con
     gtsam::Values vals;
     gtsam::deserializeFromFile(path_to_values, vals);
 
-    gtsam::KeyList keys = vals.keys();
+    gtsam::KeyVector keys = vals.keys();
     for(auto key : keys) {
         gtsam::Symbol symbol(key);
         char robot_id = symbol.chr();

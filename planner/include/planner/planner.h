@@ -85,6 +85,8 @@ using namespace std;
 #include <random>
 #include <mrbsp_utils/conversion.h>
 #include "planner/config.h"
+#include <boost/thread/mutex.hpp>
+
 
 class PlannData {
 private:

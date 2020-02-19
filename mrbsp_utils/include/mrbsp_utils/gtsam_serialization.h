@@ -34,6 +34,7 @@
 #include <gtsam/inference/Symbol.h>
 #include <gtsam/linear/GaussianISAM.h>
 #include <gtsam/base/LieVector.h>
+#include <gtsam/base/Vector.h>
 #include <gtsam/base/LieMatrix.h>
 #include <gtsam/geometry/Point2.h>
 #include <gtsam/geometry/StereoPoint2.h>

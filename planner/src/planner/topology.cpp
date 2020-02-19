@@ -374,7 +374,7 @@ void Graph::calculateSignature() {
 
     if (signature.active[VN_exact]) {
         gttic_(sigVNexact);
-        NormLaplacianMatrix L_norm = S * L * S;
+        NormLaplacianMatrix L_norm = S * L.cast<double>() * S;
         //std::cout << "Normalized Laplacian: " << L_norm << std::endl;
         EigenSolver<MatrixXd> es(L_norm.toDense());
         //cout << "The eigenvalues of L_norm are:" << endl << es.eigenvalues() << endl;
@@ -589,7 +589,7 @@ void Topology::test_01() {
     AdjacencyMatrix A(n,n);
     A.setFromTriplets(coefficients.begin(), coefficients.end());
     std::cout << "A = " << A << std::endl;
-    MatrixXd Ad(A); // dense matrix A
+    MatrixXd Ad(A.cast<double>()); // dense matrix A
     Map<RowVectorXd> v(Ad.data(), Ad.size());
     std::cout << "v = " << v << std::endl;
 

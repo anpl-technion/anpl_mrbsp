@@ -343,7 +343,7 @@ void updateDataContainer(std::map<std::string, MRBSP::Utils::MapData>& data_cont
     int seq_A(0);
     int seq_B(0);
 
-    gtsam::KeyList updated_keys = updated_values.keys();
+    gtsam::KeyVector updated_keys = updated_values.keys();
     for(auto key : updated_keys) {
         gtsam::Symbol symbol(key);
         char robot_id = symbol.chr();

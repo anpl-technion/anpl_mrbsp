@@ -178,7 +178,8 @@ void BeliefIsam2::handleNewFactorsAndValues(NewFactorsAndValues& new_factors_and
     m_delta_values.insert(new_values);
 
 
-    gtsam::KeyList new_keys = new_values.keys();
+//    gtsam::KeyList new_keys = new_values.keys();
+    gtsam::KeyVector new_keys = new_values.keys();
     for(auto key : new_keys) {
         gtsam::Symbol symbol(key);
         char robot_id = symbol.chr();
@@ -300,7 +301,8 @@ void BeliefIsam2::savePoseWithCovToFile(const std::string& file_name, const gtsa
     file.open(file_name, std::fstream::out);
 
     gtsam::Values vals = isam.calculateBestEstimate();
-    gtsam::KeyList values_key_list(vals.keys());
+//    gtsam::KeyList values_key_list(vals.keys());
+    gtsam::KeyVector values_key_list(vals.keys());
     for(auto value_key : values_key_list)
     {
         gtsam::Symbol current_key = gtsam::Symbol(value_key);

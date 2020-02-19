@@ -863,7 +863,7 @@ void OdometryIcpLaser::rosLaserMesgToGtsamMatrix(sensor_msgs::LaserScan& laser_m
             if((current_angle >= angle_min) && (current_angle <= angle_max)) {
                 double x = range * cos(current_angle);
                 double y = range * sin(current_angle);
-                scan << x << y ;
+                scan << x , y ;
             }
         }
         current_angle += laser_msg.angle_increment;

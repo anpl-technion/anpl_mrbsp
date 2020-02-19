@@ -333,7 +333,7 @@ void RobotMapOctomapLaser::insertPointcloud(MRBSP::Utils::MapData3D& map_data_3d
 }
 
 void RobotMapOctomapLaser::updatePointcloudPose(gtsam::Values& updated_values) {
-    gtsam::KeyList updated_keys = updated_values.keys();
+    gtsam::KeyVector updated_keys = updated_values.keys();
     for(auto key : updated_keys) {
         gtsam::Symbol symbol(key);
         char robot_id = symbol.chr();

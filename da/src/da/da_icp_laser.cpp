@@ -184,7 +184,7 @@ void DaIcpLaser::loadParameter() {
     m_privateNodeHandle.param("noise_model/prior/sigma_y", sigma_y_prior, 0.001);
     m_privateNodeHandle.param("noise_model/prior/sigma_z", sigma_z_prior, 0.001);
     m_prior_model = gtsam::noiseModel::Diagonal::Sigmas
-            ((gtsam::Vector(6) << sigma_yaw_prior, sigma_pitch_prior, sigma_roll_prior, sigma_x_prior, sigma_y_prior, sigma_z_prior));
+            ((gtsam::Vector(6) << sigma_yaw_prior, sigma_pitch_prior, sigma_roll_prior, sigma_x_prior, sigma_y_prior, sigma_z_prior).finished());
 
     // odom noise model
     m_privateNodeHandle.param("noise_model/odom/sigma_yaw", sigma_yaw_odom, 0.085); // 0.085rad = 5deg
@@ -194,7 +194,7 @@ void DaIcpLaser::loadParameter() {
     m_privateNodeHandle.param("noise_model/odom/sigma_y", sigma_y_odom, 0.1);
     m_privateNodeHandle.param("noise_model/odom/sigma_z", sigma_z_odom, 0.1);
     m_odom_model = gtsam::noiseModel::Diagonal::Sigmas
-            ((gtsam::Vector(6) << sigma_yaw_odom, sigma_pitch_odom, sigma_roll_odom, sigma_x_odom, sigma_y_odom, sigma_z_odom));
+            ((gtsam::Vector(6) << sigma_yaw_prior, sigma_pitch_prior, sigma_roll_prior, sigma_x_prior, sigma_y_prior, sigma_z_prior).finished());
 
     // icp noise model
     m_privateNodeHandle.param("noise_model/icp/dynamic_error_percentage", m_error_dynamic_percentage, 0.1); // if <=0 -> const noise
@@ -205,7 +205,7 @@ void DaIcpLaser::loadParameter() {
     m_privateNodeHandle.param("noise_model/icp/sigma_y", sigma_y_icp, 0.1);
     m_privateNodeHandle.param("noise_model/icp/sigma_z", sigma_z_icp, 0.1);
     m_icp_model = gtsam::noiseModel::Diagonal::Sigmas
-            ((gtsam::Vector(6) << sigma_yaw_icp, sigma_pitch_icp, sigma_roll_icp, sigma_x_icp, sigma_y_icp, sigma_z_icp));
+            ((gtsam::Vector(6) << sigma_yaw_prior, sigma_pitch_prior, sigma_roll_prior, sigma_x_prior, sigma_y_prior, sigma_z_prior).finished());
 
     m_privateNodeHandle.param("range_max", m_range_max, 10.0);
 
@@ -1134,7 +1134,7 @@ void DaIcpLaser::updateMemory(gtsam::Values& updated_values) {
     FUNCTION_LOGGER(m_tag);
 
     gtsam::Values vals_for_map;
-    gtsam::KeyList updated_keys = updated_values.keys();
+    gtsam::KeyVector updated_keys = updated_values.keys();
     for(auto key : updated_keys) {
         gtsam::Symbol symbol(key);
         char robot_id = symbol.chr();

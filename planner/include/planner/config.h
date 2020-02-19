@@ -16,6 +16,11 @@
  *
  */
 
+
+#include <gtsam/nonlinear/NonlinearFactorGraph.h>
+
+
+
 #ifndef PLANNER_CONFIG_H
 #define PLANNER_CONFIG_H
 
@@ -38,16 +43,17 @@ enum MATLAB_MSG_CODES {MATLAB_SEND_ONLY_POSTERIOR, MATLAB_SEND_PRIOR_AND_POSTERI
 using namespace gtsam;
 
 // prior noise model
-static const noiseModel::Diagonal::shared_ptr priorNoiseModel = noiseModel::Diagonal::Sigmas((Vector(6) << Vector3::Constant(1e-6), Vector3::Constant(0.001))); //Vector3::Constant(3*M_PI/180), Vector3::Constant(0.01))); // 3 degrees std on roll,pitch,yaw and 10 cm std on x,y,z
+static const noiseModel::Diagonal::shared_ptr priorNoiseModel = noiseModel::Diagonal::Sigmas((Vector(6) << 1e-6, 1e-6, 1e-6, 1e-3, 1e-3, 1e-3).finished());
+         //Vector3::Constant(3*M_PI/180), Vector3::Constant(0.01))); // 3 degrees std on roll,pitch,yaw and 10 cm std on x,y,z
 
 // Odometry noise model
-static const noiseModel::Diagonal::shared_ptr odometryNoiseModel = noiseModel::Diagonal::Sigmas((Vector(6) << 0.01, 0.01, 0.01, 0.1, 0.1, 0.1)); //0.01, 0.01, 0.1, 0.2, 0.2, 0.2)); // RPY, XYZ
+static const noiseModel::Diagonal::shared_ptr odometryNoiseModel = noiseModel::Diagonal::Sigmas((Vector(6) << 0.01, 0.01, 0.01, 0.1, 0.1, 0.1).finished()); //0.01, 0.01, 0.1, 0.2, 0.2, 0.2)); // RPY, XYZ
 
 // Loop closures noise model
-static const noiseModel::Diagonal::shared_ptr measurementNoiseModel = noiseModel::Diagonal::Sigmas((Vector(6) << 0.01, 0.01, 0.01, 0.1, 0.1, 0.1)); //0.01, 0.01, 0.1, 0.2, 0.2, 0.2));  // RPY, XYZ
+static const noiseModel::Diagonal::shared_ptr measurementNoiseModel = noiseModel::Diagonal::Sigmas((Vector(6) << 0.01, 0.01, 0.01, 0.1, 0.1, 0.1).finished()); //0.01, 0.01, 0.1, 0.2, 0.2, 0.2));  // RPY, XYZ
 
 // Noise model for multi-robot relative pose measurements
-static const noiseModel::Diagonal::shared_ptr mr_rel_pose_model = noiseModel::Diagonal::Sigmas((Vector(6) << 0.015, 0.015, 0.015, 0.1, 0.1, 0.1)); //0.01, 0.01, 0.1, 0.2, 0.2, 0.2));  // RPY, XYZ
+static const noiseModel::Diagonal::shared_ptr mr_rel_pose_model = noiseModel::Diagonal::Sigmas((Vector(6) << 0.015, 0.015, 0.015, 0.1, 0.1, 0.1).finished()); //0.01, 0.01, 0.1, 0.2, 0.2, 0.2));  // RPY, XYZ
 
 
 #endif //PLANNER_CONFIG_H
