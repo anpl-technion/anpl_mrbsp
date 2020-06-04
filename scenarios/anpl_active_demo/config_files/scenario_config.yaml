@@ -1,4 +1,4 @@
 # parameters for multi robots centralized with laser sensors scenario
-num_of_robots: 1 # optional
+num_of_robots: 1
 #is_3D_vis: false
 topics: {pointcloud: /camera/depth/points}

@@ -51,6 +51,7 @@ include_directories(
 	${PREFIX}/include/
 	${EIGEN_INCLUDE_DIRS}
 	${catkin_INCLUDE_DIRS}
+	../../../../3rdparty/source/spdlog/include/
 )
 
 add_library(anpl_utils src/${PROJECT_NAME}/mrbsp_utils.cpp src/${PROJECT_NAME}/function_logger.cpp)
