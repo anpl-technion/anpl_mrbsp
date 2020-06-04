@@ -10,18 +10,22 @@
   <rosparam> /use_sim_time : false </rosparam>
 
   <!-- Load robot params -->
-  <group ns="Robot_A">
+  <group if="$(arg A)" ns="Robot_A">
     <rosparam command="load" file="$(arg config_files_dir)/gazebo_robot_A.yaml" />
   </group>
-  <group ns="Robot_B">
+
+  <group if="$(arg B)" ns="Robot_B">
     <rosparam command="load" file="$(arg config_files_dir)/gazebo_robot_B.yaml" />
   </group>
-<!--   <group ns="Robot_C">
+
+  <group if="$(arg C)" ns="Robot_C">
     <rosparam command="load" file="$(arg config_files_dir)/gazebo_robot_C.yaml" />
   </group>
-  <group ns="Robot_D">
+
+  <group if="$(arg D)" ns="Robot_D">
     <rosparam command="load" file="$(arg config_files_dir)/gazebo_robot_D.yaml" />
-  </group> -->
+  </group>
+
   
   <param name="scenario_folder" value="$(arg scenario_dir)"/> 
 
