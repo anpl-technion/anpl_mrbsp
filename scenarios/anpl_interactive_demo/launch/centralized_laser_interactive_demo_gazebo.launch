@@ -16,6 +16,12 @@
   <group ns="Robot_B">
     <rosparam command="load" file="$(arg config_files_dir)/gazebo_robot_B.yaml" />
   </group>
+ <!--  <group ns="Robot_C">
+    <rosparam command="load" file="$(arg config_files_dir)/gazebo_robot_C.yaml" />
+  </group>
+  <group ns="Robot_D">
+    <rosparam command="load" file="$(arg config_files_dir)/gazebo_robot_D.yaml" />
+  </group> -->
   
   <param name="scenario_folder" value="$(arg scenario_dir)"/> 
 
