@@ -1,11 +1,12 @@
 <launch>
     
   <!-- Parameters to change each time-->
-  <arg name="current_scenario"  default="anpl_active_demo_sr" />
+  <arg name="current_scenario"  default="anpl_active_demo" />
 
   <arg name="scenario_dir"      default="$(eval find(current_scenario))" />
   <arg name="config_files_dir"  default="$(arg scenario_dir)/config_files" />
-  <arg name="robot_name" default="Robot_A" />
+  <arg name="robot_name"        default="Robot_A" />
+  <arg name="pioneer_num"       default="pioneer1" />
   <arg name="odometry_type"     default="odometry_external"/> <!-- odometry_icp_laser|odometry_external-->
 
   <!-- Putting the time back to real time-->
@@ -63,8 +64,8 @@
 
 
   <!-- Create static transformation between the laser frame id to the robot pose for laser drawing in rviz -->
-  <node pkg="tf" type="static_transform_publisher" name="$(arg robot_name)_laser_link" args="0.27 -0.03 0.13 0 0 0 1 pioneer1/base_link pioneer1/hokuyo_link 10" />
+  <node pkg="tf" type="static_transform_publisher" name="$(arg robot_name)_laser_link" args="0.27 -0.03 0.13 0 0 0 1 $(arg pioneer_num)/base_link $(arg pioneer_num)/hokuyo_link 10" />
 
-  <node pkg="tf" type="static_transform_publisher" name="$(arg robot_name)_base_link" args="0.0 0.0 0 0 0 0 1 $(arg robot_name) pioneer1/odom 10" />
+  <node pkg="tf" type="static_transform_publisher" name="$(arg robot_name)_base_link" args="0.0 0.0 0 0 0 0 1 $(arg robot_name) $(arg pioneer_num)/odom 10" />
 
   </launch>

@@ -1,7 +1,7 @@
 <launch>
     
   <!-- Parameters to change each time-->
-  <arg name="current_scenario"  default="anpl_interactive_demo" />
+  <arg name="current_scenario"  default="anpl_active_demo" />
   
   <arg name="scenario_dir"      default="$(eval find(current_scenario))" />
   <arg name="config_files_dir"  default="$(arg scenario_dir)/config_files" />
