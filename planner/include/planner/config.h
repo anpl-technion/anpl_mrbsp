@@ -19,7 +19,7 @@
 #ifndef PLANNER_CONFIG_H
 #define PLANNER_CONFIG_H
 
-#define NUM_ROBOTS 2 // robots ids are 'A', 'B', 'C', 'D', ...
+#define NUM_ROBOTS 3 // robots ids are 'A', 'B', 'C', 'D', ...
 // be sure to define number of colors at least equal to the number of robots.
 /* Colors can be specified using one of four formats:
  1. "#%2x%2x%2x"	Red-Green-Blue (RGB)

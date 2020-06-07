@@ -53,10 +53,10 @@ Continue [y/n]?" yn
 
 	sed "/#define NUM_ROBOTS $PREVIOUS_NUM_RORBOTS/ s/$PREVIOUS_NUM_RORBOTS/$NUM_R/" ../../../planner/include/planner/config.h > ../../../planner/include/planner/configTEST.h
 	mv ../../../planner/include/planner/configTEST.h ../../../planner/include/planner/config.h
-	cd ../../../planner/
+	# cd ../../../planner/
 	catkin clean planner
 	catkin build planner
-	cd ../scenarios/$scenario_name/scripts/
+	# cd ../scenarios/$scenario_name/scripts/
 else
 	echo "only: No need to build planner !!!"
 fi

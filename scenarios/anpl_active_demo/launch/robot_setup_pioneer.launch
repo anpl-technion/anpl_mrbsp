@@ -3,10 +3,12 @@
   <!-- Parameters to change each time-->
   <arg name="current_scenario"  default="anpl_active_demo" />
 
+  <arg name="R_id" />           <!-- 'A' 'B' 'C' 'D' -->
+  <arg name="p_id" />           <!-- '1' '2' '3' '4' -->
   <arg name="scenario_dir"      default="$(eval find(current_scenario))" />
   <arg name="config_files_dir"  default="$(arg scenario_dir)/config_files" />
-  <arg name="robot_name"        default="Robot_A" />
-  <arg name="pioneer_num"       default="pioneer1" />
+  <arg name="robot_name"        default="Robot_$(arg R_id)" />
+  <arg name="pioneer_num"       default="pioneer$(arg p_id)" />
   <arg name="odometry_type"     default="odometry_external"/> <!-- odometry_icp_laser|odometry_external-->
 
   <!-- Putting the time back to real time-->
@@ -22,22 +24,42 @@
      </node>
 
   <node pkg="odometry" type="$(arg odometry_type)" name="$(arg robot_name)" clear_params="true" output="screen" > <!-- launch-prefix="xterm -e gdb -ex run [MinusMinus]args" -->
-    <rosparam command="load" file="$(arg config_files_dir)/pioneer_robot_A.yaml" />
+    <rosparam command="load" file="$(arg config_files_dir)/pioneer_robot_$(arg R_id).yaml" />
   </node>
   
 
+  <node pkg="pure_pursuit_with_vfh" type="pure_pursuit_with_vfh_node" ns="$(arg robot_name)" name="controller_pioneer" output="screen">
+      <remap from="/current_pose" to="odometry"/>
+      <remap from="/next_waypoint" to="next_waypoint"/>
+      <!-- How to resolve low-level collisions -->
+      <!--remap from="/emergency_stop" to="Collision_warning"/-->       <!-- Uncomment to stop the robot when collision detected and decide in the state machine what to do. -->
+      <remap from="/Collision_warning" to="Collision_warning"/> 
+      <!-- Uncomment to recover by rotating the robot in place to collision free direction and then resume following the planned trajectory. This might lead to oscillating behaviour in certain configurations. -->
+      <remap from="/scan" to="scan"/>
+      <remap from="/mobile_base/commands/velocity" to="rosaria/cmd_vel"/>
+      <param name="robot_name" value="$(arg robot_name)"/>
+      
+      <!-- <rosparam command="load" file="$(find pure_pursuit_with_vfh)/config/default.yaml" />  -->
+      <rosparam command="load" file="$(arg config_files_dir)/pure_pursuit_vfh_controller_pioneer.yaml" />
+  
+    </node>
+
+
+    
+  
+   
 <group ns="$(arg robot_name)">
   <node pkg="state_machine" type="state_machine_default_node" name="state_machine_default" clear_params="true" output="screen">
     <rosparam command="load" file="$(arg config_files_dir)/state_machine_default.yaml" />
     <!-- Load robot goals -->
-    <rosparam command="load" file="$(arg config_files_dir)/pioneer_robot_A_goals.yaml" />
+    <rosparam command="load" file="$(arg config_files_dir)/pioneer_robot_$(arg R_id)_goals.yaml" />
   </node>
 
   <!-- start in GDB -->
   <!--node pkg="collision_detection_node" type="collosion_detection_octomap" name="$(arg robot_name)_collision_detector" clear_params="true" output="screen" launch-prefix="xterm -e gdb -ex run [MinusMinus]args" -->
   <node pkg="collision_detection" type="collosion_detection_octomap" name="collision_detector" clear_params="true" output="screen">
   
-    <rosparam command="load" file="$(arg config_files_dir)/collision_detector_octomap_pioneer_A.yaml" />
+    <rosparam command="load" file="$(arg config_files_dir)/collision_detector_octomap_pioneer_$(arg R_id).yaml" />
   </node>
 
 </group>
@@ -48,4 +70,4 @@
 
   <node pkg="tf" type="static_transform_publisher" name="$(arg robot_name)_base_link" args="0.0 0.0 0 0 0 0 1 $(arg robot_name) $(arg pioneer_num)/odom 10" />
 
-</launch>
+  </launch>
