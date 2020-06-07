@@ -1,10 +1,10 @@
 <launch>
 
-<arg name="robot_name" default="Robot_A" />
+<arg name="id" /> <!-- Must specify -->
+<arg name="robot_name" default="Robot_$(arg id)" />
 
 <!-- Parameters to change each time-->
-<arg name="researcher_name"   default="Or_Salmon" />
-<arg name="current_scenario"  default="orb_slam_active" />
+<arg name="current_scenario"  default="anpl_active_demo" />
 
 <arg name="scenario_dir"      default="$(eval find(current_scenario))" />
 <arg name="config_files_dir"  default="$(arg scenario_dir)/config_files" />
@@ -13,18 +13,19 @@
 <group ns="$(arg robot_name)" if="true"> <!-- put herer nodes that need to be inside robot namespace -->
 
 <!-- path following (pure pursuit) with obstacle avoidance (vector field histogram) -->
-  <node pkg="pure_pursuit_with_vfh" type="pure_pursuit_with_vfh_node" name="controller_pioneer" output="screen">
+  <node pkg="pure_pursuit_with_vfh" type="pure_pursuit_with_vfh_node" ns="$(arg robot_name)" name="controller_pioneer" output="screen">
       <remap from="/current_pose" to="odometry"/>
       <remap from="/next_waypoint" to="next_waypoint"/>
       <!-- How to resolve low-level collisions -->
-      <!--remap from="/emergency_stop" to="Collision_warning"/--> <!-- Uncomment to stop the robot when collision detected and decide in the state machine what to do. -->
-      <remap from="/Collision_warning" to="Collision_warning"/> <!-- Uncomment to recover by rotating the robot in place to collision free direction and then resume following the planned trajectory. This might lead to oscillating behaviour in certain configurations. -->
+      <!--remap from="/emergency_stop" to="Collision_warning"/-->       <!-- Uncomment to stop the robot when collision detected and decide in the state machine what to do. -->
+      <remap from="/Collision_warning" to="Collision_warning"/> 
+      <!-- Uncomment to recover by rotating the robot in place to collision free direction and then resume following the planned trajectory. This might lead to oscillating behaviour in certain configurations. -->
       <remap from="/scan" to="scan"/>
       <remap from="/mobile_base/commands/velocity" to="rosaria/cmd_vel"/>
       <param name="robot_name" value="$(arg robot_name)"/>
       
+      <!-- <rosparam command="load" file="$(find pure_pursuit_with_vfh)/config/default.yaml" />  -->
       <rosparam command="load" file="$(arg config_files_dir)/pure_pursuit_vfh_controller_pioneer.yaml" />
-      
   
     </node>
 
