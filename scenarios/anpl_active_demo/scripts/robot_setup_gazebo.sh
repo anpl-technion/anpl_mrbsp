@@ -14,8 +14,8 @@ roslaunch $scenario_name robot_setup_gazebo_$1.launch &
 
 # make sure nodes are initialized before starting a controller
 if [ -z "$2" ]; then
-	sleep 15
-	echo "Controller enabled after 15 seconds."
+	sleep 10
+	echo "Controller enabled after 10 seconds."
 else
 	sleep $2
 	echo "Controller enabled after $2 seconds."
