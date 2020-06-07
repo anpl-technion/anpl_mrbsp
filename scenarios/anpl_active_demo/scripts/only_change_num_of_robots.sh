@@ -48,7 +48,7 @@ only: This will change ROBOT_NUM in 'planner/config.h' and force 'catkin build p
 Continue [y/n]?" yn
 	case $yn in
 		[y*] ) echo "only: You choose to modify!";;
-		[n*] ) exit;;	
+		[n*] ) exit 42;;	
 	esac
 
 	sed "/#define NUM_ROBOTS $PREVIOUS_NUM_RORBOTS/ s/$PREVIOUS_NUM_RORBOTS/$NUM_R/" ../../../planner/include/planner/config.h > ../../../planner/include/planner/configTEST.h

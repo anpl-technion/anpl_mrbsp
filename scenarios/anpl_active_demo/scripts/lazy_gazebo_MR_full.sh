@@ -54,6 +54,9 @@ fi
 # "config_filers/scenario_config.yaml"
 # --------------------------------------------------------------------------------------
 bash only_change_num_of_robots.sh $n_rob $
+if [ $? -eq 42 ]; then
+	exit
+fi
 wait $!
 
 
