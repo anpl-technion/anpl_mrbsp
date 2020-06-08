@@ -9,6 +9,8 @@
     <!-- connect to pioneer robot -->
     <node pkg="rosaria" type="RosAria" name="rosaria" output="screen">
       <param name="_port" value="$(arg robot_serial_port)"/>
+      <param name="odom_frame" value="$(arg robot_name)/odom"/>
+      <param name="base_link_frame" value="$(arg robot_name)/base_link"/>
     </node>
 
     <!-- connect to astra rgbd camera -->

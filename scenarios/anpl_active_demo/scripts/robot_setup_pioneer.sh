@@ -81,7 +81,8 @@ gnome-terminal --geometry 100x17-1150-200 --tab  -e "sh -c '$cmd2; $SHELL'"
 # --------------------------------------------------------------------------------------
 # terminate all started processes including this script when SIGNAL received
 # --------------------------------------------------------------------------------------
-trap "trap - SIGTERM && kill 0" SIGINT SIGTERM EXIT
 if [ 0 -eq 1 ]; then
+trap "trap - SIGTERM && kill 0" SIGINT SIGTERM EXIT
+
 	echo "The END"
 fi

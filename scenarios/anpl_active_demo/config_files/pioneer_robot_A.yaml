@@ -2,7 +2,7 @@
 robot_name: Robot_A
 robot_id: A
 init_pose: {
-  position:    {X: 0.487, Y: -0.937, Z: 0.0},
+  position:    {X: 0.0, Y: -0.937, Z: 0.0},
   orientation: {Yaw: 0.0, Pitch: 0.0, Roll: 0.0}
 }
 topics: {pulse: /rosaria/pose, odom: /rosaria/pose, laser: /scan, ground_truth: /ground_truth, pointcloud: /camera/depth/points}
