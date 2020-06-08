@@ -30,11 +30,12 @@ scenario_name=$(awk -F/ '{print $(NF-1)}' <<< "$(pwd)")
 # num=$(ord $1)
 # let "num = num - 64"
 
-ROBOT_NAME='Robot_$1'
+ROBOT_NAME="Robot_$1"
 echo 'export robot name: '$ROBOT_NAME
 export $ROBOT_NAME 
 sudo chmod a+rw /dev/ttyUSB0
 sudo chmod 777 /dev/ttyACM0
+
 
 # Needs to be physiclly checked on the robot 'is_lidar_usb', currently know setup: 
 # Robot A - has Hokuyo UTM 30-LX lidar(is_lidar_usb = true)
@@ -45,6 +46,9 @@ case $1 in
 	* ) echo "Not yet ready for more robots" 
 		  exit;;
 esac
+
+echo $condition
+
 
 cmd0="roslaunch $scenario_name launch_robot_sensors.launch robot_name:=$ROBOT_NAME is_lidar_usb:=$condition" 
 
@@ -78,4 +82,6 @@ gnome-terminal --geometry 100x17-1150-200 --tab  -e "sh -c '$cmd2; $SHELL'"
 # terminate all started processes including this script when SIGNAL received
 # --------------------------------------------------------------------------------------
 trap "trap - SIGTERM && kill 0" SIGINT SIGTERM EXIT
-
+if [ 0 -eq 1 ]; then
+	echo "The END"
+fi
