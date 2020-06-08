@@ -8,36 +8,55 @@ scenario_name=$(awk -F/ '{print $(NF-1)}' <<< "$(pwd)")
 # Optional second argument is the time_delay in seconds between starting different groups of nodes.
 # Controller shoud start only after all other nodes are initialized. 
 
-# --------------------------------------------------------------------------------------
-# Function that prints letter given the ASCII number
-# --------------------------------------------------------------------------------------
-chr() {
-  [ "$1" -lt 256 ] || return 1
-  printf "\\$(printf '%03o' "$1")"
-}
-# --------------------------------------------------------------------------------------
-# Function that prints number given the ASCII letter
-# --------------------------------------------------------------------------------------
-ord() {
-  LC_CTYPE=C printf '%d' "'$1"
-}
 
 # --------------------------------------------------------------------------------------
-# Robot_id = $1 , pioner_num_id = $num
+# Print char from ASCII number
 # --------------------------------------------------------------------------------------
-num=$(ord $1)
-# echo $num
-let "num = num - 64"
-# echo $num
+# chr() {
+#   [ "$1" -lt 256 ] || return 1
+#   printf "\\$(printf '%03o' "$1")"
+# }
+
+# --------------------------------------------------------------------------------------
+# Print number from ASCII char
+# --------------------------------------------------------------------------------------
+# ord() {
+#   LC_CTYPE=C printf '%d' "'$1"
+# }
+
+# --------------------------------------------------------------------------------------
+# The number for pioneer id
+# --------------------------------------------------------------------------------------
+# num=$(ord $1)
+# let "num = num - 64"
+
+ROBOT_NAME='Robot_$1'
+echo 'export robot name: '$ROBOT_NAME
+export $ROBOT_NAME 
+sudo chmod a+rw /dev/ttyUSB0
+sudo chmod 777 /dev/ttyACM0
+
+# Needs to be physiclly checked on the robot 'is_lidar_usb', currently know setup: 
+# Robot A - has Hokuyo UTM 30-LX lidar(is_lidar_usb = true)
+# Robot B - has Hokuyo UTM 10-LX lidar(is_lidar_usb = false)
+case $1 in
+	["Aa"] ) condition="true";;
+    ["Bb"] ) condition="false";;
+	* ) echo "Not yet ready for more robots" 
+		  exit;;
+esac
+
+cmd0="roslaunch $scenario_name launch_robot_sensors.launch robot_name:=$ROBOT_NAME is_lidar_usb:=$condition" 
 
 
-bash run_robot_sensors_$1.sh
 
 # --------------------------------------------------------------------------------------
 # start odomtery node, state machine, collision detection ...
 # --------------------------------------------------------------------------------------
-roslaunch $scenario_name robot_setup_pioneer.launch R_id:=$1 p_id:=$num &
-wait $!
+cmd1="roslaunch $scenario_name robot_setup_pioneer.launch R_id:=$1" # p_id:=$num"
+gnome-terminal --geometry 100x17-1150-500 --tab  -e "sh -c '$cmd1; $SHELL'" \
+               --tab -e "sh -c 'sleep 5; $cmd0; $SHELL'"
+
 
 # --------------------------------------------------------------------------------------
 # make sure nodes are initialized before starting a controller
@@ -49,14 +68,14 @@ else
 	sleep $2
 	echo "Controller enabled after $2 seconds."
 fi
-
-# --------------------------------------------------------------------------------------	
+# --------------------------------------------------------------------------------------
 # start the controller
 # --------------------------------------------------------------------------------------
-roslaunch $scenario_name controller_setup_pioneer.launch R_id:=$1 p_id:=$num
+cmd2="roslaunch $scenario_name controller_setup_pioneer.launch R_id:=$1" # p_id:=$num"
+gnome-terminal --geometry 100x17-1150-200 --tab  -e "sh -c '$cmd2; $SHELL'"
 
-
+# --------------------------------------------------------------------------------------
 # terminate all started processes including this script when SIGNAL received
+# --------------------------------------------------------------------------------------
 trap "trap - SIGTERM && kill 0" SIGINT SIGTERM EXIT
-
 

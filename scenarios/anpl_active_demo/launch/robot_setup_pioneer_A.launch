@@ -49,6 +49,8 @@
 <group ns="$(arg robot_name)">
   <node pkg="state_machine" type="state_machine_default_node" name="state_machine_default" clear_params="true" output="screen">
     <rosparam command="load" file="$(arg config_files_dir)/state_machine_default.yaml" />
+    <param name="robot_id"   value="$(arg R_id)"/>
+    <param name="robot_name" value="$(arg robot_name)"/>
     <!-- Load robot goals -->
     <rosparam command="load" file="$(arg config_files_dir)/pioneer_robot_A_goals.yaml" />
   </node>

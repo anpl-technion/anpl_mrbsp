@@ -105,7 +105,7 @@ if [ 1 -eq 1 ]; then
 
 
 gnome-terminal --geometry 100x17-1150-500 --tab  -e "sh -c '$cmd1; $SHELL'" \
-               --tab -e "sh -c 'sleep 5; $cmd2; $SHELL'" \
+               --tab -e "sh -c 'sleep 5; $cmd2; $SHELL'"ba \
                --tab -e "sh -c 'sleep 7; $cmd3; $SHELL'" \
                --tab -e "sh -c 'sleep 9; $cmd4; $SHELL'" \
  	       	   --tab -e "sh -c 'sleep 13; $cmd5; $SHELL'" \
