@@ -2,7 +2,10 @@
 
   <!-- Parameters and processes on the central machine-->
   <arg name="current_scenario"  default="anpl_active_demo" />
-
+  <arg name="A"                 default="true" />
+  <arg name="B"                 default="false" />
+  <arg name="C"                 default="false" />
+  <arg name="D"                 default="false" />
   <arg name="scenario_dir"      default="$(eval find(current_scenario))" />
   <arg name="config_files_dir"  default="$(arg scenario_dir)/config_files" />
 
@@ -10,12 +13,21 @@
   <rosparam> /use_sim_time : false </rosparam>
 
   <!-- Load robot params -->
-  <group ns="Robot_A">
+  <group if="$(arg A)" ns="Robot_A">
     <rosparam command="load" file="$(arg config_files_dir)/pioneer_robot_A.yaml" />
   </group>
-  <!-- <group ns="Robot_B">
+
+  <group if="$(arg B)" ns="Robot_B">
     <rosparam command="load" file="$(arg config_files_dir)/pioneer_robot_B.yaml" />
-  </group> -->
+  </group>
+
+  <group if="$(arg C)" ns="Robot_C">
+    <rosparam command="load" file="$(arg config_files_dir)/pioneer_robot_C.yaml" />
+  </group>
+
+  <group if="$(arg D)" ns="Robot_D">
+    <rosparam command="load" file="$(arg config_files_dir)/pioneer_robot_D.yaml" />
+  </group>
   
   <param name="scenario_folder" value="$(arg scenario_dir)"/>
 

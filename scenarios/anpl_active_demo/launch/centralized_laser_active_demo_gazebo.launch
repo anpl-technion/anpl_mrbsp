@@ -2,7 +2,10 @@
 
   <!-- Parameters and processes on the central machine-->
   <arg name="current_scenario"  default="anpl_active_demo" />
-
+  <arg name="A"                 default="true" />
+  <arg name="B"                 default="false" />
+  <arg name="C"                 default="false" />
+  <arg name="D"                 default="false" />
   <arg name="scenario_dir"      default="$(eval find(current_scenario))" />
   <arg name="config_files_dir"  default="$(arg scenario_dir)/config_files" />
 
