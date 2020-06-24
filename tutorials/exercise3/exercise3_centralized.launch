@@ -22,7 +22,7 @@
 
   <node pkg="logger" type="logger" name="logger" clear_params="true" output="screen">
     <rosparam command="load" file="$(arg config_files_dir)/logger.yaml" />
-
+  </node>
   <node pkg="da" type="da_icp_laser" name="da_laser" clear_params="true" output="screen">
     <rosparam command="load" file="$(arg config_files_dir)/da_laser_csm_icp.yaml" />
   </node>
