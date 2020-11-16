@@ -72,8 +72,9 @@ if(NOT FCL_FOUND)
     set(FCL_INCLUDE_DIRS ${FCL_INCLUDEDIR})
 endif()
 
-#list(APPEND CMAKE_MODULE_PATH ${ANPL_PREFIX}/share/cmake) # if installed from apt (comment)
-# set(OMPL_PREFIX ${ANPL_PREFIX}) 			   # if installed from apt (comment)
+
+list(APPEND CMAKE_MODULE_PATH ${ANPL_PREFIX}/share/cmake) # comment out if installed from apt
+set(OMPL_PREFIX ${ANPL_PREFIX}) 			  # comment out if installed from apt
 find_package(OMPL REQUIRED)
 
 
