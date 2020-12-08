@@ -81,7 +81,8 @@ find_package(OMPL REQUIRED)
 
 
 find_package(OCTOMAP REQUIRED)
-set(EIGEN_INCLUDE_DIRS "/usr/ANPLprefix/include/gtsam/3rdparty/Eigen")
+#set(EIGEN_INCLUDE_DIRS "/usr/ANPLprefix/include/gtsam/3rdparty/Eigen")
+set(EIGEN_INCLUDE_DIRS "/usr/include/eigen3")
 
 ## Uncomment this if the package has a setup.py. This macro ensures
 ## modules and global scripts declared therein get installed

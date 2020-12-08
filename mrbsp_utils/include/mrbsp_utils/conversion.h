@@ -114,7 +114,8 @@ struct Conversion<gtsam::Rot3>
      * @return gtsam Rot3
      */
     static gtsam::Rot3 as(const octomath::Quaternion &quaternion) {
-        return gtsam::Rot3::quaternion(quaternion.u(), quaternion.x(), quaternion.y(), quaternion.z());
+	gtsam::Quaternion q(quaternion.u(), quaternion.x(), quaternion.y(), quaternion.z());
+        return gtsam::Rot3(q);
     }
 
     /**
@@ -123,7 +124,8 @@ struct Conversion<gtsam::Rot3>
      * @return gtsam Rot3
      */
     static gtsam::Rot3 as(const fcl::Quaternion3f& quaternion3f) {
-        return gtsam::Rot3::quaternion(quaternion3f.getW(), quaternion3f.getX(), quaternion3f.getY(), quaternion3f.getZ());
+	gtsam::Quaternion quaternion(quaternion3f.getW(), quaternion3f.getX(), quaternion3f.getY(), quaternion3f.getZ());
+        return gtsam::Rot3(quaternion);
     }
 
     /**
@@ -132,7 +134,8 @@ struct Conversion<gtsam::Rot3>
      * @return gtsam Rot3
      */
     static gtsam::Rot3 as(const geometry_msgs::Quaternion& quaternion) {
-        return gtsam::Rot3::quaternion(quaternion.w, quaternion.x, quaternion.y, quaternion.z);
+	gtsam::Quaternion q(quaternion.w, quaternion.x, quaternion.y, quaternion.z);
+        return gtsam::Rot3(q);
     }
 };
 

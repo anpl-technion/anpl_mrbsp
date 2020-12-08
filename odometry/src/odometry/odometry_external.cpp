@@ -98,7 +98,7 @@ void OdometryExternal::loadParameter() {
     m_privateNodeHandle.param("init_pose/orientation/Pitch", pitch, double(0.0));
     m_privateNodeHandle.param("init_pose/orientation/Roll",  roll,  double(0.0));
 
-    gtsam::Rot3 R = gtsam::Rot3::ypr(yaw, pitch, roll);
+    gtsam::Rot3 R = gtsam::Rot3::Ypr(roll, pitch, yaw);
     gtsam::Point3 t(x, y, z);
     gtsam::Pose3 initial_pose(R, t);
     m_current_pose = initial_pose;
@@ -464,9 +464,9 @@ void OdometryExternal::handleOdomData(nav_msgs::OdometryConstPtr odom_msg) {
         double pitch_noise = pitch_distribution(generator);
 
         gtsam::Point3 t_noised(current_odom.x() + x_noise, current_odom.y() + y_noise, current_odom.z() + z_noise);
-        gtsam::Rot3   R_noised(gtsam::Rot3::ypr(current_odom.rotation().yaw() + yaw_noise,
+        gtsam::Rot3   R_noised(gtsam::Rot3::Ypr(current_odom.rotation().roll() + roll_noise,
                                                 current_odom.rotation().pitch() + pitch_noise,
-                                                current_odom.rotation().roll() + roll_noise));
+						current_odom.rotation().yaw() + yaw_noise));
         current_odom = gtsam::Pose3(R_noised, t_noised);
     }
 
@@ -647,7 +647,7 @@ void OdometryExternal::rosOdomeMsgToGtsam(const nav_msgs::OdometryConstPtr& odom
     geometry_msgs::Quaternion curr_quat_ros = curr_odom_ros.orientation;
     geometry_msgs::Point curr_point_ros = curr_odom_ros.position;
 
-    gtsam::Rot3 curr_rot_gtsam = gtsam::Rot3::quaternion(curr_quat_ros.w, curr_quat_ros.x, curr_quat_ros.y, curr_quat_ros.z);
+    gtsam::Rot3 curr_rot_gtsam = gtsam::Rot3::Quaternion(curr_quat_ros.w, curr_quat_ros.x, curr_quat_ros.y, curr_quat_ros.z);
     gtsam::Point3 curr_point_gtsam = gtsam::Point3(curr_point_ros.x, curr_point_ros.y, curr_point_ros.z);
     m_current_odom_pose = gtsam::Pose3(curr_rot_gtsam, curr_point_gtsam);
 }

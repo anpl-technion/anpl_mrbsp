@@ -170,7 +170,8 @@ message("${GVC_LIBRARIES} library found in ${GVC_LIBDIR}. GVC headers in ${GVC_I
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 # include_directories(include)
-set(EIGEN_INCLUDE_DIRS ${ANPL_PREFIX}/include/gtsam/3rdparty/Eigen)
+#set(EIGEN_INCLUDE_DIRS ${ANPL_PREFIX}/include/gtsam/3rdparty/Eigen)
+set(EIGEN_INCLUDE_DIRS /usr/include/eigen3)
 include_directories(
   include
   ${ANPL_PREFIX}/include

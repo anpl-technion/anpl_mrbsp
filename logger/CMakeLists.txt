@@ -35,7 +35,8 @@ catkin_package(
 include_directories(
 	include
 	${PREFIX}/include/
-	${PREFIX}/include/gtsam/3rdparty/Eigen/
+	#${PREFIX}/include/gtsam/3rdparty/Eigen/
+	/usr/include/eigen3/
 	${catkin_INCLUDE_DIRS}
 )
 

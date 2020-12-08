@@ -145,7 +145,7 @@ void RobotMapOctomapLaser::mapDataCallback(const mrbsp_msgs::MapDataConstPtr& ma
                 m_map_node.param(std::string(robot_ns + "/sensor_pose/laser/orientation/qY"), qY, double(0.0));
                 m_map_node.param(std::string(robot_ns + "/sensor_pose/laser/orientation/qZ"), qZ, double(0.0));
                 m_map_node.param(std::string(robot_ns + "/sensor_pose/laser/orientation/qW"), qW, double(0.0));
-                gtsam::Rot3 R_sensor = gtsam::Rot3::quaternion(qW, qX, qY, qZ);
+                gtsam::Rot3 R_sensor = gtsam::Rot3::Quaternion(qW, qX, qY, qZ);
                 gtsam::Point3 t_sensor(X_sensor, Y_sensor, Z_sensor);
                 gtsam::Pose3 sensor_pose = gtsam::Pose3(R_sensor, t_sensor);
 
@@ -216,7 +216,7 @@ void RobotMapOctomapLaser::mapData3DCallback(const mrbsp_msgs::MapData3DConstPtr
                 m_map_node.param(std::string(robot_ns + "/sensor_pose/pointcloud/orientation/qY"), qY, double(0.0));
                 m_map_node.param(std::string(robot_ns + "/sensor_pose/pointcloud/orientation/qZ"), qZ, double(0.0));
                 m_map_node.param(std::string(robot_ns + "/sensor_pose/pointcloud/orientation/qW"), qW, double(0.0));
-                gtsam::Rot3 R_sensor = gtsam::Rot3::quaternion(qW, qX, qY, qZ);
+                gtsam::Rot3 R_sensor = gtsam::Rot3::Quaternion(qW, qX, qY, qZ);
                 gtsam::Point3 t_sensor(X_sensor, Y_sensor, Z_sensor);
                 gtsam::Pose3 sensor_pose = gtsam::Pose3(R_sensor, t_sensor);
 

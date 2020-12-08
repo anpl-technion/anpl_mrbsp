@@ -558,7 +558,7 @@ bool StateMachineDefault::isWaypointReached(gtsam::Pose3& current_pose) {
     // TODO consider making dist_threshold a function of position covariance
     b_m_state_machine_node.param<double>("/" + b_m_robot_ns + "/controller_pioneer/goal_radius", dist_threshold, 0.1);
     //ROS_WARN_STREAM("Dist THR set to " << dist_threshold);
-    return current_pose.translation().distance(m_waypoints.at(0)) < dist_threshold;
+    return (current_pose.translation()-m_waypoints.at(0)).norm() < dist_threshold;
 }
 
 

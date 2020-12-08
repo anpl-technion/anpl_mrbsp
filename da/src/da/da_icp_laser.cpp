@@ -670,19 +670,19 @@ void DaIcpLaser::detectLoopClosures(Keyframe &keyframe_init) {
                 bool DA_consistent;
                 if (m_enforcing_perfect_DA) {
 
-                    gtsam::Pose3 gtsam_gt_pose(gtsam::Rot3::quaternion(ground_truth_pose.orientation.w, ground_truth_pose.orientation.x, ground_truth_pose.orientation.y, ground_truth_pose.orientation.z),
+                    gtsam::Pose3 gtsam_gt_pose(gtsam::Rot3(gtsam::Quaternion(ground_truth_pose.orientation.w, ground_truth_pose.orientation.x, ground_truth_pose.orientation.y, ground_truth_pose.orientation.z)),
                                                gtsam::Point3(ground_truth_pose.position.x, ground_truth_pose.position.y, ground_truth_pose.position.z));
 
                     gtsam::Pose3 icp_current_pose = temp_pose.compose(lc_icp_transformation);
                     gtsam::Pose3 absolute_error = gtsam_gt_pose.between(icp_current_pose);
-                    DA_consistent = absolute_error.translation().equals(gtsam::Point3(), 0.5) &&
+                    DA_consistent = absolute_error.translation().isApproxToConstant(0, 0.5) &&
                             absolute_error.rotation().pitch() < 0.1 &&
                             absolute_error.rotation().roll() < 0.1 &&
                             absolute_error.rotation().yaw() < 0.3;
 
                 }
                 else
-                    DA_consistent = temp_odom.translation().equals(lc_icp_transformation.translation(), 1); // tollerance on displacement 1 m
+                    DA_consistent = (temp_odom.translation()-lc_icp_transformation.translation()).isApproxToConstant(0, 1); // tollerance on displacement 1 m
 
                 if(DA_consistent) {
                     m_logger_msg << "DA: Loop closure detected, Robot " << index_char

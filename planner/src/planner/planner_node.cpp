@@ -70,14 +70,15 @@ int main(int argc, char** argv) {
     Omega2D(1,1) = Omega3D(4,4); // var y
     Omega2D(2,2) = Omega3D(2,2); // var yaw
 
-    try {
+    // for testing purposes only
+/*    try {
         MatrixXd Ln;
         loadMatrixFromFile("Ln", Ln);
         std::cout << "Ln = " << Ln << std::endl;
 
     } catch (std::exception& e) {
         ROS_ERROR(e.what());
-    }
+    }*/
 
     while (ros::ok()) {
 

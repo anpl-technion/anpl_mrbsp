@@ -37,7 +37,8 @@ find_package(Doxygen QUIET)
 
 set(BOOST_LIBRARIES ${BOOST_LIBRARIES} boost_graph boost_serialization)
 set(GTSAM_LIBRARIES gtsam tbb tbbmalloc)
-set(EIGEN_INCLUDE_DIRS ${PREFIX}/include/gtsam/3rdparty/Eigen)
+#set(EIGEN_INCLUDE_DIRS ${PREFIX}/include/gtsam/3rdparty/Eigen)
+set(EIGEN_INCLUDE_DIRS /usr/include/eigen3)
 set(ANPL_LIBRARIES planar_icp)
 
 

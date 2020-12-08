@@ -57,7 +57,7 @@ StateMachineNodeBase::StateMachineNodeBase():
 
     try {
         gtsam::Point3 init_position(init_position_x, init_position_y, init_position_z);
-        gtsam::Rot3 init_orientation = gtsam::Rot3::ypr(init_orientation_yaw, init_orientation_pitch, init_orientation_roll);
+        gtsam::Rot3 init_orientation = gtsam::Rot3::Ypr(init_orientation_roll, init_orientation_pitch, init_orientation_yaw);
         b_m_current_robot_pose_gtsam = gtsam::Pose3(init_orientation, init_position);
         b_m_current_robot_pose_ros = Conversion<geometry_msgs::Pose>::as(b_m_current_robot_pose_gtsam);
     }

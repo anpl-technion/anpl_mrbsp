@@ -139,7 +139,8 @@ catkin_package(
 set(BOOST_LIBRARIES ${BOOST_LIBRARIES} boost_graph boost_serialization)
 set(GTSAM_LIBRARIES gtsam tbb tbbmalloc)
 set(ANPL_LIBRARIES planar_icp)
-set(EIGEN_INCLUDE_DIRS "/usr/ANPLprefix/include/gtsam/3rdparty/Eigen")
+#set(EIGEN_INCLUDE_DIRS "/usr/ANPLprefix/include/gtsam/3rdparty/Eigen")
+set(EIGEN_INCLUDE_DIRS "/usr/include/eigen3")
 
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
@@ -148,7 +149,7 @@ include_directories(
         ${Boost_INCLUDE_DIR}
         ${PREFIX}/include
         ${PREFIX}/include/planar_icp
-        ${PREFIX}/include/gtsam/3rdparty/Eigen
+        ${EIGEN_INCLUDE_DIRS}
         ${catkin_INCLUDE_DIRS}
 )
 
