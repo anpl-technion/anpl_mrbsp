@@ -1,3 +1,7 @@
 # parameters for robots map
-publish_optimize_pose_to_odometry: true
-save: {isam_objects: false, fg_values_pairs: false}
+publish_optimize_pose_to_odometry: true # old inf
+is_publish_optimize_pose: true # new inf
+
+save: {isam_objects: false, fg_values_pairs: false} # old inf
+is_save_isam_files: true # new inf
+

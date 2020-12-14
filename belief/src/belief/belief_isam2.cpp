@@ -29,6 +29,7 @@
 #include <mrbsp_utils/gtsam_serialization.h>
 
 #include <gtsam/base/serialization.h>
+#include <boost/archive/archive_exception.hpp>
 
 #include <signal.h>
 
@@ -147,9 +148,15 @@ void BeliefIsam2::factorAndValuesCallback(const mrbsp_msgs::GtsamFactorGraphCons
     FUNCTION_LOGGER(m_tag);
 
     gtsam::NonlinearFactorGraph graph;
-    gtsam::deserialize(graph_input_msg->ser_factors, graph);
     gtsam::Values vals;
-    gtsam::deserialize(graph_input_msg->ser_values, vals);
+    try {
+    	gtsam::deserialize(graph_input_msg->ser_factors, graph);
+    	gtsam::deserialize(graph_input_msg->ser_values, vals);
+    } catch (boost::archive::archive_exception& e) {
+    	ROS_ERROR("BF: Deserialize input factors and vals didn't succeed: %s", e.what());
+    	std::cout << "Input strings (FG, Val): " << graph_input_msg->ser_factors << ",\n\n " << graph_input_msg->ser_values << std::endl;
+    	return;
+    }
 
     NewFactorsAndValues new_factors_and_values = std::make_pair(graph, vals);
     handleNewFactorsAndValues(new_factors_and_values);
@@ -379,15 +386,48 @@ void BeliefIsam2::saveIsamResultsToFile(const std::string& file_name, const gtsa
 
 void BeliefIsam2::serializeResultsToFile(const std::string& file_name, const gtsam::ISAM2& isam) {
     FUNCTION_LOGGER(m_tag);
+    
+    unsigned int saveFlags = 0x0;
 
-    std::string isam_ser_filename(file_name + "_ser_isam.txt");
-    gtsam::serializeToFile(isam, isam_ser_filename);
+    try {
+    	std::string isam_ser_filename(file_name + "_ser_isam.txt");
+    	gtsam::serializeToFile(isam, isam_ser_filename);
+    	saveFlags |= 0x4;
+    	std::cout << "saveFlags = " << saveFlags << std::endl;
 
-    std::string values_ser_filename(file_name + "_ser_values.txt");
-    gtsam::serializeToFile(isam.calculateBestEstimate(), values_ser_filename);
+    } catch (boost::archive::archive_exception& e) {
 
-    std::string factors_ser_filename(file_name + "_ser_factors.txt");
-    gtsam::serializeToFile(isam.getFactorsUnsafe(), factors_ser_filename);
+		m_logger_msg << "ISAM2 object not saved. " << e.what(); // ISAM2 not serializable
+    	logMessage(info, LOG_INFO_LVL, m_logger_msg, m_tag);
+    }
+
+	try {
+    	std::string values_ser_filename(file_name + "_ser_values.txt");
+    	gtsam::serializeToFile(isam.calculateBestEstimate(), values_ser_filename);
+    	saveFlags |= 0x2;
+    	std::cout << "saveFlags = " << saveFlags << std::endl;
+
+    } catch (boost::archive::archive_exception& e) {
+
+		m_logger_msg << "Values not saved. " << e.what(); // Values not serializable
+    	logMessage(info, LOG_INFO_LVL, m_logger_msg, m_tag);
+    }
+
+	try {
+	    std::string factors_ser_filename(file_name + "_ser_factors.txt");
+    	gtsam::serializeToFile(isam.getFactorsUnsafe(), factors_ser_filename);
+    	saveFlags |= 0x1;
+    	std::cout << "saveFlags = " << saveFlags << std::endl;
+    } catch (boost::archive::archive_exception& e) {
+
+		m_logger_msg << "Factor graph not saved. " << e.what(); // Factor graph not serializable
+    	logMessage(info, LOG_INFO_LVL, m_logger_msg, m_tag);
+    }
+    
+    if (saveFlags != 0x4 && saveFlags != 0x3 && saveFlags != 0x7)
+    	ROS_WARN("Saving GTSAM objects requested, but GTSAM objects could not be serialized. See log files for more info.");
+  
+  	ROS_INFO("Save (code %0x)", saveFlags);
 }
 
 bool BeliefIsam2::getBeliefCallback(mrbsp_msgs::RequestBelief::Request& req, mrbsp_msgs::RequestBelief::Response& res) {

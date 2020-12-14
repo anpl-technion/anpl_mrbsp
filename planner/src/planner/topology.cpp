@@ -351,18 +351,22 @@ void Graph::calculateSignature() {
 
     if (signature.active[ST]) {
         gttic_(sigST);
-        SparseMatrix<double> K(n-1, n-1); // reduced Laplacian matrix, Kirchoff matrix
-        K = (L.block(1, 1, n - 1, n - 1)).cast<double>();
-        SparseQR<SparseMatrix<double>, Eigen::COLAMDOrdering<int> > qr(K);
-        qr.analyzePattern(K);
-        qr.factorize(K);
-        SparseMatrix<double> R = qr.matrixR();
+	if (n > 1) {
+	        SparseMatrix<double> K(n-1, n-1); // reduced Laplacian matrix, Kirchoff matrix
+	        K = (L.block(1, 1, n - 1, n - 1)).cast<double>();
+	        SparseQR<SparseMatrix<double>, Eigen::COLAMDOrdering<int> > qr(K);
+	        qr.analyzePattern(K);
+	        qr.factorize(K);
+	        SparseMatrix<double> R = qr.matrixR();
 
-        double tau = 0;
-        for (unsigned i = 0; i < K.rows(); ++i)
-            tau += std::log(fabs(R.coeff(i, i)));
+        	double tau = 0;
+	        for (unsigned i = 0; i < K.rows(); ++i)
+        	    tau += std::log(fabs(R.coeff(i, i)));
 
-        signature.s_ST = 1.5*tau + (n-1)/2.0*(log(Omega.determinant())-dimension*log(2*M_PI*exp(1)));
+	        signature.s_ST = 1.5*tau + (n-1)/2.0*(log(Omega.determinant())-dimension*log(2*M_PI*exp(1)));
+	} else {
+		signature.s_ST = 0;
+	}
         gttoc_(sigST);
         tictoc_getNode(tsigST, sigST);
         Topology::time_ofs << tsigST.get()->wall() << " ";

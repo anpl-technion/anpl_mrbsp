@@ -31,6 +31,7 @@
 #include <gtsam/inference/Symbol.h>
 
 #include "gtsam/base/serialization.h"
+#include <boost/archive/archive_exception.hpp>
 
 #define MAP_RESOLUTION 0.1
 #define MAP_FILENAME "octomap.ot"
@@ -123,7 +124,12 @@ void RobotMapOctomapLaser::generateMapFromMapData(std::map<std::string, MRBSP::U
 
 void RobotMapOctomapLaser::mapDataCallback(const mrbsp_msgs::MapDataConstPtr& map_data_msg) {
     gtsam::Values updated_vals;
-    gtsam::deserialize(map_data_msg->ser_values, updated_vals);
+    try {
+    	gtsam::deserialize(map_data_msg->ser_values, updated_vals);
+    } catch (boost::archive::archive_exception& e) {
+		ROS_ERROR("Map: Deserialize vals didn't succeed: %s. \nMap not updated.", e.what());
+		return;
+    }
 
     m_logger_msg << "Map: Receive map data, number of values: " << updated_vals.size();
     //ANPL::anplLogMessage(m_p_map_logger, info, 0, m_logger_msg);
@@ -195,7 +201,13 @@ void RobotMapOctomapLaser::mapDataCallback(const mrbsp_msgs::MapDataConstPtr& ma
 
 void RobotMapOctomapLaser::mapData3DCallback(const mrbsp_msgs::MapData3DConstPtr& map_data_3d_msg) {
     gtsam::Values updated_vals;
-    gtsam::deserialize(map_data_3d_msg->ser_values, updated_vals);
+    try {
+    	gtsam::deserialize(map_data_3d_msg->ser_values, updated_vals);
+    } catch (boost::archive::archive_exception& e) {
+		ROS_ERROR("Map: Deserialize vals didn't succed: %s. \nMap not updated.", e.what());
+		return;
+    }
+
 
     m_logger_msg << "Map: Receive map data, number of values: " << updated_vals.size();
     //ANPL::anplLogMessage(m_p_map_logger, info, 0, m_logger_msg);
