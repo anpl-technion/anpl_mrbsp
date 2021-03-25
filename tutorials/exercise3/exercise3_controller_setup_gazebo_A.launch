@@ -1,6 +1,6 @@
 <launch>
 
-  <arg name="current_scenario"  default="mrbsp_ros_tutorials" />
+  <arg name="current_scenario"  default="anpl_mrbsp_tutorials" />
 
   <arg name="scenario_dir"      default="$(eval find(current_scenario))" />
   <arg name="config_files_dir"  default="$(arg scenario_dir)/config_files" />

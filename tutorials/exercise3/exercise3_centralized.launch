@@ -1,7 +1,7 @@
 <launch>
 
   <!-- Parameters to change each time-->
-  <arg name="current_scenario"  default="mrbsp_ros_tutorials" />
+  <arg name="current_scenario"  default="anpl_mrbsp_tutorials" />
 
   <arg name="scenario_dir"      default="$(eval find(current_scenario))" />
   <arg name="config_files_dir"  default="$(arg scenario_dir)/config_files" />
@@ -22,7 +22,7 @@
 
   <node pkg="logger" type="logger" name="logger" clear_params="true" output="screen">
     <rosparam command="load" file="$(arg config_files_dir)/logger.yaml" />
-
+  </node>
   <node pkg="da" type="da_icp_laser" name="da_laser" clear_params="true" output="screen">
     <rosparam command="load" file="$(arg config_files_dir)/da_laser_csm_icp.yaml" />
   </node>
@@ -36,7 +36,7 @@
   </node>
 
   <!-- Action generator method -->
-   <arg name="method" default="ompl" /> <!-- "ompl" | "interactive" | "mp" -->
+   <arg name="method" default="interactive" /> <!-- "ompl" | "interactive" | "mp" -->
    <rosparam> /action_generator_method : $(arg method) </rosparam>
 
    <!-- Condition for using map in action generation. OMPL and interactive method use preloaded map for now, although it is possible to easily extend this framework to use dynamically built SLAM map. -->
@@ -67,7 +67,7 @@
 
   <!-- Planner -->
   <node pkg="planner" type="planner" name="planner" clear_params="true" output="screen">
-    <param name="planner_type" value="cpp" /> <!-- "cpp" or "matlab" -->
+    <param name="planner_type" value="matlab" /> <!-- "cpp" or "matlab" -->
     <param name="mode" value="incremental"/> <!-- incremental or batch -->
     <param name="alg" value="standard"/> <!-- BSP algorithm: "standard","t-bsp",... 
 -->

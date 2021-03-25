@@ -1,6 +1,7 @@
 <launch>
   <arg name="world_name" default="willowgarage.world"/>
   <arg name="robot1_name" default="pioneer1"/>
+  <arg name="robot2_name" default="pioneer2"/>
 
   <!-- <arg name="world" default="worlds/empty.world" /> -->
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
@@ -12,7 +13,7 @@
         <param name="tf_prefix" value="$(arg robot1_name)"/>
         <include file="$(find anpl_inf)/launch/spawn_pioneer3at.launch">
           <arg name="robot_name" value="$(arg robot1_name)" />
-          <arg name="init_pose" value="-x 0.0 -y 0.0 -z 0.0 -Y 0.0 -R 0.0 -P 0.0"/>
+          <arg name="init_pose" value="-x 20.0 -y 0.0 -z 0.0 -Y 0.0 -R 0.0 -P 0.0"/>
         </include>
     </group>
 
