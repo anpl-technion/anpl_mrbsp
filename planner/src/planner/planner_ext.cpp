@@ -39,7 +39,7 @@ PlannerExt::PlannerExt(std::string planner_type) :
         // Replace archive version number encoded in the string when serializing/deserializing GTSAM objects.
         // This is a workaround when using different boost versions which causes "unsupported version" exception
         ros::param::param<std::string>("/config_setup/matlab_boost_archive_version", m_matlab_boost_archive_version, "serialization::archive 11");
-        ros::param::param<std::string>("/config_setup/ros_boost_archive_version", m_ros_boost_archive_version, "serialization::archive 12");
+        ros::param::param<std::string>("/config_setup/ros_boost_archive_version", m_ros_boost_archive_version, "serialization::archive 15");
 
 
     } else if (type == "julia") {

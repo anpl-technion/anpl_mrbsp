@@ -98,7 +98,7 @@ void OdometryExternal::loadParameter() {
     m_privateNodeHandle.param("init_pose/orientation/Pitch", pitch, double(0.0));
     m_privateNodeHandle.param("init_pose/orientation/Roll",  roll,  double(0.0));
 
-    gtsam::Rot3 R = gtsam::Rot3::Ypr(roll, pitch, yaw);
+    gtsam::Rot3 R = gtsam::Rot3::Ypr(yaw, pitch, roll);
     gtsam::Point3 t(x, y, z);
     gtsam::Pose3 initial_pose(R, t);
     m_current_pose = initial_pose;
