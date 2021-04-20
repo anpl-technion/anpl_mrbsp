@@ -408,20 +408,6 @@ unsigned int Planner::evaluateObjFn(const std::vector<NonlinearFactorGraph>& gra
         // Do not perform more than N iteration steps
         parameters.maxIterations = 100;
 
-//        PATCH -- Evgeny ---------------------------------------------------
-//        int countI = 0;
-//        std::string post_EE[delta_edges[0].size()*delta_edges[1].size()];
-//        std::string post_VV[delta_edges[0].size()*delta_edges[1].size()];
-//        if ((USING_MR_FACTORS) && (NUM_ROBOTS > 1)) {
-//            for (int i = 0; i < delta_edges[0].size(); i++) {
-//                for (int j = 0; j < delta_edges[1].size(); j++) {
-//                    post_EE[countI] = plannData.prior_edges + delta_edges[0][i] + delta_edges[1][j];
-//                    post_VV[countI] = plannData.prior_nodes + delta_nodes[0][i] + delta_nodes[1][j];
-//                    countI++;
-//                }
-//            }
-//        }
-//        ------------------------------------------------------------------
 
         for (int i = 0; i < graph.size(); i++) {
 
@@ -450,14 +436,14 @@ unsigned int Planner::evaluateObjFn(const std::vector<NonlinearFactorGraph>& gra
                 JointMarginal JointInf = marginals.jointMarginalInformation(KeyVector(result.keys()));
                 gtsam::Matrix R_mat = gtsam::RtR(JointInf.fullMatrix()); // Cholesky factorization Lambda = R'R
 
-                J = R_mat.rows()/2.0 * log(2*M_PI*M_E);
+                J = R_mat.rows() / 2.0 * log(2 * M_PI * M_E);
                 double logDetR = 0;
                 for (unsigned i = 0; i < R_mat.rows(); ++i) {
                     logDetR += std::log(fabs(R_mat(i, i)));
                     //logDetR2 += std::log(fabs(R.coeff(i, i)));
                 }
 
-                J -= 2*logDetR;
+                J -= 2 * logDetR;
 
                 if (i == 0) {
                     idx_opt = 0;
@@ -476,18 +462,11 @@ unsigned int Planner::evaluateObjFn(const std::vector<NonlinearFactorGraph>& gra
 
             }
 
-            if (false) { //PATCH - Evgeny
+            if (NUM_ROBOTS == 1) {
                 // t-bsp
-                std::string post_E;
-                std::string post_V;
                 Graph posterior_topological_graph;
-                if ((USING_MR_FACTORS) && (NUM_ROBOTS > 1)) { // PATCH Evgeny
-//                    std::string post_E = post_EE[i];
-//                    std::string post_V = post_VV[i];
-                } else {
-                    std::string post_E = plannData.prior_edges + delta_edges[0][i]; // single robot for now, TODO MR
-                    std::string post_V = plannData.prior_nodes + delta_nodes[0][i];
-                }
+                std::string post_E = plannData.prior_edges + delta_edges[0][i]; // single robot for now, TODO MR
+                std::string post_V = plannData.prior_nodes + delta_nodes[0][i];
                 posterior_topological_graph.updateGraph(post_E, post_V, true);
                 posterior_topological_graph.calculateSignature();
 
@@ -501,7 +480,13 @@ unsigned int Planner::evaluateObjFn(const std::vector<NonlinearFactorGraph>& gra
                     s_opt = posterior_topological_graph.signature.s_VN;
                     J_t = J;
                 }
+            } else {
+
+                if (planner_algorithm == "t-bsp") {
+                    ROS_ERROR("T-BSP not implemented for multi-robot case. Robot will execute the default action.");
+                }
             }
+
         }
     } else { // incremental standard and topological BSP
 
@@ -513,15 +498,15 @@ unsigned int Planner::evaluateObjFn(const std::vector<NonlinearFactorGraph>& gra
 
             gttic_(isam2BSP);
 
-			gttic_(isam2Fact);
+            gttic_(isam2Fact);
             ISAM2 posterior_belief = *isam2; // all actions share the same prior belief
             // posterior belief b(X_{k+L}| Z_{k+L}, U_{k+L})
             posterior_belief.update(graph[i], initialEstimate[i]);
             Values result = posterior_belief.calculateBestEstimate();
             NonlinearFactorGraph posterior_fg = posterior_belief.getFactorsUnsafe();
-			gttoc_(isam2Fact);
+            gttoc_(isam2Fact);
 
-			gttic_(marginals);
+            gttic_(marginals);
             // Calculate and print marginal covariances for variables of interest
             cout.precision(3);
             // Calculate and print marginal covariances for all variables
@@ -536,7 +521,7 @@ unsigned int Planner::evaluateObjFn(const std::vector<NonlinearFactorGraph>& gra
             result.erase(Key(Symbol('A', 0))); // this is deterministic var
             JointMarginal JointInf = marginals.jointMarginalInformation(KeyVector(result.keys()));
 
-			gttoc_(marginals);
+            gttoc_(marginals);
 
 
             gttic_(obj);
@@ -568,61 +553,61 @@ unsigned int Planner::evaluateObjFn(const std::vector<NonlinearFactorGraph>& gra
              */
 
 
-           /* // Compute marginals
-            try {
-                int vi = 0;
-                BOOST_FOREACH(Key key1, result.keys()) {
-                                int vj = 0;
-                                BOOST_FOREACH(Key key2, result.keys()) {
-                                                gtsam::Matrix m;
-                                                if (vi != vj) {
-                                                    std::vector<Key> keys(2);
-                                                    keys[0] = key1;
-                                                    keys[1] = key2;
-                                                    JointMarginal info = marginals.jointMarginalInformation(keys);
-                                                    m = info.at(key1, key2);
+            /* // Compute marginals
+             try {
+                 int vi = 0;
+                 BOOST_FOREACH(Key key1, result.keys()) {
+                                 int vj = 0;
+                                 BOOST_FOREACH(Key key2, result.keys()) {
+                                                 gtsam::Matrix m;
+                                                 if (vi != vj) {
+                                                     std::vector<Key> keys(2);
+                                                     keys[0] = key1;
+                                                     keys[1] = key2;
+                                                     JointMarginal info = marginals.jointMarginalInformation(keys);
+                                                     m = info.at(key1, key2);
 
-                                                } else {
-                                                    // diagonal
-                                                    m = marginals.marginalInformation(key1);
-                                                }
-                                                Symbol s1(key1), s2(key2);
-                                                int x = s1.index()-1, y = s2.index()-1; // one key was removed, anchor
+                                                 } else {
+                                                     // diagonal
+                                                     m = marginals.marginalInformation(key1);
+                                                 }
+                                                 Symbol s1(key1), s2(key2);
+                                                 int x = s1.index()-1, y = s2.index()-1; // one key was removed, anchor
 
-                                                if (!m.isApproxToConstant(0, 1e-3)) {
+                                                 if (!m.isApproxToConstant(0, 1e-3)) {
 
 
-                                                    ROS_WARN("%d, %d", x, y);
-                                                    for (int p = 0; p < m.rows(); p++)
-                                                        for (int q = 0; q < m.cols(); q++)
-                                                            Lambda_sparse.coeffRef(6 * x + p, 6 * y + q) = m(p,
-                                                                                                             q);
-                                                }
+                                                     ROS_WARN("%d, %d", x, y);
+                                                     for (int p = 0; p < m.rows(); p++)
+                                                         for (int q = 0; q < m.cols(); q++)
+                                                             Lambda_sparse.coeffRef(6 * x + p, 6 * y + q) = m(p,
+                                                                                                              q);
+                                                 }
 
-                                                ++vj;
+                                                 ++vj;
 
-                                            }
-                                ++vi;
+                                             }
+                                 ++vi;
 
-                            }
-            } catch (std::exception& e) {
-                cout << e.what() << endl;
-            }*/
+                             }
+             } catch (std::exception& e) {
+                 cout << e.what() << endl;
+             }*/
 
 
 
             //double J = cov_end_pose.determinant();
 
-            double J = R_mat.rows()/2.0 * log(2*M_PI*M_E);
+            double J = R_mat.rows() / 2.0 * log(2 * M_PI * M_E);
             double logDetR = 0;
             for (unsigned i = 0; i < R_mat.rows(); ++i) {
                 logDetR += std::log(fabs(R_mat(i, i)));
                 //logDetR2 += std::log(fabs(R.coeff(i, i)));
             }
 
-            J -= 2*logDetR;
+            J -= 2 * logDetR;
 
-			
+
             if (i == 0) {
                 idx_opt = 0;
                 J_opt = J;
@@ -647,7 +632,8 @@ unsigned int Planner::evaluateObjFn(const std::vector<NonlinearFactorGraph>& gra
 
             //cout << "Edges of action " << i << ": " << delta_edges[0][i] << endl;
             //cout << "Nodes of action " << i << ": " << delta_nodes[0][i] << endl;
-            posterior_topological_graph.updateGraphAndSignature(delta_edges[0][i], delta_nodes[0][i], result); // single robot for now, TODO MR
+            posterior_topological_graph.updateGraphAndSignature(delta_edges[0][i], delta_nodes[0][i],
+                                                                result); // single robot for now, TODO MR
 
 
             //delta_edges[i]
@@ -689,17 +675,15 @@ unsigned int Planner::evaluateObjFn(const std::vector<NonlinearFactorGraph>& gra
     delta_edges[0].clear(); // TODO MR
     delta_nodes[0].clear();
 
-    J_t = J_opt; // PATCH - Evgeny
-    t_idx_opt = idx_opt; // PATCH - Evgeny
-
     Topology::time_ofs << "\n"; // terminate planning session
     tictoc_finishedIteration_();
     ROS_WARN_STREAM("Opt. action by: (standard bsp, t-bsp) = (" << idx_opt << ", " << t_idx_opt << ")");
-    ROS_WARN("Relative error: %lf", (J_t-J_opt)/J_opt);
+    ROS_WARN("Relative error: %lf", (J_t - J_opt) / J_opt);
 
     // what action should be the selected
-    if (planner_algorithm == "t-bsp") // topological bsp
+    if (planner_algorithm == "t-bsp") { // topological bsp
         return t_idx_opt;
+    }
     else // standard bsp
         return idx_opt;
 

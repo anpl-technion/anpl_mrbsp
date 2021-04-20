@@ -5,12 +5,12 @@ close all;
 clc;
 clearvars -except 'Robot_A_final_trajectories' 'Robot_B_final_trajectories' 'Robot_A_final_cov' 'Robot_B_final_cov';
 
-scenario = 'mrbsp_ros_tutorials';
-scenario_folder = ['..' filesep 'scenarios' filesep scenario];
-current_run_name = 'ANPL_Researcher_2019-12-09_04-37-47';
+scenario = 'anpl_mrbsp_tutorials';
+scenario_folder = ['/home/anton/ANPL/infrastructure/mrbsp_ws/src/anpl_mrbsp' filesep 'scenarios' filesep scenario];
+current_run_name = 'ANPL_Researcher_2021-04-05_12-08-40';
 current_run_folder = [scenario_folder filesep 'results' filesep current_run_name];
 path_to_results = [current_run_folder filesep 'matlab'];
-filename = 'belief_A146';
+filename = 'belief_A72';
 
 values = importdata([path_to_results filesep filename '_values.txt']);
 factors = importdata([path_to_results filesep filename '_factors.txt']);
