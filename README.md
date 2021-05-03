@@ -4,6 +4,7 @@
 
 
 ## Useful wiki pages:
+* [Easy installation](https://github.com/anpl-technion/mrbsp_installation_scripts)
 * [High level code structure](https://github.com/anpl-technion/anpl_mrbsp/wiki/High-level-code-structure)
 * [Implement new node](https://github.com/anpl-technion/anpl_mrbsp/wiki/Implement_new_node/Implement%20new%20node)
 * [Implement new scenario](https://github.com/anpl-technion/anpl_mrbsp/wiki/Generate_new_scenario/Generate%20new%20scenario)
