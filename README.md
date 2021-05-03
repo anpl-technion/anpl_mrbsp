@@ -4,17 +4,13 @@
 
 
 ## Useful wiki pages:
-* [High level code structure](https://bitbucket.org/ANPL/anpl_mrbsp/wiki/High_level_code_structure/High%20level%20code%20structure)
-* [Implement new node](https://bitbucket.org/ANPL/anpl_mrbsp/wiki/Implement_new_node/Implement%20new%20node)
-* [Implement new scenario](https://bitbucket.org/ANPL/anpl_mrbsp/wiki/Generate_new_scenario/Generate%20new%20scenario)
-* [Existing nodes](https://bitbucket.org/ANPL/anpl_mrbsp/wiki/Existing_nodes/Existing%20nodes)
-* [Existing scenarios](https://bitbucket.org/ANPL/anpl_mrbsp/wiki/Existing_scenarios/Existing%20scenarios)
-* [Tutorials](https://bitbucket.org/ANPL/anpl_mrbsp/wiki/Tutorials/Tutorials)
-* [Debugging with CLion](https://bitbucket.org/ANPL/anpl_mrbsp/wiki/Debugging_with_CLion/Debugging_with_CLion)
-* [Version changlog](https://bitbucket.org/ANPL/anpl_mrbsp/wiki/Version%20Changelog)
-* [FAQ](https://bitbucket.org/ANPL/anpl_mrbsp/wiki/FAQ/FAQ)
-* [Visual SLAM using ORB-SLAM2](https://bitbucket.org/ANPL/anpl_mrbsp/wiki/Tutorials/Visual%20SLAM%20using%20ORB-SLAM2)
-* [Remote Connection](https://bitbucket.org/ANPL/anpl_mrbsp/wiki/Remote%20Connection/Remote%20Connection)
+* [High level code structure](https://github.com/anpl-technion/anpl_mrbsp/wiki/High-level-code-structure)
+* [Implement new node](https://github.com/anpl-technion/anpl_mrbsp/wiki/Implement_new_node/Implement%20new%20node)
+* [Implement new scenario](https://github.com/anpl-technion/anpl_mrbsp/wiki/Generate_new_scenario/Generate%20new%20scenario)
+* [Existing nodes](https://github.com/anpl-technion/anpl_mrbsp/wiki/Existing_nodes/Existing%20nodes)
+* [Existing scenarios](https://github.com/anpl-technion/anpl_mrbsp/wiki/Existing_scenarios/Existing%20scenarios)
+* [Tutorials](https://github.com/anpl-technion/anpl_mrbsp/wiki/Tutorials/Tutorials)
+* [FAQ](https://github.com/anpl-technion/anpl_mrbsp/wiki/FAQ/FAQ)
 
 ## Overview
 
@@ -62,6 +58,8 @@ The **anpl_mrbsp** packages have been tested under [ROS](http://wiki.ros.org) Me
 
 
 ## Installation (from sources)
+
+For easy installation, check installation scripts repository: [mrbsp_installation_scripts](https://github.com/anpl-technion/mrbsp_installation_scripts.git)
 
 #### Dependencies
 
