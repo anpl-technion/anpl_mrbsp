@@ -1,5 +1,5 @@
 <launch>
-  <arg name="rvizconfig" default="$(find mrbsp_ros_tutorials)/rviz/exercise2_rviz.rviz" />
+  <arg name="rvizconfig" default="$(find anpl_mrbsp_tutorials)/rviz/exercise2_rviz.rviz" />
   <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true" />
 </launch>
 

@@ -5,7 +5,7 @@
 
 
 # start odomtery node, state machine, collision detection ...
-roslaunch mrbsp_ros_tutorials exercise3_robot_$1.launch &
+roslaunch anpl_mrbsp_tutorials exercise3_robot_$1.launch &
 
 # make sure nodes are initialized before starting a controller
 if [ -z "$2" ]; then
@@ -17,7 +17,7 @@ else
 fi
 
 # start the controller
-roslaunch mrbsp_ros_tutorials exercise3_controller_setup_gazebo_$1.launch
+roslaunch anpl_mrbsp_tutorials exercise3_controller_setup_gazebo_$1.launch
 
 
 # terminate all started processes including this script when SIGNAL received
